@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "main": ".open-next/worker.js",
-  "name": "dia-for",
+  "name": "chatweb",
   "compatibility_date": "2026-04-25",
   "compatibility_flags": [
     "nodejs_compat"
