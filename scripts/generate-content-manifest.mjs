@@ -7,6 +7,7 @@ const repoRoot = process.cwd();
 const contentDir = path.resolve(repoRoot, process.env.OBSIDIAN_CONTENT_DIR ?? "content/chats");
 const outputPath = path.join(repoRoot, "src", "generated", "content-manifest.json");
 const nonWordPattern = /[^\p{L}\p{N}]+/gu;
+const nonAsciiPattern = /[^a-z0-9]+/g;
 
 const roleAliases = new Map([
   ["user", "user"],
@@ -31,6 +32,17 @@ function slugify(value) {
     .replace(/^-+|-+$/g, "");
 
   return slug || "untitled";
+}
+
+function asciiSlugify(value) {
+  const slug = String(value)
+    .trim()
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(nonAsciiPattern, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return slug || null;
 }
 
 function uniqueSlug(base, existing) {
@@ -139,7 +151,8 @@ async function loadRecord(filePath, existingSlugs) {
   }
 
   const fallbackSlug = path.basename(filePath, ".md");
-  const slug = uniqueSlug(parsed.data.slug ?? fallbackSlug, existingSlugs);
+  const slugSource = parsed.data.slug ?? asciiSlugify(fallbackSlug) ?? fallbackSlug;
+  const slug = uniqueSlug(slugSource, existingSlugs);
   const { messages, parseStatus } = parseMessages(parsed.content);
 
   return {
