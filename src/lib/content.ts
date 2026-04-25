@@ -1,10 +1,6 @@
-import fs from "node:fs/promises";
-import path from "node:path";
-
-import matter from "gray-matter";
 import { z } from "zod";
 
-import { siteConfig } from "@/lib/config";
+import contentManifest from "@/generated/content-manifest.json";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import type {
   ChatMessage,
@@ -40,27 +36,10 @@ const roleAliases = new Map<string, "user" | "assistant">([
   ["gemini", "assistant"],
   ["deepseek", "assistant"],
   ["grok", "assistant"],
+  ["perplexity", "assistant"],
   ["assistant", "assistant"],
   ["model", "assistant"],
 ]);
-
-async function discoverMarkdownFiles(dir: string): Promise<string[]> {
-  const entries = await fs.readdir(dir, { withFileTypes: true }).catch(() => []);
-  const files = await Promise.all(
-    entries.map(async (entry) => {
-      const fullPath = path.join(dir, entry.name);
-      if (entry.isDirectory()) {
-        return discoverMarkdownFiles(fullPath);
-      }
-      if (entry.isFile() && entry.name.endsWith(".md")) {
-        return [fullPath];
-      }
-      return [];
-    }),
-  );
-
-  return files.flat().sort();
-}
 
 function normalizeMeta(data: unknown): ChatRecordMeta {
   const parsed = frontmatterSchema.parse(data);
@@ -73,7 +52,7 @@ function normalizeMeta(data: unknown): ChatRecordMeta {
 }
 
 function parseSpeaker(rawSpeaker: string): Pick<ChatMessage, "role" | "speaker"> {
-  const speaker = rawSpeaker.trim();
+  const speaker = rawSpeaker.trim().replace(/[：:]+$/u, "");
   const role = roleAliases.get(speaker.toLowerCase()) ?? "unknown";
 
   return { role, speaker };
@@ -115,37 +94,15 @@ export function parseMessages(markdown: string): {
   return { messages, parseStatus };
 }
 
-async function loadChatRecord(filePath: string, existingSlugs: Set<string>) {
-  const file = await fs.readFile(filePath, "utf8");
-  const parsed = matter(file);
-  const meta = normalizeMeta(parsed.data);
-
-  if (!meta.published) {
-    return null;
-  }
-
-  const fallbackSlug = path.basename(filePath, ".md");
-  const slug = uniqueSlug(slugify(parsed.data.slug ?? fallbackSlug), existingSlugs);
-  const { messages, parseStatus } = parseMessages(parsed.content);
-
-  return {
-    slug,
-    rawMarkdown: parsed.content.trim(),
-    parseStatus,
-    meta,
-    messages,
-  } satisfies ChatRecord;
-}
-
 export async function getAllChats(): Promise<ChatRecord[]> {
-  const files = await discoverMarkdownFiles(siteConfig.contentDir);
   const existingSlugs = new Set<string>();
-  const records = await Promise.all(
-    files.map((filePath) => loadChatRecord(filePath, existingSlugs)),
-  );
 
-  return records
-    .filter((record): record is ChatRecord => record !== null)
+  return (contentManifest as ChatRecord[])
+    .map((record) => ({
+      ...record,
+      slug: uniqueSlug(record.slug, existingSlugs),
+      meta: normalizeMeta(record.meta),
+    }))
     .sort((a, b) => (b.meta.created ?? "").localeCompare(a.meta.created ?? ""));
 }
 

@@ -4,7 +4,8 @@
   "description": "Public AI chat archive powered by Obsidian and Gemini.",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "content:manifest": "node scripts/generate-content-manifest.mjs",
+    "build": "npm run content:manifest && next build",
     "build:cloudflare": "opennextjs-cloudflare build",
     "dev": "next dev",
     "start": "next start",
