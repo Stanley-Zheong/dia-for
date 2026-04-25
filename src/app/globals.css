@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+:root {
+  color-scheme: light;
+  --background: #f8fbff;
+  --foreground: #1f2937;
+  --muted: #64748b;
+  --line: #dbe7f3;
+  --google-blue: #4285f4;
+  --google-red: #ea4335;
+  --google-yellow: #fbbc04;
+  --google-green: #34a853;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background:
+    radial-gradient(circle at 8% 10%, rgba(66, 133, 244, 0.1), transparent 26rem),
+    radial-gradient(circle at 96% 4%, rgba(251, 188, 4, 0.12), transparent 22rem),
+    var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.markdown-body {
+  line-height: 1.75;
+}
+
+.markdown-body :where(p, ul, ol, blockquote, pre) {
+  margin: 0.75rem 0;
+}
+
+.markdown-body :where(h1, h2, h3, h4) {
+  margin: 1.25rem 0 0.5rem;
+  font-weight: 700;
+}
+
+.markdown-body pre {
+  overflow-x: auto;
+  border-radius: 1rem;
+  background: #0f172a;
+  padding: 1rem;
+  color: #e2e8f0;
+}
+
+.markdown-body code:not(pre code) {
+  border-radius: 0.35rem;
+  background: #eef4ff;
+  padding: 0.1rem 0.3rem;
+  color: #1d4ed8;
+}
+
+.markdown-body blockquote {
+  border-left: 4px solid var(--google-blue);
+  color: var(--muted);
+  padding-left: 1rem;
+}
