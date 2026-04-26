@@ -48,9 +48,14 @@ a {
 .markdown-body pre {
   overflow-x: auto;
   border-radius: 1rem;
-  background: #0f172a;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
   padding: 1rem;
-  color: #e2e8f0;
+  color: #334155;
+}
+
+.markdown-body pre code {
+  color: inherit;
 }
 
 .markdown-body code:not(pre code) {
