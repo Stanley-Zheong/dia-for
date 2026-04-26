@@ -38,6 +38,33 @@ Hi there`);
 Raw note`);
 
     expect(result.parseStatus).toBe("partial");
-    expect(result.messages[0]).toMatchObject({ role: "unknown", speaker: "Editor" });
+    expect(result.messages).toHaveLength(0);
+  });
+
+  it("keeps answer-internal markdown headings inside the current model message", () => {
+    const result = parseMessages(`## user：
+
+Question
+
+## perplexity
+
+Answer opening.
+
+## 典型项目样本
+
+This heading is part of the model answer.
+
+## user
+
+Follow up`);
+
+    expect(result.parseStatus).toBe("complete");
+    expect(result.messages).toHaveLength(3);
+    expect(result.messages[1]).toMatchObject({
+      role: "assistant",
+      speaker: "perplexity",
+    });
+    expect(result.messages[1].content).toContain("## 典型项目样本");
+    expect(result.messages[1].content).toContain("This heading is part of the model answer.");
   });
 });

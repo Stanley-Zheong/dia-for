@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { getModels, getTopics } from "@/lib/content";
+import { getAllChats, getModels, getTopics } from "@/lib/content";
 import { siteConfig } from "@/lib/config";
 
 type AppShellProps = {
@@ -10,7 +10,7 @@ type AppShellProps = {
 };
 
 export async function AppShell({ children, aside }: AppShellProps) {
-  const [topics, models] = await Promise.all([getTopics(), getModels()]);
+  const [chats, topics, models] = await Promise.all([getAllChats(), getTopics(), getModels()]);
 
   return (
     <div className="mx-auto grid min-h-screen max-w-[1500px] grid-cols-1 gap-6 px-4 py-5 lg:grid-cols-[260px_minmax(0,1fr)_320px]">
@@ -34,6 +34,20 @@ export async function AppShell({ children, aside }: AppShellProps) {
               <Link className="block rounded-xl px-3 py-2 hover:bg-blue-50" href="/search">
                 AI Search
               </Link>
+            </div>
+          </div>
+          <div>
+            <div className="mb-2 font-semibold text-slate-900">最近文章</div>
+            <div className="space-y-1">
+              {chats.map((chat) => (
+                <Link
+                  key={chat.slug}
+                  className="block rounded-xl px-3 py-2 text-slate-600 hover:bg-blue-50 hover:text-blue-700"
+                  href={`/chats/${chat.slug}`}
+                >
+                  <span className="line-clamp-2">{chat.meta.title}</span>
+                </Link>
+              ))}
             </div>
           </div>
           <div>

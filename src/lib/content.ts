@@ -58,6 +58,10 @@ function parseSpeaker(rawSpeaker: string): Pick<ChatMessage, "role" | "speaker">
   return { role, speaker };
 }
 
+function isKnownSpeaker(rawSpeaker: string) {
+  return parseSpeaker(rawSpeaker).role !== "unknown";
+}
+
 export function parseMessages(markdown: string): {
   messages: ChatMessage[];
   parseStatus: ChatRecord["parseStatus"];
@@ -72,10 +76,19 @@ export function parseMessages(markdown: string): {
     };
   }
 
-  const messages = matches
+  const speakerMatches = matches.filter((match) => isKnownSpeaker(match[1]));
+
+  if (speakerMatches.length === 0) {
+    return {
+      messages: [],
+      parseStatus: markdown.trim() ? "partial" : "complete",
+    };
+  }
+
+  const messages = speakerMatches
     .map((match, index) => {
       const start = (match.index ?? 0) + match[0].length;
-      const end = matches[index + 1]?.index ?? markdown.length;
+      const end = speakerMatches[index + 1]?.index ?? markdown.length;
       const content = markdown.slice(start, end).trim();
       const speaker = parseSpeaker(match[1]);
 
@@ -87,9 +100,8 @@ export function parseMessages(markdown: string): {
     })
     .filter((message) => message.content.length > 0);
 
-  const parseStatus = messages.every((message) => message.role !== "unknown")
-    ? "complete"
-    : "partial";
+  const leadingContent = markdown.slice(0, speakerMatches[0]?.index ?? 0).trim();
+  const parseStatus = leadingContent ? "partial" : "complete";
 
   return { messages, parseStatus };
 }
@@ -98,6 +110,7 @@ export async function getAllChats(): Promise<ChatRecord[]> {
   const existingSlugs = new Set<string>();
 
   return (contentManifest as ChatRecord[])
+    .filter((record) => record.meta.published)
     .map((record) => ({
       ...record,
       slug: uniqueSlug(record.slug, existingSlugs),

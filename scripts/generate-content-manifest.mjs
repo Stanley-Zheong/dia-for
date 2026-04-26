@@ -109,6 +109,10 @@ function parseSpeaker(rawSpeaker) {
   return { role, speaker };
 }
 
+function isKnownSpeaker(rawSpeaker) {
+  return parseSpeaker(rawSpeaker).role !== "unknown";
+}
+
 function parseMessages(markdown) {
   const headingPattern = /^##\s+(.+)$/gm;
   const matches = [...markdown.matchAll(headingPattern)];
@@ -120,10 +124,19 @@ function parseMessages(markdown) {
     };
   }
 
-  const messages = matches
+  const speakerMatches = matches.filter((match) => isKnownSpeaker(match[1]));
+
+  if (speakerMatches.length === 0) {
+    return {
+      messages: [],
+      parseStatus: markdown.trim() ? "partial" : "complete",
+    };
+  }
+
+  const messages = speakerMatches
     .map((match, index) => {
       const start = (match.index ?? 0) + match[0].length;
-      const end = matches[index + 1]?.index ?? markdown.length;
+      const end = speakerMatches[index + 1]?.index ?? markdown.length;
       const content = markdown.slice(start, end).trim();
       const speaker = parseSpeaker(match[1]);
 
@@ -137,7 +150,7 @@ function parseMessages(markdown) {
 
   return {
     messages,
-    parseStatus: messages.every((message) => message.role !== "unknown") ? "complete" : "partial",
+    parseStatus: markdown.slice(0, speakerMatches[0]?.index ?? 0).trim() ? "partial" : "complete",
   };
 }
 
