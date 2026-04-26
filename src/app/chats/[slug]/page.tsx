@@ -2,9 +2,9 @@ import { notFound } from "next/navigation";
 
 import { AppShell } from "@/components/AppShell";
 import { ChatTranscript } from "@/components/ChatTranscript";
+import { MarkdownContent } from "@/components/MarkdownContent";
 import { MetaPills } from "@/components/MetaPills";
 import { getAllChats, getChatBySlug } from "@/lib/content";
-import { getChatInsights } from "@/lib/insights";
 
 type ChatPageProps = {
   params: Promise<{ slug: string }>;
@@ -15,6 +15,31 @@ export async function generateStaticParams() {
   return chats.map((chat) => ({ slug: chat.slug }));
 }
 
+function InsightsPanel({ insights }: { insights?: string }) {
+  if (!insights) {
+    return (
+      <div className="space-y-4">
+        <div className="text-sm font-semibold text-slate-900">价值提炼</div>
+        <p className="text-sm leading-6 text-slate-500">
+          暂无价值提炼
+        </p>
+        <p className="text-xs leading-5 text-slate-400">
+          这篇对话记录保留了原始内容，欢迎在 Obsidian 中补充你的思考。
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="text-sm font-semibold text-slate-900">价值提炼</div>
+      <div className="prose prose-sm prose-slate max-w-none">
+        <MarkdownContent content={insights} />
+      </div>
+    </div>
+  );
+}
+
 export default async function ChatPage({ params }: ChatPageProps) {
   const { slug } = await params;
   const chat = await getChatBySlug(slug);
@@ -23,35 +48,8 @@ export default async function ChatPage({ params }: ChatPageProps) {
     notFound();
   }
 
-  const insights = await getChatInsights(chat);
-
   return (
-    <AppShell
-      aside={
-        <div className="space-y-6">
-          <div>
-            <div className="mb-2 text-sm font-semibold text-slate-900">摘要</div>
-            <p className="text-sm leading-6 text-slate-600">{insights.summary}</p>
-          </div>
-          <div>
-            <div className="mb-2 text-sm font-semibold text-slate-900">关键观点</div>
-            <ul className="space-y-2 text-sm leading-6 text-slate-600">
-              {insights.viewpoints.map((item) => (
-                <li key={item}>- {item}</li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <div className="mb-2 text-sm font-semibold text-slate-900">结论</div>
-            <ul className="space-y-2 text-sm leading-6 text-slate-600">
-              {insights.conclusions.map((item) => (
-                <li key={item}>- {item}</li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      }
-    >
+    <AppShell aside={<InsightsPanel insights={chat.meta.insights} />}>
       <article className="rounded-[2rem] border border-slate-200 bg-white/75 p-6 shadow-sm">
         <header className="mb-8">
           <p className="mb-2 text-sm text-slate-500">

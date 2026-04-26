@@ -10,22 +10,38 @@ content/
     └── *.md
 ```
 
-## Frontmatter 必填字段
+## Frontmatter 字段
 
 ```yaml
 ---
-title: "聊天标题"
-topic: "话题名称"
-models:
+title: "聊天标题"           # 必填
+topic: "话题名称"           # 必填
+models:                      # 必填
   - ChatGPT
   - Claude
-published: true      # 必须为 true 才会发布
-created: 2026-04-25
-tags:
+published: true              # 必须为 true 才会发布
+created: 2026-04-25          # 可选
+tags:                        # 可选
   - tag1
   - tag2
+insights: |                  # 可选，人工撰写的价值提炼
+  ## 核心价值
+  
+  这篇对话展示了...
+  
+  ## 关键收获
+  
+  - 收获 1
+  - 收获 2
 ---
 ```
+
+### insights 字段说明
+
+- 使用 YAML `|` 语法存储多行 Markdown
+- 内容会在聊天详情页右侧面板渲染
+- 支持完整 Markdown 格式（链接、列表、粗体等）
+- 如果没有 `insights` 字段，右侧面板显示占位符
 
 ## Slug 生成规则
 

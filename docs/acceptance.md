@@ -29,6 +29,13 @@ This project treats `content/chats/*.md` as the source of truth. A deployment is
 - The visible content in `/chats/[slug]` MUST preserve the source Markdown body content.
 - Internal Markdown headings inside a model answer MUST remain inside that model answer. They MUST NOT be split into fake chat messages.
 
+## Chat Insights (Right Panel)
+
+- If a chat has an `insights` field in frontmatter, the right panel MUST render it as Markdown.
+- Markdown formatting in insights (links, lists, bold, headings) MUST render correctly.
+- If a chat does NOT have an `insights` field, the right panel MUST display a placeholder message.
+- Chat detail pages MUST NOT call Gemini API to generate chat-level insights.
+
 ## Chat Conversation Layout
 
 - User messages MUST render as user chat turns and visually align to the right side of the conversation column.

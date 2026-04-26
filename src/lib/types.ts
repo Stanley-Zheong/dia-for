@@ -15,6 +15,7 @@ export type ChatRecordMeta = {
   published: boolean;
   created?: string;
   tags: string[];
+  insights?: string;
 };
 
 export type ChatRecord = {

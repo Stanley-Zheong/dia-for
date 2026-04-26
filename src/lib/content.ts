@@ -25,6 +25,7 @@ const frontmatterSchema = z.object({
     .union([z.array(z.string()), z.string()])
     .transform((value) => (Array.isArray(value) ? value : [value]))
     .default([]),
+  insights: z.string().optional(),
 });
 
 const roleAliases = new Map<string, "user" | "assistant">([
