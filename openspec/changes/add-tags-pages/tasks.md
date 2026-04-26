@@ -26,8 +26,8 @@
 
 ## 6. Verification and Release
 
-- [ ] 6.1 Run `npm run lint` and fix any linting errors
-- [ ] 6.2 Run `npm run typecheck` and fix any type errors
-- [ ] 6.3 Run `npm run test` and ensure all tests pass
-- [ ] 6.4 Run `npm run verify:deploy` and confirm full pipeline passes
-- [ ] 6.5 Commit all changes with descriptive message
+- [x] 6.1 Run `npm run lint` and fix any linting errors
+- [x] 6.2 Run `npm run typecheck` and fix any type errors
+- [x] 6.3 Run `npm run test` and ensure all tests pass
+- [x] 6.4 Run `npm run verify:deploy` and confirm full pipeline passes
+- [x] 6.5 Commit all changes with descriptive message
