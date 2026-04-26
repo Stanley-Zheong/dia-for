@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "content:manifest": "node scripts/generate-content-manifest.mjs",
+    "content:sync": "bash scripts/sync-from-obsidian.sh",
     "build": "npm run content:manifest && next build --webpack",
     "build:cloudflare": "opennextjs-cloudflare build",
     "dev": "next dev",
