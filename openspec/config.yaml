@@ -1,20 +1,57 @@
 schema: spec-driven
 
-# Project context (optional)
+# Project context
 # This is shown to AI when creating artifacts.
-# Add your tech stack, conventions, style guides, domain knowledge, etc.
-# Example:
-#   context: |
-#     Tech stack: TypeScript, React, Node.js
-#     We use conventional commits
-#     Domain: e-commerce platform
+context: |
+  Project: dia-for — 公开 AI 对话记录发布层
+  
+  Tech stack:
+  - Next.js 16 + React 19 + TypeScript 6
+  - Tailwind CSS 4
+  - Vitest 4 (node 环境)
+  - Cloudflare Workers via @opennextjs/cloudflare
+  - Gemini API (@google/genai)
+  
+  Source of truth:
+  - content/chats/*.md 是唯一内容真源
+  - 只有 frontmatter published: true 的条目才会发布
+  - 所有路由、索引、搜索、AI insights 必须过 published 过滤
+  
+  Build dependencies:
+  - npm run content:manifest 必须在 build/test 之前执行（已内置）
+  - src/generated/content-manifest.json 是构建产物，不要手动编辑
+  
+  Deployment:
+  - npm run verify:deploy 是部署前必跑脚本（git status 检查 + lint + typecheck + test + build）
+  - 每个开发任务结束必须跑 verify:deploy 并把输出写到交付说明
+  
+  Rendering contract:
+  - 用户消息右对齐，模型消息左对齐
+  - 模型回答内部的 markdown heading 不能被切成假消息
+  - 回归 fixture: harness 自动化开发.md 的 perplexity 回答内部 heading 必须保留
+  
+  AI fallback:
+  - 没有 GEMINI_API_KEY 时站点仍可 build/浏览，AI 功能走本地降级
+  
+  Path alias:
+  - @/* → ./src/*
+  
+  New library warning:
+  - Next 16, React 19, TS 6, Tailwind 4, Vitest 4 都是较新版本
+  - 遇到这些库的 API 问题时优先用官方文档查证，不要凭记忆猜测
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always include a "Non-goals" section
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+# Per-artifact rules
+rules:
+  proposal:
+    - 必须包含 "Acceptance Criteria" 或引用 docs/acceptance.md 中的相关段落
+    - 明确列出 published 过滤语义的影响（如有）
+    - 列出是否涉及导航更新（AppShell）
+  design:
+    - 说明是否影响 content:manifest 流程
+    - 如果涉及新路由，说明 Server/Client Component 边界
+    - 列出需要更新的现有文件
+  tasks:
+    - 最后一个 section 必须是 "Verification and Release"
+    - Verification section 必须包含 "npm run verify:deploy" 步骤
+    - 每个 task 应该可在 30 分钟内完成
+    - 涉及 published 过滤的功能必须有测试 task
