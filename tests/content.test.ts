@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { getAllChats, parseMessages } from "@/lib/content";
+import { getAllChats, getTags, getTagBySlug, parseMessages } from "@/lib/content";
 import { slugify } from "@/lib/slug";
 
 describe("content ingestion", () => {
@@ -66,5 +66,38 @@ Follow up`);
     });
     expect(result.messages[1].content).toContain("## 典型项目样本");
     expect(result.messages[1].content).toContain("This heading is part of the model answer.");
+  });
+});
+
+describe("tags", () => {
+  it("getTags returns only tags from published chats", async () => {
+    const tags = await getTags();
+
+    // Tags should exist (from published chats that have tags)
+    // Each tag should only contain published chats
+    for (const tag of tags) {
+      for (const chat of tag.chats) {
+        expect(chat.meta.published).toBe(true);
+      }
+    }
+  });
+
+  it("getTagBySlug returns null for non-existent tag", async () => {
+    const tag = await getTagBySlug("this-tag-does-not-exist-anywhere");
+    expect(tag).toBeNull();
+  });
+
+  it("tag chats only include published records", async () => {
+    const tags = await getTags();
+
+    if (tags.length > 0) {
+      const firstTag = tags[0];
+      const tagBySlug = await getTagBySlug(firstTag.slug);
+      expect(tagBySlug).not.toBeNull();
+      expect(tagBySlug!.chats.length).toBeGreaterThan(0);
+      for (const chat of tagBySlug!.chats) {
+        expect(chat.meta.published).toBe(true);
+      }
+    }
   });
 });

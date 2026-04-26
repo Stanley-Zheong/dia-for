@@ -12,6 +12,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "test": "npm run content:manifest && vitest run",
+    "verify:deploy": "sh -c 'echo \"== Deploy-relevant git status ==\"; status=\"$(git status --short -- src tests scripts content docs package.json package-lock.json next.config.ts tsconfig.json)\"; printf \"%s\\n\" \"$status\"; if [ -n \"$status\" ]; then echo \"Deploy verification failed: commit or remove the files listed above.\"; exit 1; fi; npm run lint && npm run typecheck && npm run test && npm run build'",
     "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
     "deploy": "opennextjs-cloudflare build && opennextjs-cloudflare deploy",
     "upload": "opennextjs-cloudflare build && opennextjs-cloudflare upload",

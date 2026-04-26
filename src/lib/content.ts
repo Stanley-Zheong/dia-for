@@ -7,6 +7,7 @@ import type {
   ChatRecord,
   ChatRecordMeta,
   ModelSummary,
+  TagSummary,
   TopicSummary,
 } from "@/lib/types";
 
@@ -169,4 +170,25 @@ export async function getModels(): Promise<ModelSummary[]> {
 export async function getModelBySlug(slug: string) {
   const models = await getModels();
   return models.find((model) => model.slug === slug) ?? null;
+}
+
+export async function getTags(): Promise<TagSummary[]> {
+  const chats = await getAllChats();
+  const tags = new Map<string, TagSummary>();
+
+  for (const chat of chats) {
+    for (const tag of chat.meta.tags) {
+      const slug = slugify(tag);
+      const current = tags.get(slug) ?? { slug, name: tag, chats: [] };
+      current.chats.push(chat);
+      tags.set(slug, current);
+    }
+  }
+
+  return Array.from(tags.values()).sort((a, b) => a.name.localeCompare(b.name));
+}
+
+export async function getTagBySlug(slug: string) {
+  const tags = await getTags();
+  return tags.find((tag) => tag.slug === slug) ?? null;
 }

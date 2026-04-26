@@ -15,6 +15,13 @@ This project treats `content/chats/*.md` as the source of truth. A deployment is
 - Topic titles and topic counts MUST match the `topic` frontmatter values from published chats.
 - Unpublished chats MUST NOT contribute topics, counts, models, or links.
 
+## Tags
+
+- `/tags` MUST list exactly the tags derived from published chats.
+- Tag names and tag counts MUST match the `tags` frontmatter values from published chats.
+- Unpublished chats MUST NOT contribute tags, counts, or links.
+- Every tag MUST have an accessible `/tags/[slug]` page listing its associated published chats.
+
 ## Chat Detail Routes
 
 - Every published chat MUST have an accessible `/chats/[slug]` page.
@@ -36,6 +43,7 @@ Before considering a deployment correct, run automated checks that verify:
 - Published count equals manifest count.
 - Homepage source data equals published Markdown files.
 - Topic source data equals published Markdown files.
+- Tag source data equals published Markdown files.
 - Every published chat can be resolved by slug.
 - Every chat's manifest `rawMarkdown` equals the Markdown body from the source file.
 - `harness 自动化开发.md` keeps answer-internal headings inside the `perplexity` message instead of splitting them into unknown messages.

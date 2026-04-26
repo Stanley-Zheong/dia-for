@@ -38,6 +38,12 @@ export type ModelSummary = {
   chats: ChatRecord[];
 };
 
+export type TagSummary = {
+  slug: string;
+  name: string;
+  chats: ChatRecord[];
+};
+
 export type InsightReference = {
   chatSlug: string;
   title: string;

@@ -31,6 +31,9 @@ export async function AppShell({ children, aside }: AppShellProps) {
               <Link className="block rounded-xl px-3 py-2 hover:bg-blue-50" href="/topics">
                 话题
               </Link>
+              <Link className="block rounded-xl px-3 py-2 hover:bg-blue-50" href="/tags">
+                标签
+              </Link>
               <Link className="block rounded-xl px-3 py-2 hover:bg-blue-50" href="/search">
                 AI Search
               </Link>
