@@ -20,6 +20,7 @@ export type ChatRecordMeta = {
 
 export type ChatRecord = {
   slug: string;
+  aliases?: string[];
   rawMarkdown: string;
   parseStatus: "complete" | "partial";
   meta: ChatRecordMeta;

@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { AppShell } from "@/components/AppShell";
 import { ChatTranscript } from "@/components/ChatTranscript";
@@ -46,6 +46,10 @@ export default async function ChatPage({ params }: ChatPageProps) {
 
   if (!chat) {
     notFound();
+  }
+
+  if (slug !== chat.slug) {
+    redirect(`/chats/${chat.slug}`);
   }
 
   return (

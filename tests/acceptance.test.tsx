@@ -74,6 +74,15 @@ describe("published content acceptance", () => {
     }
   });
 
+  it("uses Cloudflare-safe chat slugs and resolves Chinese filename aliases", async () => {
+    const chats = await getAllChats();
+    const automationChat = await getChatBySlug("自动化开发实践");
+
+    expect(chats.every((chat) => /^[a-z0-9-]+$/.test(chat.slug))).toBe(true);
+    expect(automationChat?.meta.title).toBe("自动化开发对话");
+    expect(automationChat?.slug).toBe("chat-63bb9026");
+  });
+
   it("keeps harness answer headings inside Perplexity messages instead of creating fake turns", async () => {
     const harness = (await getAllChats()).find(
       (chat) => chat.meta.title === "harness 自动化开发思考",

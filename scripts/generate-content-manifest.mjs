@@ -1,4 +1,5 @@
 import fs from "node:fs/promises";
+import crypto from "node:crypto";
 import path from "node:path";
 
 import matter from "gray-matter";
@@ -35,6 +36,10 @@ function slugify(value) {
 }
 
 function asciiSlugify(value) {
+  if (typeof value !== "string" || value.trim().length === 0) {
+    return null;
+  }
+
   const slug = String(value)
     .trim()
     .toLowerCase()
@@ -43,6 +48,19 @@ function asciiSlugify(value) {
     .replace(/^-+|-+$/g, "");
 
   return slug || null;
+}
+
+function shortHash(value) {
+  return crypto.createHash("sha1").update(String(value)).digest("hex").slice(0, 8);
+}
+
+function canonicalChatSlug(data, meta, fallbackSlug) {
+  return (
+    asciiSlugify(data.slug) ??
+    asciiSlugify(fallbackSlug) ??
+    asciiSlugify(meta.title) ??
+    `chat-${shortHash(fallbackSlug)}`
+  );
 }
 
 function uniqueSlug(base, existing) {
@@ -164,12 +182,21 @@ async function loadRecord(filePath, existingSlugs) {
   }
 
   const fallbackSlug = path.basename(filePath, ".md");
-  const slugSource = parsed.data.slug ?? asciiSlugify(fallbackSlug) ?? fallbackSlug;
+  const slugSource = canonicalChatSlug(parsed.data, meta, fallbackSlug);
   const slug = uniqueSlug(slugSource, existingSlugs);
+  const aliases = Array.from(
+    new Set(
+      [parsed.data.slug, meta.title, fallbackSlug]
+        .filter((value) => typeof value === "string" && value.trim().length > 0)
+        .map(slugify)
+        .filter((alias) => alias !== slug),
+    ),
+  );
   const { messages, parseStatus } = parseMessages(parsed.content);
 
   return {
     slug,
+    aliases,
     rawMarkdown: parsed.content.trim(),
     parseStatus,
     meta,

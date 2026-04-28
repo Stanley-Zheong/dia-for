@@ -123,7 +123,19 @@ export async function getAllChats(): Promise<ChatRecord[]> {
 
 export async function getChatBySlug(slug: string) {
   const chats = await getAllChats();
-  return chats.find((chat) => chat.slug === slug) ?? null;
+  const slugs = new Set([slug]);
+
+  try {
+    slugs.add(decodeURIComponent(slug));
+  } catch {
+    // Keep the original slug when it is not URI encoded.
+  }
+
+  return (
+    chats.find(
+      (chat) => slugs.has(chat.slug) || chat.aliases?.some((alias) => slugs.has(alias)),
+    ) ?? null
+  );
 }
 
 export async function getTopics(): Promise<TopicSummary[]> {

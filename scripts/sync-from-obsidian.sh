@@ -15,28 +15,33 @@ echo "== 同步 Obsidian 内容到项目 =="
 echo "从 $OBSIDIAN_SOURCE 同步到 $PROJECT_TARGET ..."
 rsync -av --delete --include="*.md" --exclude="*" "$OBSIDIAN_SOURCE/" "$PROJECT_TARGET/"
 
-# 2. 检查是否有变更
+# 2. 重新生成内容 manifest，保证 GitHub 中的派生索引和 Markdown 源文件一致
 cd "$PROJECT_ROOT"
-if git diff --quiet content/chats/; then
+echo ""
+echo "重新生成内容 manifest ..."
+npm run content:manifest
+
+# 3. 检查是否有变更
+if [ -z "$(git status --porcelain content/chats/ src/generated/content-manifest.json)" ]; then
     echo "没有内容变更。"
     exit 0
 fi
 
-# 3. 显示变更
+# 4. 显示变更
 echo ""
 echo "== 内容变更 =="
-git status --short content/chats/
+git status --short content/chats/ src/generated/content-manifest.json
 
-# 4. 询问是否 commit
+# 5. 询问是否 commit
 echo ""
 read -p "是否提交并推送？(y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     # 生成 commit message
-    CHANGED_FILES=$(git diff --name-only content/chats/ | wc -l | tr -d ' ')
+    CHANGED_FILES=$(git status --porcelain content/chats/ src/generated/content-manifest.json | wc -l | tr -d ' ')
     COMMIT_MSG="content: sync ${CHANGED_FILES} files from Obsidian"
     
-    git add content/chats/
+    git add content/chats/ src/generated/content-manifest.json
     git commit -m "$COMMIT_MSG"
     git push
     
