@@ -7,7 +7,13 @@ published: true
 created: 2026-05-03
 description: Claude conversation with 16 messages
 tags:
-  - clippings
+  - AI原生开发
+  - ai自进化
+  - ai-agent
+  - Prompt
+  - hermes
+  - ai-memory
+  - ai-评估体系
 ---
 ## User
 大家在谈论anthropic的时候，提到：对很多应用来说，优化单次LLM调用，在配合检索和上下文示例，通常就够了。 这个观点在实际落地的时候都要做哪些工作，怎么做
