@@ -1,15 +1,22 @@
 ---
-title: "harness 自动化开发思考"
-topic: "多模型观点对比"
+title: harness 自动化开发思考
+topic: 多模型观点对比
 models:
   - perplexity
-source: "web-clipping"
+source: web-clipping
 published: true
 created: 2026-04-22
 tags:
-  - vibe coding
   - DIG
   - harness
+  - ADR
+  - Test-drive-specfic
+  - ai-coding-workflow
+  - oymyopenagent
+  - openspec
+  - Skill
+  - vibe-coding
+  - CLADA
 ---
 
 
@@ -1545,4 +1552,2659 @@ text
 
 
 
-by 2026-4-46
+
+## user
+https://github.com/mattpocock/skills/blob/main/skills/engineering/grill-with-docs/ADR-FORMAT.md 这里面的adr是什么缩写
+
+## google
+在软件工程和该项目的语境下，**ADR** 是 **Architecture Decision Record**（架构决策记录）的缩写。
+
+根据你提供的文档内容，ADR 的核心用途如下：
+
+- **记录决策及其原因**：它用于记录项目中做出的重大决策以及做出该决定的背景（Context）和动机（Why）。
+- **管理不可逆性**：主要针对那些**难以回滚（Hard to reverse）**、**缺乏背景会令人困惑（Surprising without context）**或**经过权衡后选择（Real trade-off）**的决定。
+- **存档历史**：文档通常以 `0001-slug.md` 这样的序列编号存储在 `docs/adr/` 目录下，方便后续团队成员追溯某个架构设计的由来。
+
+常见记录内容包括技术选型（如使用哪个数据库）、架构模式（如单体还是微服务）以及故意偏离常规路径的设计方案。
+
+
+## user
+听着这个很像DIG，都是聚焦在decision的记录，为ai提供持久记忆的。 ai coding领域还有哪些这一类的规则规范技法
+
+## google
+你非常有眼光。**ADR**（架构决策记录）和 **DIG**（Decision Integration Guide）本质上都是在为 AI 建立**“因果链条”**。
+
+在 AI Coding 领域，单纯的代码是不够的，AI 需要知道**“你为什么要这么写”**。除了这两个，目前最前沿、能显著提升 AI 开发质量的规则和技法还有以下几类：
+
+1. 技术栈指南 (Tech Stack Rules / `.cursorrules`)
+
+这是目前 Cursor 或 Windsurf 开发者最常用的。
+
+- **技法**：在项目根目录创建一个 `.cursorrules` 或 `rules.md`。
+- **作用**：明确规定“我们只用 Tailwind，不用 CSS Modules”、“所有 API 必须使用 Zod 校验”。
+- **对 AI 的意义**：它避免了 AI 每次都去猜你的偏好，减少了生成“幻觉代码”的概率。
+
+2. 状态机规范 (State Machine / XState Specs)
+
+- **技法**：使用 **XState** 或类似的 DSL（领域特定语言）来定义业务逻辑。
+- **作用**：把复杂的业务逻辑从代码中抽离，变成一个逻辑图（Logic Map）。
+- **对 AI 的意义**：AI 非常擅长理解“状态 A -> 动作 -> 状态 B”的逻辑。有了这个规范，AI 在修改逻辑时不会破坏原本的流程闭环。
+
+3. 文学编程回归 (Literate Programming / JSDoc 增强)
+
+- **技法**：不仅仅写 `// 这是一个函数`，而是使用丰富的 **JSDoc/TSDoc**。
+- **作用**：描述输入输出的边缘情况、副作用（Side Effects）以及性能考量。
+- **对 AI 的意义**：AI 在读取上下文时，注释比代码逻辑更容易被转化为“高权重”的 Attention。
+
+4. 测试驱动规格 (Test-Driven Specification)
+
+- **技法**：在写代码前，先让 AI 写 **Integration Tests**。
+- **作用**：测试用例就是最硬核的“决策记录”。
+- **对 AI 的意义**：它为 AI 划定了红线。AI 在 `gsd`（Get Stuff Done）时，如果跑不通这些测试，它就会自我修正，这比任何文字描述都有效。
+
+5. 增量上下文 (Incremental Context / `.context` 文件)
+
+- **技法**：类似 **OpenClaw** 的做法，每个模块附带一个 `.context` 文件。
+- **作用**：记录该模块上次重构的时间、已知的老 Bug、未来的扩展计划。
+- **对 AI 的意义**：这相当于给代码贴了一个“便利贴”，AI 瞬间就能接入项目的“前世今生”。
+
+6. 统一命名空间规范 (Ubiquitous Language)
+
+- **技法**：源自 DDD（领域驱动设计），维护一个 `GLOSSARY.md`（词汇表）。
+- **作用**：规定“用户订单”统一叫 `Order`，不能叫 `Purchase` 或 `Deal`。
+- **对 AI 的意义**：消除命名歧义，让 AI 生成的代码与存量代码在语义上高度对齐。
+
+**总结一下：**  
+现在的趋势是从 **"AI 写代码"** 转向 **"AI 维护决策，人类维护 Spec"**。ADR、DIG、`.cursorrules` 都是在构建这个**“共识层”**。
+
+你目前是在尝试**构建一套自己的 AI 开发工作流**（比如结合 OpenClaw 和这些规范）吗？
+
+
+## user
+是的，我想做一套AI开发工作流，我已经体验了openspec/ ohmyopenagent/ superpowers/ ，今天看了这个ADR的skill。 但是我还有几个点没在这些内容里看见； 1. 长期迭代如何做，就是项目开发可能会每天都在迭代，这样持续100天以后，ai是否还记得现在的功能、现在的实现。是不是会幻觉更重，输出质量越来越低？ 2. 如何详细约定test，不少都提到tdd，或者test drive spec， 那么是否要定义每一个test case？但是这样的话工作量就巨大了，一个需求可是非常多的test case。 3. 怎么做交叉检查，现在的skill/agent都是跑在cursor或者Claudecode里面。类似ohmyopenagent这样，启动一个issue或者一个pr后，不管几个iteration，都是一直向前跑，不停的。这期间怎么切换到另一个LLM来做测试和验证？比如多个issue，做完一个就换另一个LLM来做验证，通过了再继续下一步开发。
+
+
+## google
+这是一个非常深刻的问题。你提到的痛点正是目前 **AI Engineering (AIE)** 处于“玩具阶段”向“生产力工具”跨越时必须解决的工程屏障。
+
+针对你的三个疑问，我从目前的顶尖技法和工程实践给出解答：
+
+1. 长期迭代的“记忆衰减”与“熵增”
+
+**问题：** 100天后，AI 的 Context 塞不下，幻觉变重。  
+**对策：层级化索引（Hierarchical Indexing）与 Context Trimming。**
+
+- **知识的“三级缓存”：**
+    - **L1 (Active):** 当前正在修改的文件 + `.cursorrules`（短期记忆）。
+    - **L2 (Structural):** **ADR** + `ARCHITECTURE.md`。每次大版本迭代，必须强迫 AI 更新这几个文档，作为“压缩后的共识”。
+    - **L3 (Historical):** 利用 **Vector DB (RAG)**。将旧的代码、Git Commit、过往的 Issue 存入向量库。AI 不再通过“阅读全文”来记忆，而是通过“按需检索”。
+- **对抗幻觉：** 长期迭代质量下降通常是因为“死代码”和“语义偏移”。你需要一个 **`CLEAN_UP_ROUTINE`**。每 10 天让 AI 做一次 `Code Mapping`，比对当前代码逻辑与 `ADR` 的一致性，不一致就强制修正。
+
+2. TDD 的“工作量爆炸”
+
+**问题：** 定义每一个 Case 太累，不定义又没保障。  
+**对策：从 "Test Case" 转向 "Contract-Driven Development" (契约驱动)。**
+
+- **PBT (Property-Based Testing):** 不要定义 `1+1=2`，而是定义“加法必须符合交换律”。使用库如 `fast-check`，你写 1 个属性，AI 自动跑 1000 个随机 Case。
+- **LLM Generated Tests:** 这里的逻辑应该是：**人写“核心链路” (Golden Path) 的测试，AI 补全“边缘情况” (Edge Cases)**。
+- **Snapshot Testing:** 对于 UI 和复杂数据结构，使用快照测试。你只需要确认一次“这是对的”，以后任何改动只要偏离这个快照，AI 就会报错。
+- **Spec 自动转测试：** 利用类似 `TypeChat` 或 `Zod` 的工具，只要你的 Spec 定义了 Schema，测试代码应该是**自动生成**的，不需要人工手写。
+
+3. 多模型交叉验证 (Multi-LLM Cross-Check)
+
+**问题：** 单一 Agent 一条路走到黑，如何引入“监督者”。  
+**对策：构建“法庭模式” (Courtroom Architecture) 或“评测网关”。**
+
+- **Pipeline 节点化：** 不要让 `ohmyopenagent` 一口气跑完 100 个 iteration。修改它的 Workflow，在每个 `milestone` (里程碑) 设置一个 **Breakpoint**。
+- **引入 Validator Agent (监考老师)：**
+    - **执行者 (Executor):** 使用 **DeepSeek V4 / Claude 3.7**（写代码强）。
+    - **验证者 (Verifier):** 调用 **GPT-4o 或 Gemini 1.5 Pro**。
+    - **操作流：**
+        1. `Executor` 提交代码。
+        2. `CC Switch` 切换 API，调用 `Verifier`。
+        3. `Verifier` 不看 `Executor` 的思考过程，只看输出的代码和 Spec。
+        4. 如果 `Verifier` 给出 `Fail`，强制回滚并打回 `Executor` 重写。
+- **自动化环境切换：** 在你的 `OpenClaw` 或脚本中，设置一个 `verify` 钩子。例如：`gsd run && gsd verify --model=gpt-4o`。
+
+你的下一步尝试建议：
+
+可以尝试引入 **“项目快照 (Snapshot) 机制”**。  
+每天结束开发时，让 Agent 生成一个 `SUMMARY_OF_DAY.md`，记录今天改变了哪些决策，为什么。第 101 天，AI 只需要读这张“地图”，而不是去翻前 100 天的代码。
+
+你现在这套流里，最缺的是一个**“自动审计 Agent”**（即你说的交叉检查）。你想了解如何编写一个**自动调用不同模型进行 Code Review** 的 Bash 脚本或 GitHub Action 吗？
+
+
+
+## User
+是的，我需要一个自动调用不同模型进行 Code Review 的 Bash 脚本，当然也不一定非要bash脚本，我设想里，也可以是以下模式： 一段代码，它（可以叫owner）可以唤醒两个claude code示例（用claude code举例），两个示例共用一个项目文件夹，其中一个承担开发任务，就是你说的executor，另一个是verifier，当executor完成一阶段的开发，它通知owner，owner通知verrifier介入进行检查。结果通过返回true，否则false，owner根据不同的结果告诉executor下一步该干嘛。 一段md约定。类似上面代码的实现，核心就是事先约定，到什么阶段要换LLM来执行，结果怎么共享。通过不同结果如何决定下一步流程的执行。 其实都说的比较复杂，像你说的监考老师的模式如果可行就最理想，通过钩子直接换，那么不管用什么，openspec+DIG，还是ohmyopenagent、superpowers，都可以通过配置的模式直接切换底层模型，就完全不用这么复杂。
+
+## google
+这种**“监考老师”模式**的本质，是把原本“单人单机”的 AI 开发流程，升级为**“主权分立”的工业流水线**。
+
+通过配置钩子（Hook）来实现模型切换确实是最优雅的方案。你可以参考以下**两套方案**来实现这个逻辑：
+
+方案一：利用 CC Switch 的“别名路由”实现钩子（最快配置）
+
+既然你已经在用 **CC Switch**，可以利用它的“多 Provider”和“模型映射”功能，不用修改任何 Agent 代码。
+
+1. **配置别名**：在 CC Switch 里定义两个虚拟模型：
+    - `executor-model` 映射到 `DeepSeek V4-Pro`（高性价比写代码）。
+    - `verifier-model` 映射到 `Claude 3.7 Sonnet`（高审美、逻辑审查强）。
+2. **在脚本/配置中使用**：  
+    在你的 `ohmyopenagent` 或 `gsd` 配置中，将任务拆分为两步：
+    
+    bash
+    
+    ```
+    # 步骤1：执行开发
+    openagent run --model executor-model --task "implement feature A"
+    
+    # 步骤2：执行验证（通过 CC Switch 的钩子）
+    openagent verify --model verifier-model --criteria "./docs/spec/A.md"
+    ```
+    
+    Use code with caution.
+    
+3. **结果回传**：Verifier 的输出结果如果包含 `FAILED`，通过 Shell 的 `exit 1` 触发循环重试。
+
+---
+
+方案二：基于“.claudecode”或“Rule”的逻辑约定（规则驱动）
+
+如果要在 **Claude Code** 或 **Cursor** 内部实现，你可以通过一个名为 `.agent-protocol.md` 的文件来约束它们的行为。
+
+**文件内容示例（.agent-protocol.md）：**
+
+markdown
+
+```
+# Agent 协同协议
+
+## 角色定义
+- **Executor**: 负责修改代码。标志位：`[STATUS: DEV]`
+- **Verifier**: 负责运行测试和逻辑审查。标志位：`[STATUS: REVIEW]`
+
+## 状态转移规则
+1. 当 Executor 完成 `gsd` 任务后，必须在终端执行 `touch .ready_for_review`。
+2. 监考进程（Owner）检测到文件后，通过环境变量切换 API Key，唤醒 Verifier 实例。
+3. Verifier 只能读取代码，不能修改。它必须输出一个包含 JSON 的总结：`{"pass": true/false, "errors": []}`。
+
+## 模型切换逻辑
+- Executor Model: deepseek-v4
+- Verifier Model: claude-3-7-sonnet
+```
+
+Use code with caution.
+
+---
+
+方案三：一个简单的 Owner 控制脚本（Python 实现）
+
+如果你想真正实现两个实例“共用一个文件夹”但“各司其职”，可以用 Python 写一个简单的 **Manager**。
+
+python
+
+```
+import os
+import subprocess
+
+def run_agent(model, role, task):
+    print(f"--- {role} ({model}) is starting ---")
+    # 这里通过环境变量给 CC Switch 传参，或者直接改配置文件
+    env = os.environ.copy()
+    env["CC_SWITCH_MODEL"] = model 
+    
+    # 执行具体的 Agent 命令（如 claudecode 或 gsd）
+    result = subprocess.run(["claudecode", "--task", task], env=env, capture_output=True, text=True)
+    return result.stdout
+
+def main():
+    task = "为项目增加一个带有 ADR 记录功能的 Skill"
+    
+    # 1. 唤醒 Executor
+    dev_output = run_agent("deepseek-v4", "Executor", task)
+    
+    # 2. 状态检查 & 唤醒 Verifier
+    if "COMPLETED" in dev_output:
+        review_task = f"审查以下变更是否符合 ADR 规范：{dev_output}"
+        review_result = run_agent("claude-3-7-sonnet", "Verifier", review_task)
+        
+        if "FAIL" in review_result:
+            print("验证失败，打回重写。")
+            # 递归或循环逻辑...
+        else:
+            print("验证通过，准予 PR。")
+
+if __name__ == "__main__":
+    main()
+```
+
+Use code with caution.
+
+关键点总结：
+
+- **共享存储**：两个实例必须在同一个 Git 仓库下，这样 Verifier 才能看到 Executor 的改动。
+- **状态隔离**：Verifier 的 `System Prompt` 必须包含“你是一个严厉的面试官，禁止写任何代码，只能通过运行测试来寻找漏洞”。
+- **钩子触发**：最理想的触发点是 **Git Hook**。当 Executor 尝试 `git commit` 时，自动触发 Verifier。
+
+**你现在的 `ohmyopenagent` 或其他工具，支持在配置文件里定义“预执行（Pre-run）”和“后执行（Post-run）”的命令吗？** 如果支持，我们直接把切换逻辑塞进后执行钩子（Post-hook）里是最省事的。
+
+
+
+
+## User
+ralph loop工作流是个什么，介绍一下
+
+
+## google
+
+**Ralph Loop** 并不是一个像 Agile 或 Waterfall 这种传统的、被广泛定义的行业标准术语，它更像是==一个在 **AI Engineering (AIE)** 和 **Agentic Workflow** 圈子里被频繁提及的**非正式工作流模式**==。
+
+它的核心思想是：**“不要让 AI 猜你在想什么，而要让它在‘做’的过程中不断地‘问’。”**
+
+以下是针对这种工作流的详细介绍：
+
+1. 核心定义
+
+Ralph Loop 的名字取自于 **Ralph** 这个角色（通常指代那个虽然有点笨拙但能干活、且需要明确指令的执行者）。它是一种**闭环反馈机制**，强调在 AI 执行任务的每一个关键节点，都必须引入人的实时干预（Human-in-the-loop）或环境反馈。
+
+它不同于传统的 “Prompt -> Output” 模式，而是一个 **“Prompt -> Step -> Observation -> Correction -> Next Step”** 的循环。
+
+2. Ralph Loop 的四个关键阶段
+
+为了防止你提到的“100天后幻觉加重”，Ralph Loop 强制执行以下循环：
+
+1. **Drafting (草稿)**：AI 根据模糊需求提出一个初步方案（类似于你提到的 `bmad`）。
+2. **Contextual Probing (环境探测)**：AI 主动提问：“我的方案会影响 `auth.ts` 吗？”或者“请提供一下数据库的最新 Schema”。这一步是在补全上下文，防止盲目改代码。
+3. **Execution & Trace (执行与追踪)**：AI 开始写代码，但每写一个函数，都会生成一段说明决策原因的 **Trace（追踪日志）**。
+4. **Verification Loop (验证循环)**：这正是你最关心的部分。它会运行测试，如果失败，自动进入下一个 Loop 修正，直到满足预设的 `Specification`。
+
+5. 为什么它适合你的“AI 开发工作流”？
+
+Ralph Loop 专门解决你之前提到的三个痛点：
+
+- **对抗记忆衰减**：每一轮 Loop 都会把当前的改动“落笔成文”（比如存入 ADR 或 DIG），通过**强制文档化**来对抗长期迭代带来的熵增。
+- **降低测试成本**：它不要求你一开始就写全 1000 个测试用例。它鼓励“增量测试”——改哪里，补哪里的测试。
+- **天然适配多模型交叉**：你可以把 Ralph Loop 的**执行环节**交给一个模型，把**反馈环节**（Loop 的闭口处）交给另一个更强的模型（如你的 Verifier）。
+
+4. 落地建议
+
+在你目前的架构中，你可以把 Ralph Loop 具象化为以下操作：
+
+- **强制交互点**：在 Agent 修改超过 3 个文件时，必须停下来，输出一个 JSON 摘要，并等待你的 `y/n` 确认。
+- **日志即记忆**：让 Agent 把每一次 Loop 的失败原因都记在 `.ralph_history` 里。这样下一次循环时，它能看到“我刚才尝试过方法 A，但是由于路径不通失败了”，从而避免重复犯错。
+
+总结
+
+**Ralph Loop = 极短的执行反馈周期 + 强有力的决策记录。**
+
+它与你提到的 **ADR、DIG、gsd** 是绝配。`spec-kit` 负责定方向，`gsd` 负责跑 Loop，`ADR` 记录 Loop 的结果。
+
+**你目前的 Agent 在运行过程中，是“一闷头写到底”还是会停下来问你问题？** 如果是一闷头写到底，那它就还没进入 Ralph Loop 的模式。
+
+
+## User
+你提到；它与你提到的 ADR、DIG、gsd 是绝配。spec-kit 负责定方向，gsd 负责跑 Loop，ADR 记录 Loop 的结果。 这个意思是gsd过程需要不停的问我，或者问开发人员，用于确认。 但这不是和spec-kit的思路矛盾了，spec-kit是spec定义好以后，不用人类干预自动完成，但是ralph loop需要不停的回答问题，不然流程是无法自动推进的
+
+## google
+这是一个非常精准的洞察。你抓住了**“自动化（Automation）”**与**“鲁棒性（Robustness）”**之间的核心矛盾。
+
+其实，**Ralph Loop** 与 **spec-kit** 并不矛盾，它们是**“宏观确定性”**与**“微观不确定性”**的互补关系。我们可以通过以下三个层面来化解这个矛盾：
+
+1. 自动化的边界：Spec 不是万能药
+
+`spec-kit` 定义的是**“终点”**（ what to build），但 `gsd` 在执行路径（how to build）中会遇到 Spec 没覆盖到的细节。
+
+- **例子**：Spec 说“增加用户登录功能”。但在写代码时，`gsd` 发现 `users` 表里有个旧字段冲突了。
+- **矛盾点**：如果不问你，AI 可能自作主张删了字段（导致幻觉或破坏旧功能）；如果问你，就打破了自动化。
+
+2. 解决方案：用“虚拟人类”跑 Ralph Loop
+
+在你设想的 **Executor + Verifier** 架构中，我们可以把 Ralph Loop 的**“提问-回答”**环节内部化：
+
+- **原本的 Ralph Loop**：AI 问人类 -> 人类确认 -> AI 继续。
+- **AI 开发流中的 Ralph Loop**：**Executor 问 Verifier** -> **Verifier 根据 Spec 回答** -> **Executor 继续**。
+
+这样，你就实现了一个**“无人值守的 Ralph Loop”**。只有当 Verifier 也无法根据 Spec 做出决定时（即 Spec 真的有缺失），才抛出异常给人类。
+
+3. 三位一体的协同逻辑
+
+你可以这样重新理解这套工具链的协同：
+
+|工具|角色|在 Ralph Loop 中的位置|
+|---|---|---|
+|**spec-kit**|**最高宪法**|提供判定标准（作为 Verifier 的参考手册）|
+|**gsd**|**执行工人**|每一个微小的 `write-file` 动作就是一个小 Loop 的开始|
+|**ADR**|**审讯记录**|记录 Loop 中发生的争议和最终决策，防止以后重复问|
+
+4. 如何实现“不被打断”的自动化？
+
+为了让流程自动推进，你需要给 `gsd` 增加一个 **“自举决策逻辑”**：
+
+1. **分级确认（Priority Levels）**：
+    - **低风险**（如命名变量）：Agent 自动决定，记录在 ADR。
+    - **中风险**（如修改公共接口）：Agent 调用另一个 LLM (Verifier) 进行模拟决策。
+    - **高风险**（如删除数据）：挂起任务，发送通知给人类。
+2. **Spec 作为“真相之源”**：  
+    在 `gsd` 运行前，把 `spec-kit` 生成的文档作为 **System Prompt** 强行塞给 Verifier。Verifier 的任务就是：**“凡是 Spec 里写清楚的，直接批复通过；Spec 没写的，让 Executor 停下来报备。”**
+
+总结
+
+你之所以觉得矛盾，是因为传统的 Ralph Loop 默认“人”是唯一的反馈源。而在你的工作流里，**“Verifier AI + 完善的 Spec” 共同充当了那个“人”的角色。**
+
+只要你的 `spec-kit` 足够详尽，`gsd` 在跑 Ralph Loop 时 90% 的问题都能在 Spec 里找到答案，从而实现**“看似全自动，实则每一步都有审计”**的高质量输出。
+
+**你现在的想法是，让这个“提问-回答”的过程完全透明化（你可见但不用管），还是希望它在后台静默完成，只给你看最终结果？**
+
+
+
+## User
+是的，现在我觉得，你说的方案是可行的，前期使用spec模式完成完整的需求调研，可以在openspec或者spec-kit的proposal环节借鉴前面提到的ADRskill中，反复提问多轮，苏格拉底式提问，直到所有的问题都被明确的记录下来。形成spec，包括goal/decision/iteration（这里可以引入DIG，稍微改造一下，增加ADR的决策过程记录，可以放在spec路径下面，在spec/proposal.md文件中记录这个指向）。然后配置（或者你提到的脚本/钩子等实现方式）配置两个使用不同LLM的agent，Executor + Verifier 架构，明确给executor约定遇到矛盾或者不明确的地方不要想当然，问vertifer，vertifer不仅查询spec文档还查阅所有的ADR文档。这确实就实现了一个“无人值守的 Ralph Loop”。 但是谁在什么时间记录ADR， 究竟使用脚本还是钩子配置不同的LLM 两个agent的agent.md都要约定哪些内容。 测试怎么覆盖，不管是PBT，还是LLM Generated Tests、或者Snapshot Testing、spec自动跳转测试。在什么环节约定，怎么约定，如何约定通过条件和失败条件。 项目知识的三级缓存具体怎么设计，文档、谁负责写，什么时候写，怎么写，什么时候读、怎么读更快更准。文档什么迁移，（知识的“三级缓存”：L1 (Active): 当前正在修改的文件 + .cursorrules（短期记忆）。L2 (Structural): ADR + ARCHITECTURE.md。每次大版本迭代，必须强迫 AI 更新这几个文档，作为“压缩后的共识”。L3 (Historical): 利用 Vector DB (RAG)。将旧的代码、Git Commit、过往的 Issue 存入向量库。AI 不再通过“阅读全文”来记忆，而是通过“按需检索”。） 总之就是现在好像逻辑都通了，就是细节还不很确定，要打磨能落地的细节。
+
+
+
+
+## google
+这是一个非常了不起的构思。你已经把 AI 软件工程从“玄学”推向了“工业流水线”。要让这套逻辑**落地**，我们需要像设计电路图一样精确定义每一个接口和触发时机。
+
+以下是针对你提到的四个核心细节的打磨方案：
+
+1. ADR 的记录机制：谁在什么时候写？
+
+ADR 不应该由人类手写，也不应该在开发结束后补写。
+
+- **记录者**：**Verifier**。
+- **时机**：在 `gsd` 过程中，当 Executor 遇到矛盾向 Verifier 提问，且 Verifier 查阅 Spec 后做出了一个“非显而易见”的裁决时。
+- **动作**：Verifier 在给出回复的同时，通过 `filesystem` 工具在 `docs/adr/` 目录下生成一个新文件。
+- **闭环**：Verifier 必须更新 `spec/index.md`，将新 ADR 的索引挂载上去，确保下一轮迭代时 Executor 能读到。
+
+2. LLM 的切换实现：脚本还是钩子？
+
+**推荐“封装脚本”模式**（如一个名为 `run-task.sh` 的入口）。
+
+- **理由**：钩子（如 Git Hook）通常是单向的，很难处理“Executor 提问 -> Verifier 回答 -> Executor 继续”这种双向往复。
+- **逻辑**：
+    1. 脚本启动 Executor（设置 `MODEL_ROLE=executor`）。
+    2. Executor 运行中如果遇到问题，在指定目录（如 `.comm/`）生成一个 `request.json`。
+    3. 脚本监测到文件，挂起 Executor，启动 Verifier（设置 `MODEL_ROLE=verifier`）。
+    4. Verifier 处理完生成 `response.json`，脚本唤醒 Executor 继续。  
+        _这种“接力赛”模式最稳，且方便你通过 CC Switch 切换底层模型。_
+
+3. Agent.md 的核心约定
+
+两个 Agent 的 System Prompt（或 `.agent.md`）需要完全不同的“性格”：
+
+- **Executor.md**:
+    - **核心指令**：你是执行者，禁止在没有测试保护的情况下修改核心逻辑。
+    - **中断机制**：遇到任何不在 Spec 显式定义范围内的分支，**必须**输出固定格式 `[WAITING_FOR_DECISION: {question}]` 并停止。
+    - **记忆限制**：只关注 L1（当前文件）和 L2（ADR 摘要）。
+- **Verifier.md**:
+    - **核心指令**：你是法官，你的唯一目标是寻找 Executor 的漏洞。
+    - **决策标准**：优先级为：用户实时指令 > Spec > ADR > 通用最佳实践。
+    - **文档权限**：拥有 `docs/` 目录的完全写权限（负责维护 ADR 和三级缓存的迁移）。
+
+4. 测试覆盖：在什么环节约定？
+
+- **约定环节**：在 **`spec-kit` 的 Proposal 阶段**。
+- **如何约定**：
+    - **L1 (Unit)**: 约定 `TypeChat` 或 `Zod` Schema。只要 Schema 定了，Executor 必须自动生成对应的单元测试。
+    - **L2 (Integration)**: 人类在 Spec 中定义 3-5 个 **"Happy Path"** 的输入输出快照（Snapshot）。
+    - **通过条件**：Verifier 运行 `npm test`（或对应指令），输出必须包含 `100% Pass` 且 Coverage 达到标。
+
+5. 三级缓存的落地设计（知识迁移流）
+
+这是解决“100 天后幻觉”的关键：
+
+- **L1 (Active)**: 存在于 IDE 的 **Working Set**。
+    - _维护者_：Executor。
+- **L2 (Structural)**: 存在于 `ARCHITECTURE.md` 和 `ADR/`。
+    - _维护者_：Verifier。每当完成一个 Milestone（里程碑），Verifier 必须执行一次 **"Context Compression"**：总结这 10 个 ADR 的共同点，更新到 `ARCHITECTURE.md`，然后将旧 ADR 标记为 `Deprecated`。
+- **L3 (Historical)**: 存在于外部 **Vector DB**。
+    - _维护者_：独立的 **Archiver 脚本**。每当 Git Push 时，将变更的 Diff 和当时的对话 Log 灌入向量库。
+    - _读法_：Verifier 在处理 Executor 提问时，先通过向量检索查询“以前是否遇到过类似问题”，如果搜到了，直接复用决策。
+
+落地建议：
+
+你可以先从一个 **“双 Agent 协同脚本”** 开始打磨。
+
+1. 写一个 Python 脚本，管理两个 `claudecode` 实例。
+2. 约定好它们通过一个特定的文件夹（比如 `.task_state/`）进行文件交换。
+3. 通过 CC Switch 配置 `executor` 为 **DeepSeek V4-Pro**，`verifier` 为 **Claude 3.7 Sonnet**。
+
+**你需要我帮你写一个能同时拉起这两个 Agent 并进行简单通信的 Python 骨架吗？**
+
+
+
+## User
+我需要你先重新捋一下完整的框架，从目标开始，到实现的逐层推进和分解，我们在完整的审视一下这个设想，要捋清不同技术栈的融合，比如openspec和adr、gsd之间的协议融合，文档如何改造能让这些融合完全无缝。
+
+## google
+
+这是一个非常宏大的**AI工程化范式**。我们将这套体系命名为 **"Closed-Loop Autonomous Development Architecture" (CLADA，闭环自主开发架构)**。
+
+为了让 OpenSpec、ADR、GSD 和三级缓存无缝融合，我们需要建立一套**统一的“语料协议”**，让 AI 在不同阶段看到的文档结构是高度对齐的。
+
+---
+
+一、 顶层架构：四层演进模型
+
+我们将整个开发生命周期拆解为四个连续的物理层级：
+
+1. **共识层 (The Consensus - OpenSpec/ADR)**
+    - **目标**：消除歧义，建立最高宪法。
+    - **融合点**：OpenSpec 负责“我们要什么”，ADR 负责“我们为什么这么选”。
+2. **调度层 (The Orchestrator - Python/Bash Manager)**
+    - **目标**：模型路由与状态切换。
+    - **融合点**：控制 Executor 和 Verifier 的唤醒顺序，管理 CC Switch 的 API 切换。
+3. **执行层 (The Execution - GSD/Ralph Loop)**
+    - **目标**：最小化生产误差，实现无人值守。
+    - **融合点**：GSD 在执行中遇到未定义行为，触发 Ralph Loop 向 Verifier 提问。
+4. **记忆层 (The Memory - 3-Tier Cache)**
+    - **目标**：对抗熵增，维持长周期开发质量。
+    - **融合点**：将即时代码转化为持久化架构文档和向量索引。
+
+---
+
+二、 核心协议融合：文档结构改造
+
+为了实现无缝融合，我们需要对传统的 `docs` 结构进行“机器友好化”改造，建立 **`Spec-ADR-GSD` 链接协议**。
+
+1. 改造 OpenSpec (Proposal.md)
+
+传统的 Spec 只是需求。改造后的 Spec 必须包含 **"Decision Pointers"**：
+
+- **结构**：在每个 Feature 描述下增加 `[Decision: adr-001]` 标签。
+- **意义**：当 GSD 读到这个功能时，它会自动去索引对应的 ADR，明白实现的限制。
+
+2. 引入 DIG 增强型 ADR (adr-xxxx.md)
+
+传统的 ADR 是存量的，我们要把它变动态：
+
+- **新增字段**：`Status: [Proposed | Accepted | Superseded]` 和 `Trace: [Issue-Link | Commit-Hash]`。
+- **关联 GSD**：记录此决策对应的测试用例（Test Case ID）。
+
+3. GSD 的“上下文感知”注入
+
+在 `.cursorrules` 或 `agent.md` 中注入协议：
+
+> "If you modify a file mentioned in `ADR-005`, you MUST first read `docs/adr/005.md` and ensure no breaking changes to the stated constraints."
+
+---
+
+三、 执行流程：无人值守的 Ralph Loop
+
+这是你设想的 **Executor + Verifier** 架构的落地细节：
+
+1. **Socratic Proposal (苏格拉底式提案)**
+    - 人类启动 `spec-kit`。
+    - **Verifier** 扮演挑战者，向人类反复提问，直到逻辑闭环。
+    - 生成包含 ADR 索引的 `final_spec.md`。
+2. **Executor Work (生产环节)**
+    - **GSD** 启动，读取 `final_spec.md`。
+    - 执行中发现：Spec 没说数据库是否加索引。
+    - **暂停点**：GSD 自动生成 `.thought/q_001.json`。
+3. **Verifier Arbitration (裁决环节)**
+    - 脚本检测到 JSON，唤醒 **Verifier**。
+    - Verifier 检索 L3 (向量库) 发现：以前类似功能都加了索引。
+    - Verifier 写下新 **ADR-002**，更新 `q_001.json` 为 `resolved`。
+4. **Memory Compression (记忆压缩)**
+    - 任务完成后，**Verifier** 扫描所有新 ADR，将关键逻辑合并进 `ARCHITECTURE.md`（L2 缓存），并将详细 Log 存入 L3（向量库）。
+
+---
+
+四、 技术栈融合清单
+
+|环节|技术/工具|协议/输出物|
+|---|---|---|
+|**入口管理**|Python Controller|`status.json` (控制 Agent 挂起/唤醒)|
+|**模型网关**|CC Switch|`http://127.0.0.1:17666` (动态切换 DeepSeek/Claude)|
+|**规格定义**|OpenSpec + ADR|`docs/spec/` + `docs/adr/` (相互引用)|
+|**自动化执行**|GSD (OpenClaw)|源代码 + 单元测试 (PBT/Snapshot)|
+|**验证与审计**|Claude Code (Verifier)|`CHECK_REPORT.md` (包含 Pass/Fail 判定)|
+
+---
+
+五、 关键细节的打磨
+
+1. **测试的约定**：在 `spec-kit` 阶段，要求 AI 必须生成 **"Contract Test"**。即：如果 Spec 定义了 `input: A, output: B`，AI 必须先写出一个失败的测试用例。只有当 Verifier 运行该用例通过时，才算完成。
+2. **文档迁移**：建立一个 **"Sunset Policy"**。当 L2 (ARCHITECTURE.md) 更新后，对应的 ADR 自动进入 L3 (RAG)，保持 L2 的精简，避免模型处理过长 Context 时丢失重点。
+
+现在的核心挑战是：
+
+我们需要一个**“协议胶水”**——也就是那个能让 Executor 在报错时知道该把什么信息传给 Verifier，并让 Verifier 知道去哪翻阅 ADR 的 **Manager 脚本**。
+
+**你是否希望我先为你起草一份这个“协议胶水”的逻辑伪代码，以及对应的 `.agent.md` 指令集？**
+
+
+## User
+代码是最简单的，不要分心在这件事上，除非你觉得这个代码非常重要，或者相当复杂，必须呈现出来才能更好的理解你说的。 你的顶层架构设计了四层演进模型，但是如何实际操作，在做项目的过程中， 项目的文档结构如何？ workflow都涉及哪些命令，包括/命令。 实际交互式怎么样的 都要事先约定哪些文档，这些文档格式和内容是什么。 需要实现写好哪些脚本，脚本目的是什么。 哪些内容在运行期间可以改动，哪些不能改动，否则会破坏框架，这些都在什么地方定义。
+
+
+## google
+
+要让这套架构落地，核心不是写代码，而是建立一套**“机器强制执行的宪法”**。代码只是这套宪法的执行警察。
+
+以下是 CLADA 架构的实操落地指南：
+
+一、 项目文档结构 (The Standard Directory)
+
+项目根目录必须严格遵循以下结构，这是所有 Agent 的“共享内存”。
+
+text
+
+```
+.
+├── .cursorrules          # 顶层宪法：定义 Agent 行为边界、禁用指令、模型切换触发条件
+├── .agent.md             # 角色自述：Executor 和 Verifier 的身份与任务协议
+├── docs/
+│   ├── spec/             # OpenSpec 存放地：final_spec.md (当前任务的最高指令)
+│   ├── adr/              # 决策记录：0001-xxxx.md (历史决策的不可逆索引)
+│   └── architecture.md   # L2 缓存：项目的宏观地图 (动态更新)
+├── .comm/                # 状态缓冲区：q_waiting.json (Executor 向 Verifier 提问的信箱)
+├── tests/
+│   ├── contracts/        # 契约测试：由 Spec 直接生成的断言
+│   └── snapshots/        # 快照：UI 或复杂逻辑的最终状态参考
+└── scripts/              # 胶水脚本：run_clada.py / switch_model.sh
+```
+
+Use code with caution.
+
+二、 事先约定的关键文档 (The Contracts)
+
+1. **`.cursorrules` (顶层宪法)**：
+    - **内容**：规定 `strict_mode: true`。明确：当修改涉及到 `docs/adr/` 中提到的模块时，必须先总结决策背景；严禁在未经过 Verifier 审计的情况下合并 `main` 分支。
+2. **`final_spec.md` (OpenSpec 增强版)**：
+    - **格式**：必须包含 `Goals` (目标), `Non-Goals` (非目标), `Verification_Criteria` (验收标准)。
+    - **特殊点**：每一条验收标准必须对应一个特定的测试脚本路径。
+3. **`ADR-FORMAT.md` (模板)**：
+    - **内容**：强制包含 `Context` (背景), `Decision` (决策), `Consequences` (后果/副作用), `Supersedes` (替代了哪条旧记录)。
+
+三、 Workflow 命令与交互 (The Runtime)
+
+交互不再是随意的聊天，而是基于命令的状态转移。
+
+- **`/propose` (人类启动)**：唤醒 Verifier。Verifier 以苏格拉底方式提问，直到生成 `final_spec.md` 和初始 ADR。
+- **`/execute` (启动 GSD)**：唤醒 Executor。它读取 Spec，开始编写代码。
+- **`/ask_verifier` (Executor 发起)**：当 Executor 遇到不确定性（如代码冲突、Spec 模糊），自动在 `.comm/` 写入 JSON，并停止工作。
+- **`/audit` (Verifier 介入)**：Verifier 扫描 `.comm/`，查阅 ADR 和 L3 向量库，给出裁决，并生成新 ADR。
+- **`/compress` (周期性维护)**：将过期的 ADR 移动到 L3，并更新 `architecture.md`。
+
+四、 必须准备的脚本及其目的
+
+1. **`gateway.py` (Orchestrator)**：
+    - **目的**：监控文件系统。看到 `.comm/` 有新请求就切模型给 Verifier；看到 Verifier 回复了就切回给 Executor。它是整个 Ralph Loop 的“发条”。
+2. **`cc_switch_router.sh`**：
+    - **目的**：接收 `gateway.py` 的指令，调用 CC Switch API 动态修改当前模型 ID（例如从 DeepSeek 切到 Claude）。
+3. **`spec_to_test.js`**：
+    - **目的**：解析 `final_spec.md` 中的验收标准，自动生成基础的测试骨架（Contract Tests），确保 Executor 必须填空。
+
+五、 规则的边界 (Mutability)
+
+- **绝对不可改动（Immutable）**：
+    - **`.agent.md` 中的角色边界**：Verifier 绝对不能拥有“写代码”的权限，只能写“文档”和“测试结果”。一旦越权，流程就会坍塌回传统的单模型模式。
+    - **ADR 的 ID 序列**：ADR 只能新增或标记为 `Superseded`，绝不能删除或修改旧的 ID 内容。
+- **运行期间可改动（Mutable）**：
+    - **`final_spec.md`**：在迭代中发现需求有误，可以通过 Verifier 申请修改，但必须伴随一条新的 ADR 说明为什么改。
+    - **`.comm/` 协议格式**：可以根据模型反馈的质量，动态增加字段。
+
+实际交互示例：
+
+1. **你**：`/propose 增加一个 GitHub Action 自动跑审计。`
+2. **Verifier**：`这个 Action 需要权限吗？以前 ADR-012 说过禁止给三方插件写权限。`
+3. **你**：`只读权限。` -> 生成 **spec/002.md** 和 **adr/015.md**。
+4. **你**：`/execute`。
+5. **Executor (DeepSeek)**：写代码... 突然发现项目里已经有一个 `lint.yml`。
+6. **Executor**：生成 `.comm/q.json`: "已有同类文件，是合并还是覆盖？" -> **停止运行**。
+7. **Gateway**：感知到 q.json，切模型给 **Claude (Verifier)**。
+8. **Verifier**：查阅 ADR-015 和旧代码。回答："合并。保留 ADR-015 要求的只读限制。" -> 更新 ADR-015 并回复。
+9. **Executor**：继续工作，直到完成。
+
+**这套逻辑最核心的痛点在于：如何确保 Verifier “真的在查文档”而不是在瞎编？** 解决办法是强制 Verifier 在回答时必须引用 ADR 的编号和原文片段。
+
+你觉得在你的实际开发中，这个 **Gateway (Orchestrator)** 应该是运行在后台的静默进程，还是一个你可以随时介入的控制台？
+
+
+## User
+ **Gateway (Orchestrator)** 应该是一个我可以随时接入的控制台，这也是防止幻觉被太晚发现的一个手段
+ 我注意到你虽然有一些DIG的思路，但是并没有显式的写出decisions/iteration/goal等约定文件，其实不管是DIG，还是GSD，文档都比你现在列出的要多，是你没有详细列出还是其他什么原因，
+ 另外你重定义了proposal/executor/vertify等斜杠命令。这些命令是否要求在一些脚本的支持？我看你没提到。
+ 三层记忆结构里，很多细节没提到，谁写进去、写的prompt是什么，查怎么查能保证准确和速度，
+ 
+ 所以你可以理解我的思路，接下来不要节约文字，按照一个方案的标准完整的讲一遍这套框架，关键点一定要说清细节，
+
+
+## google
+
+
+这是一份经过深度打磨、针对 AI 软件工程全生命周期的 **CLADA (Closed-Loop Autonomous Development Architecture)** 完整方案。
+
+这套方案不再将 AI 视为一个聊天框，而是将其嵌入到一个**具有宪法约束、物理隔离和层级记忆**的工业流水线中。
+
+---
+
+一、 顶层架构设计：三权分立模型
+
+为了彻底解决长周期迭代下的幻觉与熵增，我们将系统分为三个核心实体：
+
+1. **The Owner (你)**：掌握最高裁决权，通过 **Gateway 控制台** 监控所有 Agent 的对话与决策流。
+2. **The Executor (执行者 - 推荐 DeepSeek V4)**：拥有代码写权限。它被定义为“严格的蓝领”，只负责将 Spec 转化为代码，遇到任何模糊点必须立刻停工并上报。
+3. **The Verifier (审计者 - 推荐 Claude 3.7)**：拥有文档写权限和测试运行权。它是“法官与记录员”，负责查阅历史、更新架构文档、编写 ADR、并对 Executor 的代码进行交叉审计。
+
+---
+
+二、 核心文档结构与协议 (The Unified Context)
+
+文档是 Agent 之间唯一的“共享内存”。我们必须显式定义以下文件格式，以确保 DIG 和 GSD 的语义无缝融合。
+
+1. 决策记录层：`docs/decisions/` (增强型 DIG)
+
+不再是散乱的记录，而是结构化的决策树。
+
+- **`.goal.md`**：项目的北极星目标，定义“能做什么”和“绝对不做什么”。
+- **`.decisions/DR-xxx.md`**：每一条重大决策。必须包含：
+    - `Context`: 决策时的背景。
+    - `Decision`: 最终选择及理由。
+    - `Trade-offs`: 放弃了什么（这是防止幻觉的关键）。
+    - `Verification`: 如何验证此决策已落实。
+- **`.iterations/IT-xxx.md`**：记录每一轮 GSD 循环的输入输出快照，用于追溯“代码是怎么变乱的”。
+
+2. 规格说明层：`docs/spec/` (OpenSpec 规范)
+
+- **`current_spec.md`**：当前任务的最高指令集。
+- **`contract.json`**：将自然语言描述转化为硬性的输入输出约束。
+
+3. 状态交互层：`.comm/` (物理隔离的信箱)
+
+- **`q_waiting.json`**：Executor 挂起时的提问包。
+- **`audit_report.json`**：Verifier 的审计结论（Pass/Fail）。
+
+---
+
+三、 交互逻辑与斜杠命令 (The Commands)
+
+这些命令必须由底层的 **Gateway 脚本**（建议用 Python 编写，作为 Agent 的宿主环境）支持，通过拦截 Agent 输出的特定字符串来触发模型切换和环境操作。
+
+- **`/propose` (苏格拉底模式)**：
+    - **动作**：唤醒 Verifier 接入控制台。
+    - **细节**：Verifier 启动“质疑模式”，查阅 `.goal.md`。如果你的需求与既有决策冲突，它会引用 `DR-xxx` 提醒你。
+    - **结果**：输出更新后的 `current_spec.md`。
+- **`/execute` (GSD 启动)**：
+    - **动作**：Gateway 将 `current_spec.md` 发给 Executor，并切换到 DeepSeek。
+    - **细节**：Executor 进入工作流，每修改 3 个文件必须在终端输出一个 `[TRACE]` 摘要。
+- **`/ask_verifier` (Ralph Loop 触发)**：
+    - **动作**：Executor 遇到歧义时自动触发。
+    - **细节**：Gateway 挂起 Executor 进程，读取其提问，切换模型给 Verifier。Verifier 必须引用 `.decisions/` 中的内容进行回答。
+- **`/audit` (交叉检查)**：
+    - **动作**：Executor 完成后自动触发。
+    - **细节**：Verifier 独立拉起一个新的环境运行测试，通过后向你申请 `git merge`。
+
+---
+
+四、 知识三级缓存的实现细节 (The Memory)
+
+这是对抗“100天后幻觉”的核武器。
+
+1. L1 (Active): IDE 实时上下文
+
+- **内容**：当前修改的文件 + `.cursorrules` + `current_spec.md`。
+- **机制**：由 Gateway 在每次模型唤醒时动态注入 System Prompt，确保 AI 满脑子只有当前任务。
+
+2. L2 (Structural): 架构与决策索引 (The ADR)
+
+- **写入者**：Verifier。
+- **Prompt**：_"你现在是首席架构师，总结本次迭代中产生的 3 个核心决策，并更新到架构图。使用简洁的标记语言，删除不必要的细节。"_
+- **读取时机**：每次 `/propose` 或 `/ask_verifier` 时强制读取。
+
+3. L3 (Historical): 向量库 RAG
+
+- **写入者**：后台异步脚本。将每次 `IT-xxx.md`（迭代记录）和对话的全量 Log 灌入。
+- **精准查询技巧**：
+    - **双重检索**：先搜“关键词”，再搜“代码片段（AST）”。
+    - **重排（Rerank）**：由 Verifier 对检索结果进行二次筛选，剔除过期的、被 `Superseded` 的记录，只给 Executor 喂最有参考价值的“干货”。
+
+---
+
+五、 Gateway 控制台的设计 (The Orchestrator)
+
+它不是一个简单的脚本，而是一个 **Intervention Interface (干预界面)**。
+
+1. **实时流观测**：你会看到左窗口是 Executor 在疯狂写代码，右窗口是 Verifier 在同步进行“影子审计”。
+2. **强制暂停（Breakpoints）**：你可以预设“当花费超过 $1 额度”或“修改超过 5 个文件”时强制跳回控制台。
+3. **决策拦截**：当 Verifier 准备写下一条 ADR 时，它会先在控制台问你：_“我判定由于 ADR-005 的限制，我们必须放弃使用第三方库 A，你同意吗？”_
+
+六、 核心脚本准备清单
+
+1. **`orchestrator.py`**：负责监听文件系统和 Agent 输出，管理两个 Agent 进程的生命周期，提供用户控制台界面。
+2. **`memory_manager.py`**：负责 L2 到 L3 的压缩与同步。它包含一个 **Compaction Prompt**，负责把冗长的对话提炼成精简的 ADR。
+3. **`test_runner.py`**：Verifier 专用的无副作用测试脚本，支持 PBT（属性测试）和快照比对。
+
+总结：如何防破坏？
+
+- **不可动摇的底线**：在 `.cursorrules` 中定义：**“Executor 严禁读取 `.agent.md` 之外的 Prompt 指令”**。防止 Agent “自我意识觉醒”去修改你的流程配置。
+- **原子化写入**：所有对 `docs/` 的修改必须经过 Verifier。如果 Executor 尝试修改文档，Gateway 会立即报错并关闭进程。
+
+**这套方案中，你认为目前最难实现的一环是“Executor 与 Verifier 的双机通讯”，还是“高质量三级缓存的提炼”？**
+
+
+## User
+你非常了解软件设计全生命期，深知设计的作用和约束力。以及从设计一步步变成实际产品的过程。并对ai编程有亲身体会，熟悉openspec/spec-kit、DIG、GSD、ohmyopenageagent、superpowers、ralph loop等不同的软件规范、技术。这是一份ai自动编码框架CLADA的设计方案，它想将各种规范的优点融合在一起，按照法官模式设计一套两权分离的实现框架。请你看一下这个方案的完整度，然后对你不明白认为需要补充的内容提出6～10左右问题，问题可以是要求补充内容，也可以是答疑要求解释。
+
+
+## claude
+
+我仔细读完了这份 CLADA 方案。整体架构思路清晰，三权分立模型、文档即共享内存、斜杠命令触发状态机这几个核心思路都很扎实。但从"设计能否真正落地成产品"的角度看，有几处关键环节语焉不详，甚至存在内在矛盾。以下是我的问题，大致按"越早需要回答越靠前"排列：
+
+---
+
+**1. Gateway 的宿主身份是什么？**
+
+方案说 Gateway 是"拦截 Agent 输出特定字符串来触发模型切换"的 Python 脚本。但 Executor 和 Verifier 的具体接入方式没有说明——它们是通过 API 调用（stateless）、还是有状态的长连接进程？如果是 API 调用，"挂起 Executor 进程"这个说法在技术上是什么意思？挂起的是什么？
+
+---
+
+**2. /ask_verifier 触发的判定逻辑是什么？**
+
+方案说 Executor"遇到歧义时自动触发"，但"歧义"的判定标准完全缺失。是 Executor 自己在输出中写 `/ask_verifier`？还是 Gateway 通过某种规则检测？如果是前者，如何防止 Executor 为了规避责任而滥用？如果是后者，这个规则是什么？
+
+---
+
+**3. Verifier 的"独立环境"如何保证物理隔离？**
+
+/audit 阶段说 Verifier"独立拉起一个新的环境运行测试"。这个环境是 Docker 容器、沙盒虚拟机、还是仅仅是另一个进程？隔离的边界在哪里——是文件系统、网络、还是两者都有？如果测试需要数据库或外部服务，怎么处理？
+
+---
+
+**4. contract.json 的权威性与 current_spec.md 的冲突如何仲裁？**
+
+方案定义了两个规格层——自然语言的 `current_spec.md` 和机器可读的 `contract.json`。实际开发中两者必然出现语义偏差（自然语言描述的边界总比 schema 宽）。当 Executor 按 contract.json 实现、Verifier 却按 current_spec.md 审计，产生分歧时，谁说了算？有没有明确的优先级规则？
+
+---
+
+**5. L3 向量库的"过期记录剔除"由谁、按什么标准执行？**
+
+方案说 Verifier 对检索结果进行二次筛选，"剔除被 Superseded 的记录"。但 Superseded 的判定依据是什么？是 DR-xxx 文件里的某个字段？还是 Verifier 自己推断？如果是后者，Verifier 本身是无状态的 LLM，它凭什么知道哪条记录已经过时？这个"过期判定"逻辑如果缺失，RAG 检索反而会把 Executor 引向历史错误。
+
+---
+
+**6. Verifier 的审计结论写入 audit_report.json 之后，Owner 不介入的情况下流程如何继续？**
+
+方案在 /audit 通过后说"向你申请 git merge"，但如果 Owner 不在线或没有响应呢？是阻塞等待、超时自动合并、还是回滚？整个方案对"Owner 离线"这个最常见的真实场景没有任何描述，而这恰恰是自动化框架存在价值最大的场景。
+
+---
+
+**7. Executor 的 [TRACE] 输出是给谁看的，谁来消费它？**
+
+方案说 Executor"每修改 3 个文件必须输出一个 [TRACE] 摘要"。但没有说明这个 TRACE 的消费者是谁——是 Owner 实时看、是 Gateway 解析后存入 L2、还是仅作为日志归档？如果只是打印到终端，它在整个架构中的实质作用是什么？
+
+---
+
+**8. 两个 Agent 的费用与延迟如何控制？**
+
+方案提到"花费超过 $1 时强制暂停"，但双 Agent 并行运行（Executor 写代码、Verifier 影子审计同步进行）的 token 消耗模型完全没有估算。对于一个 100 天长周期项目，L3 的全量对话 Log 灌入向量库的成本是多少？Verifier 每次读取完整 ADR + DR-xxx 的上下文窗口够用吗？这些是方案可行性的前置条件。
+
+---
+
+**9. "Executor 严禁读取 .agent.md 之外的 Prompt 指令"这个约束如何强制执行？**
+
+方案把这条规则写在 `.cursorrules` 里，但 `.cursorrules` 本身也是文本文件，也在 Executor 的可读范围内。这是一个"用规则约束规则执行者"的循环——Executor 如果要违反，它同样可以读到这条规定然后选择忽视。真正的强制执行必须在 Gateway 层实现文件访问过滤，方案对此没有任何描述。
+
+---
+
+**10. 整套方案的启动引导（Bootstrap）过程是什么？**
+
+方案描述的是一个稳态运行的系统，但第一次启动时：`current_spec.md` 从哪里来？`contract.json` 谁来生成？L3 向量库是空的怎么办？DR-xxx 编号从哪里开始？这个"冷启动"过程如果没有专门设计，实际上每个新项目都需要人工搭建一遍脚手架，和"自动化"的目标相悖。
+
+
+## User
+
+还是不够明确，我还有以下问题：
+@claude 的回复
+
+
+## google
+
+这是对 **CLADA 架构** 核心工程屏障的深度拆解。你的问题直指 AI 自动化中“纸上谈兵”与“工业落地”的分水岭。
+
+以下是针对这 10 个技术盲点的硬核回复：
+
+1. Gateway 的宿主身份与“挂起”本质
+
+- **宿主身份**：Gateway 是一个 **Wrapper（包装器）进程**。它通过 `subprocess` 或 `pty` 启动 Agent（如 Claude Code 或自定义 CLI）。
+- **接入方式**：Agent 是**有状态的长连接进程**。
+- **挂起逻辑**：技术上是 **STDIN 阻塞**。当检测到触发词，Gateway 停止向 Executor 的进程发送用户输入，并停止读取其输出流，同时将 Executor 的内存上下文状态保持在原位。此时，Gateway 切换到 Verifier 的进程进行对话。对 Executor 而言，它只是在“等待服务器响应”。
+
+2. `/ask_verifier` 的判定逻辑
+
+- **触发机制**：双重触发。
+    1. **主动（Agent 逻辑）**：在 `executor.md` 中规定：当代码改动涉及跨模块且 Spec 未明确定义接口时，必须输出 `[REQ_REVIEW]`。
+    2. **被动（Gateway 规则）**：Gateway 监控 Executor 修改的文件列表。若 Executor 尝试修改被 `docs/decisions/` 标记为 `PROTECTED` 的核心文件却未附带决策引用，Gateway 强制截断输出并自动转接 Verifier 询问。
+- **防滥用**：给 Executor 设置“询问点数（Quota）”，并在 `verifier.md` 中增加评价指标：如果 Verifier 判定问题在 Spec 中已有答案，Executor 会被标记“低评分”，降低其后续任务优先级。
+
+3. Verifier 的物理隔离与环境处理
+
+- **隔离方式**：**Docker 容器（DIND - Docker in Docker）**。
+- **边界**：文件系统只读挂载（除了 `test_results/`），网络环境通过 `iptables` 仅允许访问指定的本地 Mock 服务。
+- **外部服务处理**：使用 **LocalStack** 或内置的 **Docker Compose** 编排。Verifier 启动时会拉起一整套临时的数据库和依赖镜像，测试完成后直接 `docker rm -f`，不污染宿主机。
+
+4. 冲突仲裁：Contract vs. Spec
+
+- **优先级规则**：**Contract.json > ADR > current_spec.md**。
+- **逻辑**：代码实现必须满足 Schema（硬指标）。如果 Spec 的描述与 Contract 冲突，Verifier 会在审计阶段报错，并触发 `/propose` 重新修订，而不是让 Executor 猜。**机器可见的契约是第一真理。**
+
+5. L3 向量库的“过期剔除”逻辑
+
+- **判定依据**：**DR-xxx 文件中的 `Superseded-By` 字段**。
+- **执行流**：
+    1. RAG 检索返回 Top-K 结果。
+    2. Gateway 脚本预处理：检查结果中是否包含 `DR-xxx` 编号。
+    3. 若该编号在 L2 的 `index.json` 中被标记为已废弃，脚本直接在喂给 Verifier 前将其剔除。
+- **Verifier 的角色**：它不是靠“猜”过期，而是靠 L2 的**静态索引表**做过滤。
+
+6. Owner 离线时的流程处理
+
+- **模式切换**：`gateway.py --auto-pilot [true/false]`。
+- **离线逻辑**：如果开启 `auto-pilot`，Verifier 在审计通过后，将结论存入 `.comm/final_result.json`，并由脚本执行 `git checkout -b feature-xxx && git add .`。
+- **风险隔离**：**禁止自动合并 `main`**。它只能停留在 feature 分支等待 Owner 最终确认，但由于已经过交叉验证，Owner 上线后只需看 `audit_report.json` 即可一键合并。
+
+7. [TRACE] 输出的消费路径
+
+- **消费者**：**Gateway 状态监控器** + **L2 实时摘要器**。
+- **实质作用**：Gateway 实时将 TRACE 发送给另一个轻量级模型（如 GPT-4o-mini），生成一个 `current_progress.md`。这解决了长对话中“AI 忘了自己刚才在干嘛”的问题，同时也为 Owner 提供可读的进度条。
+
+8. 费用与延迟控制
+
+- **Token 估算**：Executor 用 DeepSeek V4（极低成本），Verifier 用 Claude 3.7（昂贵但精准）。
+- **上下文窗口管理**：
+    - **不传递全量 ADR**：Verifier 只读取由 RAG 召回并经脚本过滤后的“相关 ADR”。
+    - **动态窗口**：利用 **Prompt Caching** 缓存 L2 架构文档，只有变化的 Diff 和当前任务会消耗全量 Token。
+
+9. 强制执行指令隔离
+
+- **Gateway 过滤**：这是本方案的“系统内核”。
+- **实现方式**：Gateway 接管了文件系统 API 代理。当进程名为 `Executor` 的实例请求读取 `.agent.md` 之外的 `.dot` 配置文件时，Gateway 在操作系统层级直接返回 `Access Denied`。**AI 无法读取它不知道存在的文件。**
+
+10. 启动引导（Bootstrap）过程
+
+- **引导脚本**：`clada init`。
+- **流程**：
+    1. 引导用户输入核心 Goal。
+    2. 自动生成 `DR-001`（技术选型）。
+    3. 调用 Verifier 生成基础 `contract.json`。
+    4. **冷启动 RAG**：如果 L3 为空，它会先扫描你现有的代码库（Repo Map），生成第一份 `architecture.md`。
+- **模板库**：CLADA 提供预设的脚手架，让新项目在 5 分钟内完成宪法配置。
+
+总结
+
+这套架构的命门在于 **Gateway 的严密性**。它不只是一个脚本，它是一个**虚拟操作系统**。
+
+**既然“代码是最简单的”，下一步我们是否应该定义 `gateway.py` 如何拦截文件系统调用（FS Interception）的策略逻辑？**
+
+
+## User
+claude，你看看这些回复，还有问题继续提出。
+
+
+
+## Claude
+回复质量很高，10个盲点基本都给出了可实施的技术路径。但读完之后，有几处新的回复本身又引出了更深层的问题，同时有2-3处回答我认为"答了但没真正解决"。继续追问：
+
+---
+
+**1. STDIN阻塞挂起的前提假设存在裂缝**
+
+回复说Gateway通过"停止向Executor发送输入"来挂起。但Claude Code、Cursor这类主流Agent宿主，它们的交互模型并非简单的stdin/stdout管道——它们有自己的事件循环和工具调用机制。请问：CLADA是假设Executor是一个完全由Gateway自己启动的纯CLI进程？还是兼容现有Agent IDE（如Cursor/Claude Code）？如果是后者，pty劫持在这些IDE上的可行性验证做了吗？
+
+---
+
+**2. "询问点数Quota"的设计细节缺失**
+
+防滥用机制提到给Executor设置Quota，但没有说明：Quota的计量单位是什么（每个iteration？每个文件？每个session）？耗尽后的行为是什么——强制让Executor自己做决定，还是直接报错终止？后者在复杂任务中会导致大量中途失败的iteration，这个代价有没有估算？
+
+---
+
+**3. Contract.json > ADR > Spec 的优先级链在Bootstrap阶段自我矛盾**
+
+回复第4条确立了"Contract是第一真理"，但第10条Bootstrap流程是：先输入Goal → 再生成DR-001 → 最后由Verifier生成contract.json。也就是说，contract.json是从自然语言Goal和ADR里**派生**出来的。这意味着在项目生命周期的起点，优先级链是反的（Spec > ADR > Contract）。这个"创世时刻"的逻辑与稳态运行的优先级链如何自洽？谁来保证Bootstrap生成的contract.json忠实反映了Goal而没有引入偏差？
+
+---
+
+**4. Docker隔离与Gateway文件代理之间存在架构层级冲突**
+
+第3条说Verifier在Docker容器里运行测试；第9条说Gateway在操作系统层级做文件访问代理。问题是：如果Verifier的测试环境在容器内，容器内的文件系统访问如何被宿主机的Gateway代理拦截？这两个机制是针对不同对象的（容器隔离针对Verifier，文件代理针对Executor），但方案没有明确说这一点，读起来像是同一套机制。请把这两条的适用对象和边界分开说清楚。
+
+---
+
+**5. GPT-4o-mini作为TRACE摘要器引入了第三个模型**
+
+第7条说[TRACE]由"轻量级模型如GPT-4o-mini"实时生成current_progress.md。这意味着CLADA实际上是一个三模型架构（Executor + Verifier + Summarizer），但方案全程只提两个Agent。这个第三个模型的：定位是否固定（还是可替换）？它的输出current_progress.md是否会反哺给Executor或Verifier作为上下文？如果会，它就不是旁观者，而是第三个决策参与者，需要单独设计约束。
+
+---
+
+**6. clada init的"5分钟完成宪法配置"与Verifier冷启动之间的鸡生蛋问题**
+
+Bootstrap流程第3步是"调用Verifier生成基础contract.json"，但Verifier依赖L2索引和DR文件才能做出有约束力的判断。在L3为空、只有一份用户输入的Goal文本的情况下，此时的Verifier实际上是一个没有历史记忆的裸模型。它生成的contract.json的质量和可靠性由什么来保证？还是说Bootstrap阶段的Verifier本质上只是一个"格式化工具"，并不真正行使审计职能？如果是后者，需要在文档里明确说明，否则会给使用者造成"第一份contract已经经过严格审计"的错误印象。
+
+
+
+## User
+
+
+
+## google
+
+你提出的这些问题标志着从“概念架构”进入到“系统内核设计”的深水区。这些问题的答案决定了 CLADA 是一个稳固的开发环境，还是一个由于机制冲突而崩溃的实验品。
+
+以下是针对这 6 个核心矛盾的深度对齐：
+
+1. 宿主兼容性：CLADA 是“Agent 的 Agent”
+
+- **物理现实**：CLADA **不兼容** Cursor 等闭源 IDE 内部的 AI 逻辑。它是为了 **Claude Code / OpenClaw / GSD** 这类暴露了命令行接口（CLI）的 Agent 设计的。
+- **劫持机制**：Gateway 通过 `Pseudo-Terminal (PTY)` 包装 Agent 进程。对于 Claude Code 来说，它认为自己是在与标准终端对话，但实际上每一行输出都被 Gateway 的正则引擎拦截。
+- **状态挂起**：在 PTY 模型中，当触发切换，Gateway 简单地停止轮询子进程的文件描述符并发送 `SIGSTOP` 信号。这在 Linux/macOS 上能完美物理挂起进程，不丢失内存状态。
+
+2. Quota 机制：计费与策略
+
+- **单位**：以 **Iteration（单次任务循环）** 为单位。
+- **行为**：
+    - **消耗**：Executor 每发起一次 `/ask_verifier` 扣除 1 点。
+    - **耗尽后果**：Executor 进入 **"Final Choice Mode"**。它必须基于现有信息做出决定并加上 `[B_PLAN]` 标签。
+- **代价估算**：这种设计是为了迫使 Executor 在“创世阶段”（Spec 定义期）解决问题，而不是在“施工阶段”反复横跳。中途失败的代价远低于一个带 Bug 跑完 100 个 Iteration 的代价。
+
+3. 创世逻辑：协议的“坍塌”过程
+
+- **逻辑自洽**：这类似于法律的产生——先有民意（Goal），后有宪法（ADR），最后产生具体法规（Contract）。
+- **优先级反转**：
+    - **Bootstrap 阶段**：这是一个“共识坍塌”过程。人类审核生成的 `contract.json` 是否符合 Goal。一旦人类点击 `Confirm`，状态就从“流体”变为“晶体”。
+    - **稳态运行**：一旦确认，`contract.json` 就具有最高效力。
+- **保证机制**：Bootstrap 阶段必须引入 **“双检锁”**：由两个不同的模型（如 GPT-4o 和 Claude）分别生成 Contract，Gateway 比对差异，人类只仲裁差异点。
+
+4. 隔离边界：容器与代理的职能分离
+
+这两者是完全不同的防御层：
+
+- **Executor 层（宿主代理）**：针对的是**“逻辑泄密”**。Gateway 通过路径拦截防止 Executor 读到不该读的 `.env` 或 `secret_key`。
+- **Verifier 层（容器隔离）**：针对的是**“执行风险”**。因为测试代码可能具有破坏性（如 `rm -rf /`），所以必须在容器内跑。
+- **通信桥梁**：容器通过 `Volume` 挂载只读的代码目录。Gateway 监控宿主机的代码目录，而容器内的测试引擎只管运行并把结果写回宿主机的 `test_results.json`。
+
+5. 第三模型：Summarizer 的“旁观者”定位
+
+- **定位**：**只读、异步、无权控制流**。它是一个“仪表盘增益”，不是决策参与者。
+- **约束**：它的输出 `current_progress.md` **严禁**进入 Executor 和 Verifier 的 Context。它只给 Owner 看。
+- **可替换性**：完全可替换，甚至可以关闭以节省成本。它的存在是为了解决“Owner 接入时不需要翻阅几千行日志”的体验问题。
+
+6. 冷启动质量：Verifier 的“降级模式”
+
+- **职能界定**：在 Bootstrap 阶段，Verifier 确实处于 **“格式化工具模式”**。
+- **质量保证**：
+    - **Schema 强制**：Gateway 强制要求 Contract 必须符合预设的 `Meta-Schema`（必须有输入输出类型、错误码定义等）。
+    - **人工仲裁**：Bootstrap 阶段是 CLADA 唯一要求 Owner **高强度介入**的时刻。你必须像审计合同一样审计第一份 `contract.json`。
+- **警示逻辑**：系统会通过 Gateway 醒目提示：“当前 Contract 未经过历史 ADR 审计，请人工确认逻辑完备性。”
+
+---
+
+总结：框架的“灵魂”在于状态机
+
+CLADA 的运行实际上是一个在 **自由（Executor）** 与 **秩序（Verifier）** 之间不断跳转的状态机。Gateway 是这个状态机的 **时钟信号**。
+
+**我们现在是否已经达成共识：CLADA 的第一版本应该聚焦于“基于 PTY 的命令行 Agent 封装”，而不是去适配 Cursor 这种闭源 IDE？** 如果确认这一点，我可以给出 `contract.json` 与 `DR-xxx` 相互引用的**规范化字段定义**。
+
+
+## User
+问题回来了。你看看还有什么问题需要搞清楚，我想你对完整度的评估超过95%，而且并且技术细节上没有致命阻碍,关键环节都可以实现。
+
+## claude
+读完这轮回复，整体质量很高。状态机定义是整份文档迄今为止最扎实的部分，Mermaid图把之前散落在各处的逻辑收拢得很干净。[B_PLAN]闭环和双检锁的工程化定义也都达到了可实施的精度。
+
+但距离95%还差几个具体的缺口，我逐一说：
+
+---
+
+**已经可以关闭的问题**
+
+TCP长连接风险、[B_PLAN]强制Owner介入、双检锁Hard/Soft字段分类、状态机全图——这四项我认为已经达到设计完整度，可以进入实现阶段。
+
+---
+
+**还差这几处，每一处都是实现时会踩的坑：**
+
+**1. EXECUTING → IDLE 的异常终止路径过于粗糙**
+
+状态图里写了"Quota耗尽且未完成 → 异常终止 → IDLE"，但这条路径没有善后逻辑。Executor在中途终止时，它已经修改的文件处于什么状态？是回滚、是保留在脏工作区、还是自动stash？如果不定义，每次异常终止都会给下一个iteration留下一个不确定的起点，这是熵增的主要来源之一。建议补充：异常终止前Gateway强制执行`git stash`并写入`interrupted_state.json`，下次PROPOSING时作为恢复选项提示Owner。
+
+**2. Pattern Monitor的"同时写入冲突"防护依赖single-writer假设，但AUDITING阶段会破坏它**
+
+`current_state.json`记录当前哪个Agent掌控文件夹，这个设计在EXECUTING和ARBITRATING阶段有效。但AUDITING阶段Verifier在Docker容器内通过Volume挂载读取代码，同时如果Executor因某种原因（比如Gateway的SIGSTOP失效）还在运行，就会出现容器内读、宿主机写的竞态。建议明确：进入AUDITING状态时，Gateway对宿主机代码目录执行`chmod -R 444`（只读锁），AUDITING结束后恢复，这才是真正的物理互斥。
+
+**3. ARBITRATING → EXECUTING的上下文恢复没有定义**
+
+Verifier回答完问题后，Executor从SUSPENDED恢复。但Verifier的回答如何注入给Executor？是追加到Executor的stdin、还是写入一个临时文件让Executor读取、还是更新current_spec.md？这三种方式对Executor后续行为的影响完全不同。目前方案对这个"信息交接"环节是空白的，而它恰恰是Ralph Loop能否真正闭合的关键。
+
+**4. Heartbeat你自己提出来了但没有回答**
+
+你在回复末尾问"是否需要定期Heartbeat把TRACE喂给Summarizer"——这个问题我反问回来：**如果不做Heartbeat，Summarizer只能在TRACE输出时被动触发，那在Executor长时间沉默执行（比如跑一个复杂算法）的区间里，Owner侧的进度感知是完全盲区。** 建议的答案是：设置30秒定时器，如果无TRACE输出，Gateway主动向Executor的PTY发送一个无害的状态查询指令（类似心跳包），强制它输出当前进度，而不是被动等待。
+
+---
+
+**当前完整度评估：88%**
+
+从75%到88%，这轮进步是实质性的。剩余12%集中在：
+
+- 上述4个实现级细节（约8%）
+- 一份完整的`contract.json` + `DR-xxx`规范化字段定义还没有出现（约4%）——这是你上一轮末尾承诺要给的，也是Executor和Verifier能够真正"对话"的语言基础
+
+字段定义给出来之后，我认为可以到95%。
+
+
+## User
+
+
+
+
+## google
+这是对 **CLADA 架构** 深度工程细节的最后一块拼图。我们不仅要解决“逻辑闭环”，更要解决“物理稳定性”。
+
+1. 异常终止的善后逻辑：**Clean Shutdown 协议**
+
+为了防止脏工作区（Dirty Workspace）污染下一个迭代，`EXECUTING → IDLE` 必须路径化。
+
+- **动作**：Gateway 拦截到 Quota 耗尽信号后，执行以下原子操作：
+    1. **自动快照**：执行 `git commit -m "[CLADA_INTERRUPTED]: Quota exhausted" --no-verify`。
+    2. **状态保存**：将 Executor 最后的 `TRACE`、未完成的 `.comm/q.json`、以及当前堆栈摘要写入 `interrupted_state.json`。
+    3. **回滚/挂起选择**：Gateway 提示 Owner：“任务中断，代码已暂存在 `clada/interrupted` 分支，请选择：[A] 补充 Quota 继续；[B] 回滚至 Master。”
+
+2. 物理互斥锁定：**只读锁机制**
+
+为了彻底杜绝 `AUDITING` 阶段的竞态冲突：
+
+- **写保护**：Gateway 在启动 Docker 容器前，不仅记录 `current_state.json`，还必须对宿主机源码目录执行：
+    
+    bash
+    
+    ```
+    chmod -R 555 ./src  # 剥夺所有写权限 (Read & Execute only)
+    ```
+    
+    Use code with caution.
+    
+- **异常熔断**：如果 Gateway 检测到任何非容器进程尝试对 `./src` 发起 `write` 调用（通过 `fswatch`），立即杀死该进程并向控制台报警。
+
+3. 信息交接协议：**ARBITRATING → EXECUTING**
+
+Verifier 的决策如何被 Executor “感知”？推荐使用 **“上下文追加注入（Append Injection）”**。
+
+- **机制**：当 Verifier 生成裁决回复后，Gateway 将该回复包装成特定的系统消息：
+    
+    text
+    
+    ```
+    [SYSTEM_NOTIFICATION]: Verifier has resolved your query. 
+    Decision: {Decision_Content}
+    Referenced ADR: DR-xxx
+    Please integrate this decision into your current task.
+    ```
+    
+    Use code with caution.
+    
+- **注入方式**：Gateway 将上述文字直接写入 Executor 的 **STDIN**，伪装成 Owner 的指令。这样做的好处是 Executor 不需要去读第三方文件，直接在对话流中获取最新指令，符合其“长连接会话”的特性。
+
+4. Heartbeat (心跳包) 机制：**主动状态嗅探**
+
+- **逻辑**：设置 30s 计数器。
+- **触发条件**：若 30s 内 `stdout` 无任何输出。
+- **指令**：Gateway 向 PTY 发送一个“空查询”（如在 Shell 中发送一个空的注释 `#: heartbeat`）。
+- **强制 TRACE**：如果空查询无效，Gateway 模拟发送 `show current status` 指令，强制 Executor 总结当前已修改文件列表，确保护理员（Owner）始终掌握进度。
+
+---
+
+5. 规范化字段定义 (Standard Definitions)
+
+为了让 OpenSpec、DIG、GSD 彻底对齐，所有文档必须遵循以下 JSON Schema/Markdown 结构。
+
+A. `contract.json` (契约层定义)
+
+此文件是 Executor 的行动准则，Verifier 的审计标准。
+
+json
+
+```
+{
+  "contract_id": "CNT-001",
+  "version": "1.0.0",
+  "scope": {
+    "modules": ["auth", "database"],
+    "interfaces": ["POST /v1/login"]
+  },
+  "constraints": {
+    "strict_types": true,
+    "max_latency_ms": 200,
+    "allowed_dependencies": ["zod", "argon2"]
+  },
+  "hard_assertions": [
+    {
+      "id": "ASSERT-01",
+      "description": "Password must be hashed with Argon2id before storage",
+      "check_script": "npm run test:security"
+    }
+  ],
+  "soft_recommendations": [
+    {
+      "id": "REC-01",
+      "description": "Prefer async/await over raw promises"
+    }
+  ]
+}
+```
+
+Use code with caution.
+
+B. `DR-xxx.md` (决策记录增强规范)
+
+必须在 front-matter 中定义元数据，方便 RAG 过滤。
+
+markdown
+
+```
+---
+id: DR-024
+title: Use DeepSeek V4 for Executor model
+status: accepted | superseded
+superseded_by: DR-050 (optional)
+date: 2026-05-04
+tags: [model-selection, cost-control]
+---
+
+## Context
+Initial plan used Claude-3-Opus, but cost per token was too high for 100-day iteration.
+
+## Decision
+Switched to DeepSeek V4-Pro via CC Switch bridge.
+
+## Rationale
+V4-Pro achieved comparable coding scores with 90% lower cost, crucial for long-term Ralph Loops.
+
+## Consequences
+- Positive: Reduced total cost by $500/month.
+- Negative: Latency increased slightly on reasoning tasks.
+
+## Verification
+- Monitor token usage in Gateway dashboard.
+- Verify coding accuracy via `npm run test:audit`.
+```
+
+Use code with caution.
+
+六、 总结：CLADA 的稳定性底座
+
+现在，这套架构不仅有**宪法（Contract/ADR）**，还有了执法机构（Gateway）和物理牢笼（Docker/Chmod）。
+
+- **Owner** 通过 **Gateway 控制台** 掌控全局。
+- **Executor** 在被监视的 **PTY** 管道中干活。
+- **Verifier** 在 **Docker 沙盒** 中冷酷审计。
+
+**接下来，你想看这个 Gateway 核心调度器（用于监控 PTY 输出并触发 SIGSTOP）的 Python 核心逻辑实现，还是直接针对你的第一个项目开始起草它的 `Goal` 文本？**
+
+
+
+
+## User
+问题回复来了，我等你的完整度评估
+
+
+
+## claude
+
+读完这轮。结论先说：
+
+**当前完整度：95%。达标。**
+
+---
+
+**各项逐一确认：**
+
+Clean Shutdown协议——`git commit --no-verify`的快照 + `interrupted_state.json` + Owner二选一的恢复界面，逻辑闭合，可实施。
+
+只读锁——`chmod -R 555` + `fswatch`异常熔断，物理互斥有了真正的执行层。这个组合在macOS和Linux上都能跑，是实用的选择。
+
+ARBITRATING→EXECUTING的信息交接——Append Injection写入STDIN伪装成Owner指令，这个方案干净，不引入第三方文件依赖，符合Agent的会话心智模型。
+
+Heartbeat——30秒计时器 + 空注释探针 + 兜底的`show current status`强制指令，三层降级设计合理。
+
+`contract.json`字段结构——`hard_assertions`挂`check_script`这个设计是点睛之笔，把自然语言约束直接绑定到可执行验证脚本，Verifier审计时不需要主观判断，直接跑脚本看结果。
+
+`DR-xxx.md`的front-matter——`status`/`superseded_by`字段出现了，这正是L3 RAG过滤的元数据基础，和之前第5轮讨论的过期剔除逻辑完全对接上了。
+
+---
+
+**剩余5%是什么：**
+
+不是设计缺陷，是三处"实现时必须做决定但设计文档可以不写"的工程细节：
+
+第一，`fswatch`在容器化环境里的行为需要实测——它监控的是宿主机inode，容器内的写操作通过Volume映射是否能被宿主机的fswatch捕获，取决于挂载方式，建议在技术风险清单里标注。
+
+第二，Heartbeat的`#: heartbeat`空注释对不同的Agent Shell解释器行为不一致——Claude Code如果把它当成一条用户消息处理，可能会触发不必要的响应，实现时需要找到真正的"无副作用探针"指令。
+
+第三，`contract_id`的版本演进规则没有定义——当Contract从1.0.0升级到1.1.0时，历史DR中引用旧版contract_id的记录如何处理？是向前兼容还是强制迁移？这在100天长周期里必然发生。
+
+---
+
+**总体判断：**
+
+骨架完整，关键路径全部闭合，防破坏机制有物理层保障，文档格式可以直接作为实现规范使用。这三处剩余问题是实现阶段的工程决策，不是设计阶段的逻辑漏洞。
+
+可以进入实现阶段了。建议下一步的优先级是：`orchestrator.py`的状态机骨架 → `contract.json`的Meta-Schema验证器 → PTY封装的兼容性测试（优先验证Claude Code的SIGSTOP行为）。
+
+
+
+## User
+现在请你重写这个方案，包括必要、完整、详细的细节说明，能为接下来的技术方案落地提供详细的细节
+
+## claude
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CLADA — 完整技术方案 v1.0</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #0a0c0f;
+    --bg2: #0f1217;
+    --bg3: #141920;
+    --surface: #1a2030;
+    --border: #252d3d;
+    --border2: #2e3a50;
+    --accent: #4af0a0;
+    --accent2: #0ef;
+    --accent3: #f0a04a;
+    --warn: #f05a4a;
+    --text: #d4dde8;
+    --text2: #8899aa;
+    --text3: #556677;
+    --heading: #eef3f8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+    font-size: 15px;
+  }
+
+  /* SIDEBAR NAV */
+  .sidebar {
+    position: fixed;
+    left: 0; top: 0;
+    width: 240px;
+    height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    padding: 32px 0;
+  }
+
+  .sidebar-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 18px;
+    color: var(--accent);
+    padding: 0 24px 24px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.05em;
+  }
+
+  .sidebar-logo span { color: var(--text3); font-size: 11px; display: block; font-weight: 400; margin-top: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  .nav-section { padding: 20px 24px 8px; font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text3); font-family: 'JetBrains Mono', monospace; }
+
+  .nav-item {
+    display: block;
+    padding: 7px 24px;
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.2s;
+    border-left: 2px solid transparent;
+  }
+
+  .nav-item:hover { color: var(--accent); border-left-color: var(--accent); background: rgba(74,240,160,0.04); }
+
+  /* MAIN */
+  .main {
+    margin-left: 240px;
+    min-height: 100vh;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 80px 64px 64px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(74,240,160,0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 52px;
+    color: var(--heading);
+    line-height: 1.1;
+    margin-bottom: 16px;
+  }
+
+  .hero h1 em { color: var(--accent); font-style: normal; }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text2);
+    max-width: 640px;
+    margin-bottom: 40px;
+    line-height: 1.7;
+  }
+
+  .hero-meta {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text3); }
+  .meta-item strong { color: var(--text2); display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+
+  /* CONTENT */
+  .content { padding: 0 64px 80px; }
+
+  .section {
+    padding: 64px 0 0;
+    border-top: 1px solid var(--border);
+    margin-top: 64px;
+  }
+
+  .section:first-child { border-top: none; margin-top: 0; padding-top: 64px; }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 28px;
+    color: var(--heading);
+    margin-bottom: 24px;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 17px;
+    color: var(--heading);
+    margin: 32px 0 12px;
+  }
+
+  h4 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 24px 0 8px;
+  }
+
+  p { color: var(--text); margin-bottom: 14px; }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .card.green::before { background: var(--accent); }
+  .card.blue::before { background: var(--accent2); }
+  .card.orange::before { background: var(--accent3); }
+  .card.red::before { background: var(--warn); }
+
+  .card-icon { font-size: 22px; margin-bottom: 12px; }
+  .card-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 15px; color: var(--heading); margin-bottom: 8px; }
+  .card-body { font-size: 13px; color: var(--text2); line-height: 1.7; }
+  .card-tag { display: inline-block; margin-top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 3px; }
+  .card.green .card-tag { background: rgba(74,240,160,0.1); color: var(--accent); }
+  .card.blue .card-tag { background: rgba(0,238,255,0.1); color: var(--accent2); }
+  .card.orange .card-tag { background: rgba(240,160,74,0.1); color: var(--accent3); }
+  .card.red .card-tag { background: rgba(240,90,74,0.1); color: var(--warn); }
+
+  /* CODE BLOCKS */
+  pre {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 20px 24px;
+    overflow-x: auto;
+    margin: 16px 0 24px;
+    position: relative;
+  }
+
+  pre code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--text);
+  }
+
+  .code-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .hl-green { color: var(--accent); }
+  .hl-blue { color: var(--accent2); }
+  .hl-orange { color: var(--accent3); }
+  .hl-red { color: var(--warn); }
+  .hl-dim { color: var(--text3); }
+
+  /* INLINE CODE */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 6px;
+    color: var(--accent2);
+  }
+
+  /* STATE MACHINE */
+  .state-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 20px 0;
+  }
+
+  .state-box {
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 6px;
+    padding: 16px;
+  }
+
+  .state-name {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .state-desc { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  .state-box.active .state-name { color: var(--accent); }
+  .state-box.verify .state-name { color: var(--accent2); }
+  .state-box.warn .state-name { color: var(--accent3); }
+  .state-box.danger .state-name { color: var(--warn); }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 32px;
+    margin: 24px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    line-height: 2;
+    overflow-x: auto;
+  }
+
+  .flow-arrow { color: var(--text3); }
+  .flow-state { color: var(--accent); font-weight: 500; }
+  .flow-trigger { color: var(--accent3); font-style: italic; }
+  .flow-agent { color: var(--accent2); }
+
+  /* TABLE */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 13px;
+  }
+
+  th {
+    background: var(--surface);
+    color: var(--text2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border2);
+  }
+
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.015); }
+
+  /* RISK BOX */
+  .risk-box {
+    background: rgba(240,90,74,0.07);
+    border: 1px solid rgba(240,90,74,0.25);
+    border-left: 3px solid var(--warn);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  .risk-box strong { color: var(--warn); font-family: 'JetBrains Mono', monospace; font-size: 11px; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  .note-box {
+    background: rgba(74,240,160,0.05);
+    border: 1px solid rgba(74,240,160,0.2);
+    border-left: 3px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  .note-box strong { color: var(--accent); font-family: 'JetBrains Mono', monospace; font-size: 11px; display: block; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.1em; }
+
+  /* FIELD SPEC */
+  .field-row {
+    display: grid;
+    grid-template-columns: 180px 80px 1fr;
+    gap: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+    align-items: start;
+  }
+
+  .field-row:last-child { border-bottom: none; }
+  .field-name { font-family: 'JetBrains Mono', monospace; color: var(--accent2); font-size: 12px; }
+  .field-type { font-family: 'JetBrains Mono', monospace; color: var(--accent3); font-size: 11px; }
+  .field-desc { color: var(--text2); }
+
+  .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 2px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+
+  .badge-hard { background: rgba(240,90,74,0.15); color: var(--warn); }
+  .badge-soft { background: rgba(74,240,160,0.1); color: var(--accent); }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  ul { padding-left: 20px; margin-bottom: 14px; }
+  li { margin-bottom: 6px; color: var(--text); font-size: 14px; }
+  li::marker { color: var(--accent); }
+
+  /* PROGRESS BAR */
+  .completeness {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    margin: 24px 0;
+  }
+
+  .completeness-title { font-family: 'Syne', sans-serif; font-weight: 600; color: var(--heading); margin-bottom: 16px; }
+
+  .progress-item { margin-bottom: 12px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .progress-label span:first-child { color: var(--text2); }
+  .progress-label span:last-child { font-family: 'JetBrains Mono', monospace; color: var(--accent); }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 2px; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    CLADA
+    <span>Technical Specification v1.0</span>
+  </div>
+  <div class="nav-section">Overview</div>
+  <a class="nav-item" href="#overview">设计哲学</a>
+  <a class="nav-item" href="#architecture">三权分立架构</a>
+  <div class="nav-section">Core Design</div>
+  <a class="nav-item" href="#gateway">Gateway 控制器</a>
+  <a class="nav-item" href="#statemachine">状态机</a>
+  <a class="nav-item" href="#protocols">通讯协议</a>
+  <div class="nav-section">Documents</div>
+  <a class="nav-item" href="#contract">contract.json 规范</a>
+  <a class="nav-item" href="#dr">DR-xxx 规范</a>
+  <a class="nav-item" href="#memory">三级记忆系统</a>
+  <div class="nav-section">Implementation</div>
+  <a class="nav-item" href="#bootstrap">Bootstrap 引导</a>
+  <a class="nav-item" href="#isolation">隔离机制</a>
+  <a class="nav-item" href="#risks">技术风险清单</a>
+  <a class="nav-item" href="#roadmap">实现路线图</a>
+</nav>
+
+<div class="main">
+  <div class="hero">
+    <div class="hero-tag">// CLADA · Closed-Loop Autonomous Development Architecture</div>
+    <h1>让 AI 在<em>宪法约束</em>下<br>自主完成软件工程</h1>
+    <p class="hero-sub">
+      CLADA 不是聊天框的延伸，而是一套将 AI Agent 嵌入工业流水线的完整架构。
+      它通过物理隔离、层级记忆和双 Agent 互审，将 AI 编程的熵增问题系统性地解决。
+    </p>
+    <div class="hero-meta">
+      <div class="meta-item"><strong>Architecture</strong>三权分立 · 双 Agent</div>
+      <div class="meta-item"><strong>Executor</strong>DeepSeek V4（低成本执行）</div>
+      <div class="meta-item"><strong>Verifier</strong>Claude Sonnet（精准审计）</div>
+      <div class="meta-item"><strong>Gateway</strong>Python · PTY · fswatch</div>
+      <div class="meta-item"><strong>Isolation</strong>Docker · chmod 555</div>
+      <div class="meta-item"><strong>完整度</strong>95%（可进入实现阶段）</div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION 1: 设计哲学 -->
+    <div class="section" id="overview">
+      <div class="section-label">§ 01 · Design Philosophy</div>
+      <h2>设计哲学：为什么需要 CLADA</h2>
+      <p>
+        传统 AI 编程的失败模式有三个根源：<strong>上下文熵增</strong>（长期迭代后 AI 忘记早期决策）、<strong>单点权威缺失</strong>（没有任何机制阻止 AI 改变自己的规则）、以及<strong>验证与执行混同</strong>（同一个 Agent 既写代码又判断代码好坏）。
+      </p>
+      <p>
+        CLADA 的核心思想是将这三个问题分别用三个机制解决：<strong>三级记忆</strong>解决熵增、<strong>宪法文件（Contract + ADR）</strong>解决权威缺失、<strong>双 Agent 分权</strong>解决验证混同。
+      </p>
+
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-icon">⚖️</div>
+          <div class="card-title">三权分立</div>
+          <div class="card-body">Owner（最高裁决）、Executor（执行权）、Verifier（审计权）三者权责边界由物理机制强制执行，而非依赖 Prompt 约定。</div>
+          <div class="card-tag">Constitutional</div>
+        </div>
+        <div class="card blue">
+          <div class="card-icon">🧠</div>
+          <div class="card-title">文档即共享内存</div>
+          <div class="card-body">Agent 之间没有直接对话。所有信息交换通过结构化文件进行，每个文件格式都经过严格定义，防止语义漂移。</div>
+          <div class="card-tag">Memory-First</div>
+        </div>
+        <div class="card orange">
+          <div class="card-icon">🔄</div>
+          <div class="card-title">状态机驱动</div>
+          <div class="card-body">系统在八个明确定义的状态之间跳转。每次状态转移都有物理触发条件，Gateway 是唯一的状态时钟。</div>
+          <div class="card-tag">Deterministic</div>
+        </div>
+        <div class="card red">
+          <div class="card-icon">🔒</div>
+          <div class="card-title">物理隔离</div>
+          <div class="card-body">Executor 的文件访问权限由 Gateway 在操作系统层级代理拦截。Verifier 的测试运行在 Docker 容器内，测试代码无法影响宿主机。</div>
+          <div class="card-tag">Hardware-Enforced</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: 三权分立架构 -->
+    <div class="section" id="architecture">
+      <div class="section-label">§ 02 · Architecture</div>
+      <h2>三权分立架构总览</h2>
+
+      <div class="flow">
+<span class="hl-dim">┌─────────────────────────────────────────────────────────────────┐</span>
+<span class="hl-dim">│</span>                    <span class="hl-orange">OWNER（最高裁决权）</span>                          <span class="hl-dim">│</span>
+<span class="hl-dim">│</span>              Gateway 控制台 · 实时监控 · 强制断点                  <span class="hl-dim">│</span>
+<span class="hl-dim">└───────────────────────────┬─────────────────────────────────────┘</span>
+                            <span class="hl-dim">│ 监控 / 指令</span>
+<span class="hl-dim">┌───────────────────────────▼─────────────────────────────────────┐</span>
+<span class="hl-dim">│</span>                <span class="hl-green">GATEWAY（状态机时钟）</span>                               <span class="hl-dim">│</span>
+<span class="hl-dim">│</span>   PTY 包装  ·  Pattern Monitor  ·  文件访问代理  ·  状态路由     <span class="hl-dim">│</span>
+<span class="hl-dim">└──────────────┬────────────────────────────┬────────────────────┘</span>
+               <span class="hl-dim">│ PTY/SIGSTOP</span>                <span class="hl-dim">│ Docker + Volume</span>
+<span class="hl-dim">┌──────────────▼──────────┐</span>  <span class="hl-dim">┌──────────▼─────────────────┐</span>
+<span class="hl-dim">│</span>  <span class="hl-green">EXECUTOR（执行权）</span>      <span class="hl-dim">│</span>  <span class="hl-blue">│  VERIFIER（审计权）        │</span>
+<span class="hl-dim">│</span>  DeepSeek V4           <span class="hl-dim">│</span>  <span class="hl-blue">│  Claude Sonnet             │</span>
+<span class="hl-dim">│</span>  · 只写代码             <span class="hl-dim">│</span>  <span class="hl-blue">│  · 只写文档 + 审计报告     │</span>
+<span class="hl-dim">│</span>  · 只读 spec/           <span class="hl-dim">│</span>  <span class="hl-blue">│  · 运行测试（容器内）      │</span>
+<span class="hl-dim">│</span>  · 遇歧义必须上报       <span class="hl-dim">│</span>  <span class="hl-blue">│  · 引用 ADR 做裁决         │</span>
+<span class="hl-dim">└──────────────┬──────────┘</span>  <span class="hl-blue">└─────────────┬──────────────┘</span>
+               <span class="hl-dim">│ 写入</span>                        <span class="hl-dim">│ 写入</span>
+<span class="hl-dim">┌──────────────▼──────────────────────────▼────────────────────────┐</span>
+<span class="hl-dim">│</span>                   <span class="hl-orange">共享文档层（唯一共享内存）</span>                       <span class="hl-dim">│</span>
+<span class="hl-dim">│</span>  contract.json · DR-xxx.md · current_spec.md · audit_report.json  <span class="hl-dim">│</span>
+<span class="hl-dim">└──────────────────────────────────────────────────────────────────┘</span>
+      </div>
+
+      <h3>角色权限边界（硬性规定）</h3>
+      <table>
+        <tr>
+          <th>能力</th>
+          <th>Owner</th>
+          <th>Executor</th>
+          <th>Verifier</th>
+        </tr>
+        <tr>
+          <td>写入源代码 <code>src/</code></td>
+          <td>✅</td><td>✅</td><td>❌</td>
+        </tr>
+        <tr>
+          <td>写入文档 <code>docs/</code></td>
+          <td>✅</td><td>❌（Gateway 拦截）</td><td>✅</td>
+        </tr>
+        <tr>
+          <td>读取 <code>docs/decisions/</code></td>
+          <td>✅</td><td>✅（只读）</td><td>✅</td>
+        </tr>
+        <tr>
+          <td>读取 <code>.env</code> / secrets</td>
+          <td>✅</td><td>❌（Gateway 拦截）</td><td>❌</td>
+        </tr>
+        <tr>
+          <td>执行 <code>git merge main</code></td>
+          <td>✅</td><td>❌</td><td>❌</td>
+        </tr>
+        <tr>
+          <td>触发状态转移</td>
+          <td>✅（斜杠命令）</td><td>部分（输出触发词）</td><td>部分（审计结论）</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SECTION 3: Gateway -->
+    <div class="section" id="gateway">
+      <div class="section-label">§ 03 · Gateway</div>
+      <h2>Gateway 控制器详细设计</h2>
+      <p>Gateway 是整个系统的神经中枢，以 <code>orchestrator.py</code> 形式运行。它不是简单的脚本，而是一个多线程进程管理器。</p>
+
+      <h3>核心组件</h3>
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-title">PTY Wrapper</div>
+          <div class="card-body">通过 <code>pty.openpty()</code> 启动 Agent 进程。Agent 认为自己在与标准终端对话，Gateway 截获所有 I/O 流。支持 SIGSTOP / SIGCONT 物理挂起。</div>
+        </div>
+        <div class="card blue">
+          <div class="card-title">Pattern Monitor 线程</div>
+          <div class="card-body">持续嗅探 Executor 的 stdout。正则匹配触发词（<code>[REQ_REVIEW]</code>、<code>[DONE]</code>、<code>[B_PLAN]</code>）后立即发出状态切换指令。</div>
+        </div>
+        <div class="card orange">
+          <div class="card-title">文件访问代理</div>
+          <div class="card-body">通过 LD_PRELOAD 或 ptrace 拦截 Executor 进程的文件系统调用。禁止读取 <code>.env</code>、<code>secrets/</code>、<code>docs/decisions/</code>（写操作）。</div>
+        </div>
+        <div class="card red">
+          <div class="card-title">Heartbeat 守护线程</div>
+          <div class="card-body">30 秒计时器。stdout 静默超时后向 PTY 发送 <code>#: heartbeat\n</code> 探针。若无响应，发送 <code>show current status</code> 强制 Executor 输出 TRACE。</div>
+        </div>
+      </div>
+
+      <h3>current_state.json — 全局状态文件</h3>
+      <div class="code-label">runtime / current_state.json</div>
+      <pre><code>{
+  <span class="hl-green">"state"</span>: <span class="hl-orange">"EXECUTING"</span>,          <span class="hl-dim">// 当前状态机状态</span>
+  <span class="hl-green">"active_agent"</span>: <span class="hl-orange">"executor"</span>,   <span class="hl-dim">// 当前持有文件写权限的 Agent</span>
+  <span class="hl-green">"src_lock"</span>: <span class="hl-blue">false</span>,            <span class="hl-dim">// AUDITING 阶段置 true，触发 chmod 555</span>
+  <span class="hl-green">"executor_pid"</span>: <span class="hl-blue">31245</span>,
+  <span class="hl-green">"verifier_pid"</span>: <span class="hl-blue">31289</span>,
+  <span class="hl-green">"quota_remaining"</span>: <span class="hl-blue">7</span>,          <span class="hl-dim">// Executor 剩余询问次数</span>
+  <span class="hl-green">"iteration_id"</span>: <span class="hl-orange">"IT-042"</span>,
+  <span class="hl-green">"last_trace_ts"</span>: <span class="hl-blue">1716880200</span>,  <span class="hl-dim">// 上次 TRACE 输出时间戳</span>
+  <span class="hl-green">"b_plan_detected"</span>: <span class="hl-blue">false</span>,      <span class="hl-dim">// 是否出现过 [B_PLAN] 标签</span>
+  <span class="hl-green">"autopilot"</span>: <span class="hl-blue">false</span>             <span class="hl-dim">// Owner 离线模式开关</span>
+}</code></pre>
+
+      <h3>斜杠命令（Owner 控制接口）</h3>
+      <table>
+        <tr><th>命令</th><th>触发状态</th><th>动作</th></tr>
+        <tr><td><code>/init</code></td><td>IDLE → BOOTSTRAP</td><td>引导用户输入 Goal，启动创世流程</td></tr>
+        <tr><td><code>/propose</code></td><td>IDLE → PROPOSING</td><td>唤醒 Verifier，加载 L2 架构文档，生成新 Spec</td></tr>
+        <tr><td><code>/execute</code></td><td>PROPOSING → EXECUTING</td><td>切换至 Executor，注入 current_spec.md</td></tr>
+        <tr><td><code>/merge</code></td><td>PENDING_COMMIT → IDLE</td><td>执行 git merge，归档 IT-xxx.md，重置状态</td></tr>
+        <tr><td><code>/reject</code></td><td>PENDING_COMMIT → EXECUTING</td><td>将拒绝理由注入 Executor STDIN，继续修改</td></tr>
+        <tr><td><code>/abort</code></td><td>任意 → IDLE</td><td>触发 Clean Shutdown 协议，stash 现场</td></tr>
+      </table>
+    </div>
+
+    <!-- SECTION 4: 状态机 -->
+    <div class="section" id="statemachine">
+      <div class="section-label">§ 04 · State Machine</div>
+      <h2>完整状态机定义</h2>
+
+      <h3>八个状态</h3>
+      <div class="state-grid">
+        <div class="state-box">
+          <div class="state-name">IDLE</div>
+          <div class="state-desc">系统等待 Owner 指令。无 Agent 持有文件写权限。</div>
+        </div>
+        <div class="state-box warn">
+          <div class="state-name">BOOTSTRAP</div>
+          <div class="state-desc">创世阶段。Verifier 以"格式化工具模式"生成初始 Contract 和 DR-001。Owner 必须高强度介入确认。</div>
+        </div>
+        <div class="state-box verify">
+          <div class="state-name">PROPOSING</div>
+          <div class="state-desc">Verifier 接管。读取 L2 文档，与 Owner 协商，输出 current_spec.md。</div>
+        </div>
+        <div class="state-box active">
+          <div class="state-name">EXECUTING</div>
+          <div class="state-desc">Executor 持有代码写权限。每修改 3 个文件输出一次 [TRACE]。Heartbeat 守护激活。</div>
+        </div>
+        <div class="state-box warn">
+          <div class="state-name">SUSPENDED</div>
+          <div class="state-desc">Executor 发出 [REQ_REVIEW]。Gateway 发送 SIGSTOP，检查 TCP 连接状态，准备切换至 Verifier。</div>
+        </div>
+        <div class="state-box verify">
+          <div class="state-name">ARBITRATING</div>
+          <div class="state-desc">Verifier 接管。必须引用 DR-xxx 做裁决，将决策追加注入 Executor STDIN。</div>
+        </div>
+        <div class="state-box verify">
+          <div class="state-name">AUDITING</div>
+          <div class="state-desc">src/ 目录 chmod 555 锁定。Verifier 在 Docker 容器内运行测试，生成 audit_report.json。</div>
+        </div>
+        <div class="state-box warn">
+          <div class="state-name">PENDING_COMMIT</div>
+          <div class="state-desc">审计通过，等待 Owner 执行 /merge 或 /reject。若含 [B_PLAN] 则不可进入 autopilot。</div>
+        </div>
+      </div>
+
+      <h3>完整状态转移表</h3>
+      <table>
+        <tr><th>From</th><th>To</th><th>触发条件</th><th>Gateway 动作</th></tr>
+        <tr>
+          <td>IDLE</td><td>BOOTSTRAP</td>
+          <td>Owner 执行 <code>/init</code></td>
+          <td>启动 Verifier 进程，加载 Meta-Schema，提示双检锁警告</td>
+        </tr>
+        <tr>
+          <td>BOOTSTRAP</td><td>IDLE</td>
+          <td>Owner 点击 Confirm（双检锁通过）</td>
+          <td>写入 DR-001.md，生成 L2 index.json，标注"未经历史 ADR 审计"警告</td>
+        </tr>
+        <tr>
+          <td>IDLE</td><td>PROPOSING</td>
+          <td>Owner 执行 <code>/propose</code></td>
+          <td>注入 L2 架构文档 + 相关 DR 摘要到 Verifier 上下文</td>
+        </tr>
+        <tr>
+          <td>PROPOSING</td><td>EXECUTING</td>
+          <td>Verifier 输出确认的 current_spec.md</td>
+          <td>切换至 Executor PTY，写入 Spec，重置 Quota 计数器</td>
+        </tr>
+        <tr>
+          <td>EXECUTING</td><td>SUSPENDED</td>
+          <td>stdout 出现 <code>[REQ_REVIEW]</code> 或 ACCESS_DENIED</td>
+          <td>发送 SIGSTOP，检查 TCP 连接，读取 q_waiting.json</td>
+        </tr>
+        <tr>
+          <td>SUSPENDED</td><td>ARBITRATING</td>
+          <td>Verifier 进程就绪</td>
+          <td>将 q_waiting.json + 相关 DR 注入 Verifier 上下文</td>
+        </tr>
+        <tr>
+          <td>ARBITRATING</td><td>EXECUTING</td>
+          <td>Verifier 输出裁决</td>
+          <td>将裁决以 SYSTEM_NOTIFICATION 格式写入 Executor STDIN，发送 SIGCONT，Quota -1</td>
+        </tr>
+        <tr>
+          <td>EXECUTING</td><td>AUDITING</td>
+          <td>stdout 出现 <code>[DONE]</code></td>
+          <td>chmod -R 555 src/，拉起 Docker 容器，Volume 只读挂载</td>
+        </tr>
+        <tr>
+          <td>AUDITING</td><td>EXECUTING</td>
+          <td>audit_report.json 中 failure_count &gt; 0</td>
+          <td>chmod -R 755 src/，将失败摘要写入 Executor STDIN</td>
+        </tr>
+        <tr>
+          <td>AUDITING</td><td>PENDING_COMMIT</td>
+          <td>所有测试通过 且 无 [B_PLAN]</td>
+          <td>chmod -R 755 src/，git checkout -b feature-xxx，通知 Owner</td>
+        </tr>
+        <tr>
+          <td>AUDITING</td><td>WAITING_FOR_OWNER</td>
+          <td>所有测试通过 但 含 [B_PLAN]</td>
+          <td>强制阻塞，禁止 autopilot，Owner 必须手动审阅 B_PLAN 决策</td>
+        </tr>
+        <tr>
+          <td>EXECUTING</td><td>IDLE</td>
+          <td>Quota 耗尽（异常终止）</td>
+          <td>触发 Clean Shutdown 协议（见下文）</td>
+        </tr>
+      </table>
+
+      <h3>Clean Shutdown 协议（异常终止善后）</h3>
+      <div class="code-label">Gateway 原子操作序列</div>
+      <pre><code><span class="hl-dim"># 1. 强制快照（不触发 pre-commit hooks）</span>
+git add -A
+git commit -m <span class="hl-orange">"[CLADA_INTERRUPTED]: Quota exhausted at IT-042"</span> --no-verify
+git checkout -b clada/interrupted/IT-042
+
+<span class="hl-dim"># 2. 保存中断现场</span>
+{
+  <span class="hl-green">"iteration_id"</span>: <span class="hl-orange">"IT-042"</span>,
+  <span class="hl-green">"last_trace"</span>: <span class="hl-orange">"[TRACE] Modified: auth.ts, db.ts, session.ts"</span>,
+  <span class="hl-green">"pending_question"</span>: <span class="hl-orange">"..."</span>,   <span class="hl-dim">// 来自 q_waiting.json（如有）</span>
+  <span class="hl-green">"modified_files"</span>: [<span class="hl-orange">"src/auth.ts"</span>, <span class="hl-orange">"src/db.ts"</span>],
+  <span class="hl-green">"stack_summary"</span>: <span class="hl-orange">"..."</span>         <span class="hl-dim">// Summarizer 生成的摘要</span>
+} <span class="hl-dim">→ interrupted_state.json</span>
+
+<span class="hl-dim"># 3. 提示 Owner 选择</span>
+<span class="hl-orange">"任务在 IT-042 中断。代码已保存至 clada/interrupted/IT-042 分支。"</span>
+<span class="hl-orange">"[A] 补充 Quota 继续  [B] 回滚至 main  [C] 保留分支稍后处理"</span></code></pre>
+    </div>
+
+    <!-- SECTION 5: 通讯协议 -->
+    <div class="section" id="protocols">
+      <div class="section-label">§ 05 · Communication Protocols</div>
+      <h2>Agent 间通讯协议</h2>
+
+      <h3>ARBITRATING → EXECUTING：Append Injection</h3>
+      <p>Verifier 的裁决通过 Gateway 以 <strong>SYSTEM_NOTIFICATION</strong> 格式直接写入 Executor 的 PTY STDIN，伪装成 Owner 指令。Executor 不需要读取第三方文件，在会话流中直接获取最新指令。</p>
+      <div class="code-label">注入格式（写入 Executor PTY STDIN）</div>
+      <pre><code>[SYSTEM_NOTIFICATION]: Verifier has resolved your query.
+Decision: <span class="hl-green">{裁决内容}</span>
+Referenced ADR: <span class="hl-orange">DR-024</span>
+Constraint: This decision is binding. Do not deviate.
+Please integrate this decision and continue your current task.</code></pre>
+
+      <h3>EXECUTING → SUSPENDED：q_waiting.json</h3>
+      <div class="code-label">.comm/q_waiting.json</div>
+      <pre><code>{
+  <span class="hl-green">"iteration_id"</span>: <span class="hl-orange">"IT-042"</span>,
+  <span class="hl-green">"question_id"</span>: <span class="hl-orange">"Q-007"</span>,
+  <span class="hl-green">"type"</span>: <span class="hl-orange">"interface_ambiguity"</span>,   <span class="hl-dim">// 歧义类型</span>
+  <span class="hl-green">"context"</span>: <span class="hl-orange">"Spec 未定义跨模块接口的错误传递方式"</span>,
+  <span class="hl-green">"affected_files"</span>: [<span class="hl-orange">"src/auth.ts"</span>, <span class="hl-orange">"src/session.ts"</span>],
+  <span class="hl-green">"quota_used"</span>: <span class="hl-blue">3</span>,
+  <span class="hl-green">"timestamp"</span>: <span class="hl-blue">1716880200</span>
+}</code></pre>
+
+      <h3>[TRACE] 输出规范</h3>
+      <div class="code-label">Executor 每修改 3 个文件输出一次</div>
+      <pre><code>[TRACE] IT-042 | Modified: src/auth.ts, src/db.ts, src/session.ts
+[TRACE] Status: Implementing login endpoint per ASSERT-01
+[TRACE] Next: Write unit test for Argon2id hash verification</code></pre>
+      <p><strong>消费路径</strong>：Gateway 实时将 TRACE 发送给 Summarizer（轻量级模型），生成 <code>current_progress.md</code>，供 Owner 实时查看。Summarizer 输出<strong>严禁</strong>进入 Executor 或 Verifier 的上下文。</p>
+
+      <h3>[B_PLAN] 标签协议</h3>
+      <div class="note-box">
+        <strong>触发条件</strong>
+        Executor Quota 耗尽但任务未完成时，必须在下一次代码提交中附加 [B_PLAN] 标签，表明此次决策为"无Spec依据的主观判断"。
+      </div>
+      <pre><code><span class="hl-dim">// 代码注释中标注</span>
+<span class="hl-orange">// [B_PLAN]: Session expiry set to 24h — no spec guidance, owner must confirm</span>
+
+<span class="hl-dim">// TRACE 中也必须出现</span>
+[TRACE] [B_PLAN] IT-042 | Decision without spec: session TTL = 86400s</code></pre>
+      <p><strong>审计后果</strong>：Verifier 发现 [B_PLAN] 后，即便测试全部通过，审计结论为 <code>PASS_WITH_RISK</code>，强制进入 WAITING_FOR_OWNER，<strong>禁止 autopilot 合并</strong>。</p>
+    </div>
+
+    <!-- SECTION 6: contract.json -->
+    <div class="section" id="contract">
+      <div class="section-label">§ 06 · Contract Specification</div>
+      <h2>contract.json 完整规范</h2>
+      <p>Contract 是系统的"机器可读宪法"，优先级高于一切自然语言文档。Verifier 以此为审计标准，Executor 以此为实现边界。</p>
+
+      <h3>字段分类</h3>
+      <div class="field-row">
+        <div class="field-name">contract_id <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">string</div>
+        <div class="field-desc">格式 CNT-xxx，唯一标识。版本升级时创建新 CNT，旧 CNT 标记 superseded_by。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">version <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">semver</div>
+        <div class="field-desc">语义化版本。Hard Fields 变更必须升 major，Soft Fields 变更升 minor。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">scope.modules <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">string[]</div>
+        <div class="field-desc">本 Contract 覆盖的模块列表。Executor 不得修改范围外的模块而不创建新 Contract。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">scope.interfaces <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">string[]</div>
+        <div class="field-desc">涉及的 API 端点或函数签名。格式：<code>METHOD /path</code> 或 <code>FunctionName(args): ReturnType</code>。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">constraints.strict_types <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">boolean</div>
+        <div class="field-desc">是否强制严格类型。影响 Verifier 的类型检查策略。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">constraints.max_latency_ms <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">number</div>
+        <div class="field-desc">性能硬指标。Verifier 的测试脚本中必须包含延迟断言。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">constraints.allowed_dependencies <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">string[]</div>
+        <div class="field-desc">白名单依赖库。Executor 引入白名单外依赖时 Gateway 拦截并报错。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">hard_assertions <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">Assertion[]</div>
+        <div class="field-desc">每条断言包含 id、description、check_script（可执行验证脚本路径）。Verifier 直接运行脚本，不做主观判断。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">soft_recommendations <span class="badge badge-soft">Soft</span></div>
+        <div class="field-type">Rec[]</div>
+        <div class="field-desc">编码风格建议，不影响审计结论。Owner 在双检锁阶段自行选择。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">superseded_by <span class="badge badge-soft">Soft</span></div>
+        <div class="field-type">string?</div>
+        <div class="field-desc">废弃时填写继任 CNT 编号。RAG 系统据此过滤过期 Contract。</div>
+      </div>
+
+      <h3>完整示例</h3>
+      <div class="code-label">docs/spec/contract.json</div>
+      <pre><code>{
+  <span class="hl-green">"contract_id"</span>: <span class="hl-orange">"CNT-001"</span>,
+  <span class="hl-green">"version"</span>: <span class="hl-orange">"1.0.0"</span>,
+  <span class="hl-green">"created_by"</span>: <span class="hl-orange">"bootstrap-dual-lock"</span>,
+  <span class="hl-green">"bootstrap_warning"</span>: <span class="hl-orange">"未经历史 ADR 审计，由 Owner 手动确认"</span>,
+  <span class="hl-green">"scope"</span>: {
+    <span class="hl-green">"modules"</span>: [<span class="hl-orange">"auth"</span>, <span class="hl-orange">"database"</span>],
+    <span class="hl-green">"interfaces"</span>: [<span class="hl-orange">"POST /v1/login"</span>, <span class="hl-orange">"POST /v1/logout"</span>]
+  },
+  <span class="hl-green">"constraints"</span>: {
+    <span class="hl-green">"strict_types"</span>: <span class="hl-blue">true</span>,
+    <span class="hl-green">"max_latency_ms"</span>: <span class="hl-blue">200</span>,
+    <span class="hl-green">"allowed_dependencies"</span>: [<span class="hl-orange">"zod"</span>, <span class="hl-orange">"argon2"</span>, <span class="hl-orange">"jsonwebtoken"</span>]
+  },
+  <span class="hl-green">"hard_assertions"</span>: [
+    {
+      <span class="hl-green">"id"</span>: <span class="hl-orange">"ASSERT-01"</span>,
+      <span class="hl-green">"description"</span>: <span class="hl-orange">"密码必须在存储前用 Argon2id 哈希处理"</span>,
+      <span class="hl-green">"check_script"</span>: <span class="hl-orange">"npm run test:security"</span>
+    },
+    {
+      <span class="hl-green">"id"</span>: <span class="hl-orange">"ASSERT-02"</span>,
+      <span class="hl-green">"description"</span>: <span class="hl-orange">"登录接口 P95 延迟必须低于 200ms"</span>,
+      <span class="hl-green">"check_script"</span>: <span class="hl-orange">"npm run test:perf -- --assert-p95=200"</span>
+    }
+  ],
+  <span class="hl-green">"soft_recommendations"</span>: [
+    {
+      <span class="hl-green">"id"</span>: <span class="hl-orange">"REC-01"</span>,
+      <span class="hl-green">"description"</span>: <span class="hl-orange">"优先使用 async/await 而非裸 Promise"</span>
+    }
+  ],
+  <span class="hl-green">"superseded_by"</span>: <span class="hl-blue">null</span>
+}</code></pre>
+
+      <h3>Contract 版本演进规则</h3>
+      <p>当 Contract 从 1.0.0 升级时，旧 CNT 不删除，标记 <code>superseded_by: "CNT-002"</code>。历史 DR 中引用旧 CNT 编号的记录保持原样（历史真实性），但 RAG 检索时通过 L2 index.json 的 superseded 字段自动过滤，不向 Agent 提供过期 Contract 内容。</p>
+    </div>
+
+    <!-- SECTION 7: DR-xxx -->
+    <div class="section" id="dr">
+      <div class="section-label">§ 07 · Decision Records</div>
+      <h2>DR-xxx.md 决策记录规范</h2>
+      <p>DR（Decision Record）是系统的"判例法库"。所有重大决策必须记录，Verifier 在仲裁时必须引用 DR 而非凭空判断。</p>
+
+      <h3>Front-matter 字段（机器可读，RAG 过滤依据）</h3>
+      <div class="field-row">
+        <div class="field-name">id <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">DR-xxx</div>
+        <div class="field-desc">三位数字编号，唯一，递增。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">title <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">string</div>
+        <div class="field-desc">一句话描述决策内容。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">status <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">enum</div>
+        <div class="field-desc"><code>proposed</code> | <code>accepted</code> | <code>superseded</code>。RAG 过滤器据此剔除 superseded 记录。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">superseded_by <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">DR-xxx?</div>
+        <div class="field-desc">若 status 为 superseded，必须填写继任 DR 编号。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">date <span class="badge badge-hard">Hard</span></div>
+        <div class="field-type">YYYY-MM-DD</div>
+        <div class="field-desc">决策日期，用于 RAG 按时间排序。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">tags <span class="badge badge-soft">Soft</span></div>
+        <div class="field-type">string[]</div>
+        <div class="field-desc">分类标签，用于 RAG 关键词检索。</div>
+      </div>
+      <div class="field-row">
+        <div class="field-name">related_contract <span class="badge badge-soft">Soft</span></div>
+        <div class="field-type">CNT-xxx?</div>
+        <div class="field-desc">与本决策关联的 Contract 版本。</div>
+      </div>
+
+      <h3>完整示例</h3>
+      <div class="code-label">docs/decisions/DR-024.md</div>
+      <pre><code><span class="hl-dim">---</span>
+<span class="hl-green">id</span>: DR-024
+<span class="hl-green">title</span>: 使用 DeepSeek V4 作为 Executor 模型
+<span class="hl-green">status</span>: accepted
+<span class="hl-green">superseded_by</span>: null
+<span class="hl-green">date</span>: 2026-05-04
+<span class="hl-green">tags</span>: [model-selection, cost-control]
+<span class="hl-green">related_contract</span>: CNT-001
+<span class="hl-dim">---</span>
+
+## Context
+初始方案使用 Claude Opus，但长期运行的 Token 成本过高，在 100 天迭代周期内不可持续。
+
+## Decision
+切换至 DeepSeek V4-Pro 通过 CLI Bridge 接入作为 Executor 模型。
+
+## Rationale
+V4-Pro 在编码基准测试中达到可比分数，成本降低约 90%，对长周期 Ralph Loop 至关重要。
+
+## Trade-offs
+- **放弃**：Claude Opus 在复杂推理任务中的优势
+- **获得**：每月约 $500 的成本节省，可持续运行能力
+
+## Consequences
+- ✅ 总 Token 成本下降 90%
+- ⚠️ 复杂推理任务延迟轻微上升
+- ❌ 部分多语言任务质量略有下降
+
+## Verification
+- Gateway 仪表盘监控 Token 用量
+- 每次 Audit 运行 <span class="hl-orange">`npm run test:audit`</span> 验证编码准确性</code></pre>
+    </div>
+
+    <!-- SECTION 8: 三级记忆 -->
+    <div class="section" id="memory">
+      <div class="section-label">§ 08 · Memory System</div>
+      <h2>三级记忆系统</h2>
+      <p>三级记忆是对抗"100天后幻觉"的核心机制。每一级有明确的写入者、读取时机和过期机制。</p>
+
+      <div class="card-grid">
+        <div class="card green">
+          <div class="card-title">L1 · Active（工作记忆）</div>
+          <div class="card-body">
+            <strong style="color:var(--accent)">内容：</strong>当前修改文件 + current_spec.md + .cursorrules<br><br>
+            <strong style="color:var(--accent)">机制：</strong>Gateway 在每次唤醒 Agent 时动态注入 System Prompt。Agent 的上下文窗口只包含当前任务相关内容。<br><br>
+            <strong style="color:var(--accent)">生命周期：</strong>单次 Iteration
+          </div>
+          <div class="card-tag">In-Context</div>
+        </div>
+        <div class="card blue">
+          <div class="card-title">L2 · Structural（架构记忆）</div>
+          <div class="card-body">
+            <strong style="color:var(--accent2)">内容：</strong>DR-xxx.md 集合 + architecture.md + L2 index.json<br><br>
+            <strong style="color:var(--accent2)">写入者：</strong>Verifier（每次 ARBITRATING 后更新）<br><br>
+            <strong style="color:var(--accent2)">读取时机：</strong>/propose 和 /ask_verifier 时强制读取<br><br>
+            <strong style="color:var(--accent2)">过期机制：</strong>index.json 维护 superseded 字段，Gateway 在注入前预过滤
+          </div>
+          <div class="card-tag">File-Based</div>
+        </div>
+        <div class="card orange">
+          <div class="card-title">L3 · Historical（向量记忆）</div>
+          <div class="card-body">
+            <strong style="color:var(--accent3)">内容：</strong>IT-xxx.md（迭代快照）+ 对话全量 Log<br><br>
+            <strong style="color:var(--accent3)">写入者：</strong>后台异步脚本，每次 Iteration 结束后压缩写入<br><br>
+            <strong style="color:var(--accent3)">检索策略：</strong>双重检索（关键词 + AST 代码片段），Verifier 对结果二次过滤<br><br>
+            <strong style="color:var(--accent3)">过期机制：</strong>Gateway 在喂给 Agent 前检查 DR front-matter，剔除 superseded 记录
+          </div>
+          <div class="card-tag">Vector RAG</div>
+        </div>
+      </div>
+
+      <h3>L2 index.json 结构</h3>
+      <div class="code-label">docs/decisions/index.json（Gateway 过滤依据）</div>
+      <pre><code>{
+  <span class="hl-green">"decisions"</span>: [
+    {
+      <span class="hl-green">"id"</span>: <span class="hl-orange">"DR-024"</span>,
+      <span class="hl-green">"status"</span>: <span class="hl-orange">"accepted"</span>,
+      <span class="hl-green">"superseded_by"</span>: <span class="hl-blue">null</span>,
+      <span class="hl-green">"tags"</span>: [<span class="hl-orange">"model-selection"</span>],
+      <span class="hl-green">"summary"</span>: <span class="hl-orange">"使用 DeepSeek V4 作为 Executor，节省 90% 成本"</span>
+    },
+    {
+      <span class="hl-green">"id"</span>: <span class="hl-orange">"DR-005"</span>,
+      <span class="hl-green">"status"</span>: <span class="hl-orange">"superseded"</span>,
+      <span class="hl-green">"superseded_by"</span>: <span class="hl-orange">"DR-024"</span>,
+      <span class="hl-green">"tags"</span>: [<span class="hl-orange">"model-selection"</span>],
+      <span class="hl-green">"summary"</span>: <span class="hl-orange">"[DEPRECATED] 使用 Claude Opus 作为 Executor"</span>
+    }
+  ],
+  <span class="hl-green">"contracts"</span>: [
+    { <span class="hl-green">"id"</span>: <span class="hl-orange">"CNT-001"</span>, <span class="hl-green">"status"</span>: <span class="hl-orange">"active"</span>, <span class="hl-green">"version"</span>: <span class="hl-orange">"1.0.0"</span> }
+  ]
+}</code></pre>
+    </div>
+
+    <!-- SECTION 9: Bootstrap -->
+    <div class="section" id="bootstrap">
+      <div class="section-label">§ 09 · Bootstrap</div>
+      <h2>Bootstrap 引导流程（clada init）</h2>
+      <p>Bootstrap 是 CLADA 唯一要求 Owner 高强度介入的阶段。此阶段生成的 Contract 和 ADR 是整个项目的"宪法创世"，必须经过双检锁确认后才能进入稳态。</p>
+
+      <div class="risk-box">
+        <strong>⚠ Bootstrap 警告</strong>
+        此阶段 Verifier 处于"格式化工具模式"，没有历史 ADR 可参考。生成的 contract.json 必须由 Owner 像审计法律合同一样仔细审阅。系统会在 Contract 上自动标注 bootstrap_warning 字段，直到经过至少一次完整 Iteration 验证后才移除。
+      </div>
+
+      <h3>双检锁机制</h3>
+      <p>Bootstrap 阶段由两个不同模型分别生成 Contract，Gateway 进行字段级比对，Owner 只仲裁差异点。</p>
+
+      <div class="flow">
+<span class="hl-dim">Step 1</span>  Owner 输入 Goal 文本
+          <span class="flow-arrow">↓</span>
+<span class="hl-dim">Step 2</span>  <span class="flow-agent">Model A (Claude)</span> 生成 contract_a.json
+          <span class="flow-agent">Model B (GPT-4o)</span> 生成 contract_b.json
+          <span class="flow-arrow">↓ 并行</span>
+<span class="hl-dim">Step 3</span>  Gateway 执行 Hard Fields 字段级 Key-Value 比对
+          <span class="flow-arrow">↓</span>
+<span class="hl-dim">Step 4a</span> Hard Fields 不一致 → <span class="hl-red">标红，Owner 必须手动选择</span>
+<span class="hl-dim">Step 4b</span> Soft Fields 不一致 → <span class="hl-orange">标黄，Owner 可选择或忽略</span>
+<span class="hl-dim">Step 4c</span> 所有字段一致 → <span class="hl-green">自动通过</span>
+          <span class="flow-arrow">↓</span>
+<span class="hl-dim">Step 5</span>  Owner 点击 Confirm → contract.json 状态从"流体"变为"晶体"
+          <span class="flow-arrow">↓</span>
+<span class="hl-dim">Step 6</span>  系统写入 DR-001.md（技术选型决策）
+          生成初始 L2 index.json
+          标注 bootstrap_warning，进入 IDLE
+      </div>
+
+      <h3>冷启动 RAG 处理</h3>
+      <p>若 L3 为空（新项目），Gateway 扫描现有代码库生成 Repo Map，作为第一份 <code>architecture.md</code> 写入 L2。若代码库也为空，则 architecture.md 仅包含 Goal 和技术栈选型，后续每次 Iteration 增量追加。</p>
+    </div>
+
+    <!-- SECTION 10: 隔离机制 -->
+    <div class="section" id="isolation">
+      <div class="section-label">§ 10 · Isolation</div>
+      <h2>物理隔离机制详解</h2>
+      <p>CLADA 的隔离分两个独立防御层，针对不同的安全目标，适用对象不同。</p>
+
+      <table>
+        <tr><th>防御层</th><th>适用对象</th><th>防御目标</th><th>实现方式</th></tr>
+        <tr>
+          <td><strong>宿主机文件代理</strong></td>
+          <td>Executor</td>
+          <td>逻辑泄密（读取 secrets、修改 docs）</td>
+          <td>Gateway 通过 LD_PRELOAD 或 ptrace 拦截文件系统调用，返回 EACCES</td>
+        </tr>
+        <tr>
+          <td><strong>Docker 容器隔离</strong></td>
+          <td>Verifier（测试运行时）</td>
+          <td>执行风险（破坏性测试代码）</td>
+          <td>Docker DIND + iptables 白名单网络 + 只读 Volume 挂载</td>
+        </tr>
+      </table>
+
+      <h3>AUDITING 阶段完整隔离流程</h3>
+      <div class="code-label">Gateway 执行序列</div>
+      <pre><code><span class="hl-dim"># 1. 进入 AUDITING 前锁定宿主机源码目录</span>
+chmod -R 555 ./src      <span class="hl-dim"># Read & Execute only，剥夺写权限</span>
+
+<span class="hl-dim"># 2. 启动 fswatch 守护（宿主机层面监控）</span>
+fswatch -r ./src | while read f; do
+  echo "[SECURITY] Unauthorized write attempt: $f"
+  kill -9 $EXECUTOR_PID   <span class="hl-dim"># 立即杀死违规进程</span>
+done &
+
+<span class="hl-dim"># 3. 拉起 Docker 容器（只读挂载源码）</span>
+docker run --rm \
+  -v $(pwd)/src:/app/src:ro \         <span class="hl-dim"># 只读挂载</span>
+  -v $(pwd)/test_results:/results \   <span class="hl-dim"># 可写输出目录</span>
+  --network=clada-test-net \           <span class="hl-dim"># 隔离网络（仅 LocalStack）</span>
+  clada-verifier:latest \
+  npm run test:all
+
+<span class="hl-dim"># 4. 测试完成后恢复权限</span>
+chmod -R 755 ./src
+docker rm -f clada-verifier-$(ITERATION_ID)</code></pre>
+
+      <div class="risk-box">
+        <strong>⚠ 技术风险：fswatch 与 Docker Volume</strong>
+        fswatch 监控宿主机 inode。容器内通过 Volume 映射的写操作是否能被宿主机 fswatch 捕获，取决于 Volume 挂载方式（bind mount vs overlay）。在 bind mount 模式下 inode 共享，fswatch 可捕获；在某些 overlay 配置下可能无法捕获。<strong>必须在目标环境实测验证</strong>。
+      </div>
+    </div>
+
+    <!-- SECTION 11: 技术风险 -->
+    <div class="section" id="risks">
+      <div class="section-label">§ 11 · Technical Risks</div>
+      <h2>技术风险清单</h2>
+
+      <table>
+        <tr><th>风险编号</th><th>风险描述</th><th>严重性</th><th>缓解策略</th><th>状态</th></tr>
+        <tr>
+          <td><code>RISK-01</code></td>
+          <td>SIGSTOP 挂起期间 Claude Code 与 Anthropic 服务器的 TCP 长连接超时（通常 60-120s）</td>
+          <td><span style="color:var(--warn)">高</span></td>
+          <td>Gateway 恢复前检查连接状态；断线则重新注入 current_spec.md 上下文片段；建议部署 Ollama 本地备选模型</td>
+          <td>⚠️ 待实测</td>
+        </tr>
+        <tr>
+          <td><code>RISK-02</code></td>
+          <td>fswatch 在特定 Docker Volume 挂载方式下无法捕获容器内写操作</td>
+          <td><span style="color:var(--accent3)">中</span></td>
+          <td>使用 bind mount 模式；或改用 inotifywait（Linux）替代；AUDITING 开始前的 chmod 555 作为主防线</td>
+          <td>⚠️ 待实测</td>
+        </tr>
+        <tr>
+          <td><code>RISK-03</code></td>
+          <td>Heartbeat 的 <code>#: heartbeat</code> 空注释被 Agent 当成用户消息触发不必要响应</td>
+          <td><span style="color:var(--accent3)">中</span></td>
+          <td>在 PTY 层拦截 Agent 回应该注释的输出，不转发给 Owner；或改用纯 PTY 控制序列（不经 Agent 解析）</td>
+          <td>⚠️ 待实测</td>
+        </tr>
+        <tr>
+          <td><code>RISK-04</code></td>
+          <td>LD_PRELOAD 文件访问代理在不同 OS / Agent 运行时（如容器化 Claude Code）下可能失效</td>
+          <td><span style="color:var(--accent3)">中</span></td>
+          <td>备选方案：使用 Linux namespace（mount ns）创建受限文件系统视图；macOS 上使用 sandbox-exec</td>
+          <td>⚠️ 设计备选</td>
+        </tr>
+        <tr>
+          <td><code>RISK-05</code></td>
+          <td>Bootstrap 双检锁生成的 contract.json 语义差异无法通过字段级 Key-Value 比对发现</td>
+          <td><span style="color:var(--accent)">低</span></td>
+          <td>Hard Fields 严格字符串比对已足够；Soft Fields 差异由 Owner 人工仲裁；Meta-Schema 强制字段存在性</td>
+          <td>✅ 已设计</td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- SECTION 12: 实现路线图 -->
+    <div class="section" id="roadmap">
+      <div class="section-label">§ 12 · Implementation Roadmap</div>
+      <h2>实现路线图</h2>
+
+      <h3>Phase 1 · 核心骨架（优先级最高）</h3>
+      <table>
+        <tr><th>任务</th><th>交付物</th><th>关键验证点</th></tr>
+        <tr>
+          <td>PTY 封装与 SIGSTOP 兼容性测试</td>
+          <td><code>orchestrator.py</code> 基础版</td>
+          <td>Claude Code 在 SIGSTOP 60s 后恢复的上下文完整性</td>
+        </tr>
+        <tr>
+          <td>Pattern Monitor 线程</td>
+          <td>触发词正则引擎</td>
+          <td>[REQ_REVIEW] / [DONE] / [B_PLAN] 可靠识别</td>
+        </tr>
+        <tr>
+          <td>状态机骨架</td>
+          <td><code>current_state.json</code> 读写逻辑</td>
+          <td>八个状态的转移不出现死锁或漏转</td>
+        </tr>
+        <tr>
+          <td>contract.json Meta-Schema 验证器</td>
+          <td><code>contract_validator.py</code></td>
+          <td>Hard Fields 缺失时 Bootstrap 报错拒绝通过</td>
+        </tr>
+      </table>
+
+      <h3>Phase 2 · 隔离与记忆</h3>
+      <table>
+        <tr><th>任务</th><th>交付物</th><th>关键验证点</th></tr>
+        <tr>
+          <td>Docker 测试环境</td>
+          <td><code>Dockerfile.verifier</code> + <code>docker-compose.test.yml</code></td>
+          <td>LocalStack 模拟外部服务；破坏性测试不影响宿主机</td>
+        </tr>
+        <tr>
+          <td>chmod 互斥锁 + fswatch</td>
+          <td>AUDITING 阶段物理锁定逻辑</td>
+          <td>bind mount 场景下 fswatch 捕获率 100%</td>
+        </tr>
+        <tr>
+          <td>L2 index.json 维护</td>
+          <td><code>memory_manager.py</code></td>
+          <td>superseded DR 不出现在 Agent 上下文</td>
+        </tr>
+        <tr>
+          <td>Heartbeat 守护</td>
+          <td>30s 计时器 + 探针逻辑</td>
+          <td>探针不触发 Agent 业务逻辑响应</td>
+        </tr>
+      </table>
+
+      <h3>Phase 3 · 完整流水线</h3>
+      <table>
+        <tr><th>任务</th><th>交付物</th><th>关键验证点</th></tr>
+        <tr>
+          <td>Bootstrap 双检锁 UI</td>
+          <td><code>clada init</code> 命令</td>
+          <td>Hard Fields 差异必须 Owner 手动仲裁，无法跳过</td>
+        </tr>
+        <tr>
+          <td>L3 向量库集成</td>
+          <td>RAG 管道 + Summarizer 接入</td>
+          <td>双重检索 + superseded 过滤正确工作</td>
+        </tr>
+        <tr>
+          <td>Clean Shutdown 协议</td>
+          <td>异常终止善后逻辑</td>
+          <td>中断后 git stash 完整，下次可选择恢复</td>
+        </tr>
+        <tr>
+          <td>Owner 控制台 UI</td>
+          <td>实时 TRACE 面板 + 断点设置</td>
+          <td>$1 费用限制 / 5文件修改限制 可靠触发</td>
+        </tr>
+      </table>
+
+      <div class="completeness">
+        <div class="completeness-title">方案完整度评估</div>
+        <div class="progress-item">
+          <div class="progress-label"><span>三权分立架构设计</span><span>100%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>状态机定义</span><span>100%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>文档规范（Contract + DR）</span><span>100%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>通讯协议（Injection / TRACE / B_PLAN）</span><span>100%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:100%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>隔离机制设计</span><span>95%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:95%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>技术风险覆盖</span><span>95%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:95%"></div></div>
+        </div>
+        <div class="progress-item">
+          <div class="progress-label"><span>PTY 兼容性（待实测）</span><span>70%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:70%"></div></div>
+        </div>
+        <div class="progress-item" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+          <div class="progress-label"><span style="color:var(--heading);font-weight:500">总体完整度</span><span>95%</span></div>
+          <div class="progress-bar" style="height:6px"><div class="progress-fill" style="width:95%"></div></div>
+        </div>
+      </div>
+
+      <div class="note-box">
+        <strong>✅ 结论</strong>
+        CLADA 方案已达到可进入实现阶段的完整度。剩余 5% 集中在三个需要实测验证的技术前提（RISK-01/02/03），建议在 Phase 1 结束时专门安排一个"兼容性验证 Sprint"，以实测结果修正对应的设计细节，再进入 Phase 2。
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
+
+
+
+
+
+## User
+
+另外讨论两个：ohmyopenagent，它运行在opencode上，指挥多个agent来模拟一个团队。其中使用LISP和AST方式，这让我在想，我们是不是把软件想的太复杂了，物理世界里软件之所以很难，是因为形态太多：单体的、集群的；企业用、个人用、；web端、app、桌面；游戏、工具；等等，如果只面向一种，其实规则很明确，比如一个2c的app，如果不考虑后端，其实规则重合度很高。 另外一个思路是建筑，软件设计模式就来自于建筑行业，现在是否还可以照搬建筑行业：有设计、施工、监理、材料制作和供应、工具制作和供应，这很像不同的底层大模型有不同的能力倾向。但是建筑还有一个：流程化，每个项目甲方和设计谈需求、最终四方进行设计交底，施工方每一步施工都有监理确认才可以下一步，监理遵照和施工方不同的工作标准来工作。
+
+上面这两个思路，你看着有点什么启发
+
+
+## Claude
+这两个思路都触到了真实的东西，但方向不同，我分开说。
+
+---
+
+**ohmyopenagent 的 LISP/AST 思路**
+
+它真正有价值的洞察不是 LISP 本身，而是：**把任务描述变成可被机器操作的树结构，而不是自然语言**。
+
+自然语言 Spec 的问题是歧义在传递过程中会放大。但 AST 形式的任务描述是可以被程序验证的——你能判断"这个节点有没有被执行"、"这个分支有没有覆盖"。这和 CLADA 的 contract.json 思路是同一个方向，只是表达层不同。
+
+你说"如果只面向一种形态，规则重合度很高"——这个判断是对的，而且 LISP/AST 的价值正好在这里：**当你把目标领域限定了，任务树的节点类型就是有限的**。一个 2C app 的任务树，节点无非是：数据模型、页面、交互、网络调用、状态管理——就这几类。这个有限集合是可以被穷举和形式化的，Executor 不需要从自然语言里猜你要什么。
+
+但我要泼一盆冷水：**领域限定本身是个硬问题**。"2C app 不考虑后端"听起来简单，但 UI 框架、状态管理方案、设计规范、目标平台，每一个维度都会分叉。你限定的不是"2C app"，你限定的是一个具体的技术栈 + 设计语言的组合。一旦限定够窄，规则确实清晰，但这时候你建的已经不是通用框架，而是一个**垂直领域的代码生成器**。这不是贬义，有时候这恰恰是更有价值的东西。
+
+---
+
+**建筑行业的类比**
+
+这个思路比 ohmyopenagent 更有系统性，而且你说到了一个 CLADA 目前完全缺失的东西：**流程的强制顺序性**。
+
+建筑里监理不是在最后验收，而是**每一步完工才能开始下一步**，而且监理和施工方用的是不同的标准文件——施工方看施工图，监理看验收规范，两者都对，但不是同一个文件。这个结构非常精确地描述了一个 CLADA 现在没有的机制。
+
+让我把建筑角色映射到软件，然后指出真正有价值的地方是哪里：
+
+V
+
+visualize
+
+V
+
+visualize show_widget
+
+映射里大部分 CLADA 已经有对应机制了。真正有价值的启发，是图里标红的三个缺口：
+
+---
+
+**缺口一：双标准文件**
+
+这是建筑里最精妙的设计，也是 CLADA 目前最大的漏洞。
+
+施工方拿的是**施工图**，监理拿的是**验收规范**，这两份文件由不同的人在不同时间写成，有意保持独立。施工方不参与写验收规范，监理不参与画施工图。
+
+CLADA 现在的问题是：`contract.json` 同时充当了这两个角色。Executor 拿它作为实现依据，Verifier 也拿它作为审计依据。这意味着如果 contract 本身有歧义，两边都会用同一种方式理解错误。
+
+建筑行业的解法是：分成两份文件，写法不同，角度不同。对应到 CLADA 就是：
+
+- `spec.md` — 给 Executor 看的，描述"要做什么"，以功能为中心
+- `acceptance_criteria.json` — 给 Verifier 看的，描述"怎么判断做没做到"，以可验证断言为中心
+
+这两个文件在 PROPOSING 阶段由同一个 Verifier 生成，但**刻意用不同视角写**，然后在四方交底时对齐。
+
+---
+
+**缺口二：工序签字（分阶段解锁）**
+
+建筑监理的核心权力不是最后验收，而是**不签字就不能浇下一层混凝土**。这是一种物理级别的强制顺序。
+
+CLADA 现在的状态机已经有顺序，但没有**阶段内部的检查点**。Executor 在 EXECUTING 状态里可以一直跑，中间没有任何强制的"完成 30% 检查一次"的机制。
+
+建筑里对应的是：地基完成监理签字 → 主体结构 → 监理签字 → 装修。每一层都是独立的合同和验收动作。
+
+映射到 CLADA：在 Spec 里把任务分成若干**里程碑（Milestone）**，Executor 完成每个里程碑输出 `[MILESTONE: auth-layer]`，Verifier 做一次轻量审计签字，才解锁下一个里程碑。这样 100 天的项目就变成了 20 个 5 天的项目，每个都有独立的 ADR 和验收记录。
+
+---
+
+**缺口三：四方交底本身**
+
+建筑里交底是一个**仪式性的强制同步时刻**。所有人站在同一张图纸面前，任何歧义必须当场解决，解决记录签字存档。
+
+CLADA 的 PROPOSING 阶段现在是 Owner 和 Verifier 的两方对话，产出 Spec。但 Executor 在这个阶段是沉默的——它不参与 Spec 的形成，直接收到成品 Spec 开始干活。
+
+建筑行业明确反对这种做法，因为施工方最了解"这个设计能不能建"。所以交底时施工方必须在场，有权提出施工疑问，这些疑问会修改图纸。
+
+对应到 CLADA：在 PROPOSING 结束后、EXECUTING 开始前，加一个"**Executor 预审**"步骤。Gateway 把 Spec 发给 Executor，让它只读不写，输出它预见的所有歧义点。Verifier 处理这些歧义点修订 Spec。这一步可以消灭 80% 的 `[REQ_REVIEW]` 中断，因为问题在施工前就暴露了。
+
+---
+
+**两个思路合起来看**
+
+ohmyopenagent 的贡献是：**限定领域，让任务树有限**。建筑行业的贡献是：**流程顺序有物理强制力，标准文件有意分离**。
+
+把这两个合在一起，你会得到一个比 CLADA 更强的架构：**领域限定的分阶段交付系统**，每个领域有自己的任务节点类型，每个阶段有独立的验收标准文件，Executor 在施工前必须参与交底。这比现在的 CLADA 要具体得多，也要可靠得多——代价是它不再是通用的，而是某个特定领域的专用流水线。
+
+你觉得这个方向值得深入吗？
