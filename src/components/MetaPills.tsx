@@ -9,24 +9,24 @@ type MetaPillsProps = {
 
 export function MetaPills({ chat }: MetaPillsProps) {
   return (
-    <div className="flex flex-wrap gap-2 text-sm">
-      <Link
+    <div className="tag-row">
+      <Link prefetch={false}
         href={`/topics/${slugify(chat.meta.topic)}`}
-        className="rounded-full bg-blue-100 px-3 py-1 text-blue-700"
+        className="tag"
       >
         {chat.meta.topic}
       </Link>
       {chat.meta.models.map((model) => (
-        <Link
+        <Link prefetch={false}
           key={model}
           href={`/models/${slugify(model)}`}
-          className="rounded-full bg-green-100 px-3 py-1 text-green-700"
+          className="tag"
         >
           {model}
         </Link>
       ))}
       {chat.meta.tags.map((tag) => (
-        <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-slate-600">
+        <span key={tag} className="tag">
           #{tag}
         </span>
       ))}

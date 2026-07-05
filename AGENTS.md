@@ -44,19 +44,21 @@
 - **框架**：Next.js 16 + React 19 + TypeScript 6
 - **样式**：Tailwind CSS 4
 - **测试**：Vitest 4（node 环境，`tests/**/*.test.{ts,tsx}`）
-- **部署**：Cloudflare Workers via `@opennextjs/cloudflare`
+- **部署**：Next.js static export + Cloudflare Workers Assets
 - **AI**：Gemini API（`@google/genai`）
 - **工作流**：OpenSpec
 
 ## 部署链路
 
 ```
-npm run build:cloudflare   # 构建 worker
+npm run build              # 生成 manifest 和静态 out/
+npm run build:cloudflare   # 当前等同 build
 npm run preview            # 本地预览
 npm run deploy             # 部署到 Cloudflare
+npm run qa:live            # 线上链接和页面完整性验收
 ```
 
-配置文件：`wrangler.jsonc`（`compatibility_date: 2026-04-25`，`nodejs_compat` 已开启）
+配置文件：`wrangler.jsonc`（`main: src/worker.ts`，`assets.directory: out`，`compatibility_date: 2026-04-25`）
 
 ## 路径别名
 

@@ -1,5 +1,7 @@
 export type ChatMessageRole = "user" | "assistant" | "unknown";
 
+export type ContentSection = "brainwave" | "yuan-shan" | "xiao-ju-deng";
+
 export type ChatMessage = {
   id: string;
   role: ChatMessageRole;
@@ -9,13 +11,27 @@ export type ChatMessage = {
 
 export type ChatRecordMeta = {
   title: string;
+  section: ContentSection;
+  category?: string;
   topic: string;
   models: string[];
   source?: string;
+  source_name?: string;
+  source_url?: string;
+  canonical_url?: string;
+  summary?: string;
   published: boolean;
   created?: string;
   tags: string[];
   insights?: string;
+  rss_source?: string;
+  score?: number;
+  impact_score?: number;
+  urgency_score?: number;
+  confidence_score?: number;
+  repo_path?: string;
+  stack?: string[];
+  status?: string;
 };
 
 export type ChatRecord = {
@@ -26,6 +42,8 @@ export type ChatRecord = {
   meta: ChatRecordMeta;
   messages: ChatMessage[];
 };
+
+export type ArticleRecord = ChatRecord;
 
 export type TopicSummary = {
   slug: string;
@@ -71,7 +89,20 @@ export type TopicComparison = {
 
 export type SearchSource = {
   chatSlug: string;
+  section: ContentSection;
   title: string;
   topic: string;
   excerpt: string;
+};
+
+export type SectionSummary = {
+  slug: ContentSection;
+  name: string;
+  articles: ArticleRecord[];
+};
+
+export type YuanShanCategorySummary = {
+  slug: "ai" | "data" | "new-energy" | "traditional-ai" | "education-ai";
+  name: string;
+  articles: ArticleRecord[];
 };

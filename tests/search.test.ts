@@ -10,6 +10,7 @@ const chat: ChatRecord = {
   meta: {
     title: "公开搜索记录",
     topic: "AI Search",
+    section: "brainwave",
     models: ["Gemini"],
     published: true,
     tags: ["search"],

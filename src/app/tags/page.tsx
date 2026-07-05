@@ -7,26 +7,33 @@ export default async function TagsPage() {
   const tags = await getTags();
 
   return (
-    <AppShell>
-      <section className="rounded-[2rem] border border-slate-200 bg-white/75 p-6 shadow-sm">
-        <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-950">标签</h1>
-        {tags.length === 0 ? (
-          <p className="text-slate-500">暂无标签。</p>
-        ) : (
-          <div className="flex flex-wrap gap-3">
-            {tags.map((tag) => (
-              <Link
-                key={tag.slug}
-                href={`/tags/${tag.slug}`}
-                className="rounded-full border border-slate-200 bg-white px-4 py-2 shadow-sm hover:shadow-md"
-              >
-                <span className="font-medium text-slate-950">{tag.name}</span>
-                <span className="ml-2 text-sm text-slate-500">{tag.chats.length}</span>
-              </Link>
-            ))}
-          </div>
-        )}
-      </section>
+    <AppShell active="tags">
+      <div className="topic-layout">
+        <section>
+          <p className="eyebrow">Tags</p>
+          <h1 className="page-title">标签</h1>
+          {tags.length === 0 ? (
+            <p className="page-intro">暂无标签。</p>
+          ) : (
+            <div className="keyword-cloud">
+              {tags.map((tag) => (
+                <Link
+                  prefetch={false}
+                  key={tag.slug}
+                  href={`/tags/${tag.slug}`}
+                  className="keyword"
+                >
+                  {tag.name} <span>{tag.chats.length}</span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </section>
+        <aside className="panel">
+          <h2>标签网络</h2>
+          <p>标签连接脑电波、远山和小桔灯，不同栏目可以通过同一个关键词互相穿透。</p>
+        </aside>
+      </div>
     </AppShell>
   );
 }

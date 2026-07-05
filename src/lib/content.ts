@@ -3,22 +3,33 @@ import { z } from "zod";
 import contentManifest from "@/generated/content-manifest.json";
 import { slugify, uniqueSlug } from "@/lib/slug";
 import type {
+  ArticleRecord,
   ChatMessage,
   ChatRecord,
   ChatRecordMeta,
+  ContentSection,
   ModelSummary,
   TagSummary,
   TopicSummary,
+  YuanShanCategorySummary,
 } from "@/lib/types";
 
 const frontmatterSchema = z.object({
   title: z.string().min(1).default("Untitled chat"),
+  section: z
+    .enum(["brainwave", "yuan-shan", "xiao-ju-deng"])
+    .default("brainwave"),
+  category: z.string().min(1).optional(),
   topic: z.string().min(1).default("General"),
   models: z
     .union([z.array(z.string()), z.string()])
     .transform((value) => (Array.isArray(value) ? value : [value]))
     .default([]),
   source: z.string().optional(),
+  source_name: z.string().optional(),
+  source_url: z.string().optional(),
+  canonical_url: z.string().optional(),
+  summary: z.string().optional(),
   published: z.boolean().default(false),
   created: z.coerce.string().optional(),
   tags: z
@@ -26,6 +37,17 @@ const frontmatterSchema = z.object({
     .transform((value) => (Array.isArray(value) ? value : [value]))
     .default([]),
   insights: z.string().optional(),
+  rss_source: z.string().optional(),
+  score: z.coerce.number().optional(),
+  impact_score: z.coerce.number().optional(),
+  urgency_score: z.coerce.number().optional(),
+  confidence_score: z.coerce.number().optional(),
+  repo_path: z.string().optional(),
+  stack: z
+    .union([z.array(z.string()), z.string()])
+    .transform((value) => (Array.isArray(value) ? value : [value]))
+    .optional(),
+  status: z.string().optional(),
 });
 
 const roleAliases = new Map<string, "user" | "assistant">([
@@ -48,9 +70,58 @@ function normalizeMeta(data: unknown): ChatRecordMeta {
 
   return {
     ...parsed,
+    category: parsed.category ?? defaultCategoryForSection(parsed.section),
+    topic: parsed.topic === "General" ? defaultTopicForSection(parsed.section) : parsed.topic,
     models: parsed.models.filter(Boolean),
     tags: parsed.tags.filter(Boolean),
+    stack: parsed.stack?.filter(Boolean),
   };
+}
+
+export const yuanShanCategoryConfig = [
+  { slug: "ai", name: "AI" },
+  { slug: "data", name: "数据" },
+  { slug: "new-energy", name: "新能源" },
+  { slug: "traditional-ai", name: "传统AI+" },
+  { slug: "education-ai", name: "教育AI+" },
+] as const;
+
+const sectionNames: Record<ContentSection, string> = {
+  brainwave: "脑电波",
+  "yuan-shan": "远山",
+  "xiao-ju-deng": "小桔灯",
+};
+
+function defaultCategoryForSection(section: ContentSection) {
+  return sectionNames[section];
+}
+
+function defaultTopicForSection(section: ContentSection) {
+  if (section === "brainwave") {
+    return "General";
+  }
+
+  return sectionNames[section];
+}
+
+function normalizeYuanShanCategorySlug(category: string) {
+  const normalized = category.trim().toLowerCase();
+  if (["ai", "01_ai技术", "02_ai产品", "ai技术", "ai产品"].includes(normalized)) {
+    return "ai";
+  }
+  if (["data", "数据", "08_cdo中央数据组织", "cdo"].includes(normalized)) {
+    return "data";
+  }
+  if (["new-energy", "新能源", "07_新能源"].includes(normalized)) {
+    return "new-energy";
+  }
+  if (["traditional-ai", "传统ai+", "传统ai", "03_ai传统行业落地", "05_制造业"].includes(normalized)) {
+    return "traditional-ai";
+  }
+  if (["education-ai", "教育ai+", "教育ai", "04_高等教育职业发展"].includes(normalized)) {
+    return "education-ai";
+  }
+  return "ai";
 }
 
 function parseSpeaker(rawSpeaker: string): Pick<ChatMessage, "role" | "speaker"> {
@@ -108,7 +179,7 @@ export function parseMessages(markdown: string): {
   return { messages, parseStatus };
 }
 
-export async function getAllChats(): Promise<ChatRecord[]> {
+export async function getAllArticles(): Promise<ArticleRecord[]> {
   const existingSlugs = new Set<string>();
 
   return (contentManifest as ChatRecord[])
@@ -119,6 +190,53 @@ export async function getAllChats(): Promise<ChatRecord[]> {
       meta: normalizeMeta(record.meta),
     }))
     .sort((a, b) => (b.meta.created ?? "").localeCompare(a.meta.created ?? ""));
+}
+
+export async function getAllChats(): Promise<ChatRecord[]> {
+  const articles = await getAllArticles();
+  return articles.filter((article) => article.meta.section === "brainwave");
+}
+
+export async function getArticlesBySection(section: ContentSection): Promise<ArticleRecord[]> {
+  const articles = await getAllArticles();
+  return articles.filter((article) => article.meta.section === section);
+}
+
+export async function getArticleBySectionSlug(section: ContentSection, slug: string) {
+  const articles = await getArticlesBySection(section);
+  const slugs = new Set([slug]);
+
+  try {
+    slugs.add(decodeURIComponent(slug));
+  } catch {
+    // Keep the original slug when it is not URI encoded.
+  }
+
+  return (
+    articles.find(
+      (article) => slugs.has(article.slug) || article.aliases?.some((alias) => slugs.has(alias)),
+    ) ?? null
+  );
+}
+
+export async function getProducts() {
+  return getArticlesBySection("xiao-ju-deng");
+}
+
+export async function getYuanShanCategories(): Promise<YuanShanCategorySummary[]> {
+  const articles = await getArticlesBySection("yuan-shan");
+  return yuanShanCategoryConfig.map((category) => ({
+    ...category,
+    articles: articles.filter(
+      (article) =>
+        normalizeYuanShanCategorySlug(article.meta.category ?? "AI") === category.slug,
+    ),
+  }));
+}
+
+export async function getYuanShanCategoryBySlug(slug: string) {
+  const categories = await getYuanShanCategories();
+  return categories.find((category) => category.slug === slug) ?? null;
 }
 
 export async function getChatBySlug(slug: string) {
@@ -186,14 +304,14 @@ export async function getModelBySlug(slug: string) {
 }
 
 export async function getTags(): Promise<TagSummary[]> {
-  const chats = await getAllChats();
+  const articles = await getAllArticles();
   const tags = new Map<string, TagSummary>();
 
-  for (const chat of chats) {
-    for (const tag of chat.meta.tags) {
+  for (const article of articles) {
+    for (const tag of article.meta.tags) {
       const slug = slugify(tag);
       const current = tags.get(slug) ?? { slug, name: tag, chats: [] };
-      current.chats.push(chat);
+      current.chats.push(article);
       tags.set(slug, current);
     }
   }

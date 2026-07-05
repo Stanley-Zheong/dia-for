@@ -22,17 +22,23 @@ export default async function ModelPage({ params }: ModelPageProps) {
   }
 
   return (
-    <AppShell>
-      <section className="rounded-[2rem] border border-slate-200 bg-white/75 p-6 shadow-sm">
-        <p className="mb-2 text-sm font-semibold text-blue-600">Model</p>
-        <h1 className="mb-3 text-4xl font-bold tracking-tight text-slate-950">{model.name}</h1>
-        <p className="mb-8 text-slate-600">{model.chats.length} 篇公开聊天记录。</p>
-        <div className="space-y-4">
-          {model.chats.map((chat) => (
-            <ChatCard key={chat.slug} chat={chat} />
-          ))}
-        </div>
-      </section>
+    <AppShell active="brainwave">
+      <div className="category-layout">
+        <section>
+          <p className="eyebrow">Model</p>
+          <h1 className="page-title">{model.name}</h1>
+          <p className="page-intro">{model.chats.length} 篇公开聊天记录。</p>
+          <div className="stream">
+            {model.chats.map((chat) => (
+              <ChatCard key={chat.slug} chat={chat} />
+            ))}
+          </div>
+        </section>
+        <aside className="panel">
+          <h2>{model.name}</h2>
+          <p>按模型反向查看公开对话，适合比较同一工具在不同问题里的表现。</p>
+        </aside>
+      </div>
     </AppShell>
   );
 }

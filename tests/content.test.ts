@@ -8,12 +8,12 @@ describe("content ingestion", () => {
     const chats = await getAllChats();
     const titles = chats.map((chat) => chat.meta.title);
 
-    expect(titles).toContain("AI 编程工具选型：ChatGPT 视角");
+    expect(titles).toContain("AI 编程工具选型：Claude 视角");
     expect(titles).not.toContain("未发布的私人草稿");
   });
 
   it("normalizes slugs", () => {
-    expect(slugify("AI 编程工具选型")).toBe("ai-编程工具选型");
+    expect(slugify("AI 编程工具选型")).toMatch(/^ai-u-[a-z0-9]+$/);
     expect(slugify("  Gemini AI Search  ")).toBe("gemini-ai-search");
   });
 

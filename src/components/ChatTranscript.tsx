@@ -9,8 +9,8 @@ type ChatTranscriptProps = {
 export function ChatTranscript({ chat }: ChatTranscriptProps) {
   if (chat.messages.length === 0) {
     return (
-      <section className="rounded-3xl border border-amber-200 bg-amber-50/80 p-5">
-        <p className="mb-3 text-sm font-medium text-amber-800">
+      <section className="article-callout">
+        <p>
           这篇记录没有识别出标准角色标题，已按原始 Markdown 渲染。
         </p>
         <MarkdownContent content={chat.rawMarkdown} />
@@ -19,9 +19,9 @@ export function ChatTranscript({ chat }: ChatTranscriptProps) {
   }
 
   return (
-    <section className="space-y-5">
+    <section className="chat-transcript">
       {chat.parseStatus === "partial" ? (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+        <div className="article-callout">
           部分标题不是已知用户或模型角色，页面仍保留原文渲染。
         </div>
       ) : null}

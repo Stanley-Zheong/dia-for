@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { AppShell } from "@/components/AppShell";
@@ -5,6 +6,7 @@ import { ChatTranscript } from "@/components/ChatTranscript";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { MetaPills } from "@/components/MetaPills";
 import { getAllChats, getChatBySlug } from "@/lib/content";
+import { slugify } from "@/lib/slug";
 
 type ChatPageProps = {
   params: Promise<{ slug: string }>;
@@ -18,22 +20,20 @@ export async function generateStaticParams() {
 function InsightsPanel({ insights }: { insights?: string }) {
   if (!insights) {
     return (
-      <div className="space-y-4">
-        <div className="text-sm font-semibold text-slate-900">价值提炼</div>
-        <p className="text-sm leading-6 text-slate-500">
-          暂无价值提炼
-        </p>
-        <p className="text-xs leading-5 text-slate-400">
-          这篇对话记录保留了原始内容，欢迎在 Obsidian 中补充你的思考。
-        </p>
+      <div className="tip-related open">
+        <div className="related-card">
+          <strong>价值提炼</strong>
+          暂无价值提炼。
+          <span>这篇对话记录保留了原始内容，欢迎在 Obsidian 中补充你的思考。</span>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="text-sm font-semibold text-slate-900">价值提炼</div>
-      <div className="prose prose-sm prose-slate max-w-none">
+    <div className="tip-related open">
+      <div className="related-card">
+        <strong>价值提炼</strong>
         <MarkdownContent content={insights} />
       </div>
     </div>
@@ -49,23 +49,41 @@ export default async function ChatPage({ params }: ChatPageProps) {
   }
 
   if (slug !== chat.slug) {
-    redirect(`/chats/${chat.slug}`);
+    redirect(`/brainwave/${chat.slug}`);
   }
 
   return (
-    <AppShell aside={<InsightsPanel insights={chat.meta.insights} />}>
-      <article className="rounded-[2rem] border border-slate-200 bg-white/75 p-6 shadow-sm">
-        <header className="mb-8">
-          <p className="mb-2 text-sm text-slate-500">
-            {chat.meta.created ?? "未标注日期"} · {chat.meta.source ?? "Obsidian"}
-          </p>
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-slate-950">
-            {chat.meta.title}
-          </h1>
-          <MetaPills chat={chat} />
-        </header>
-        <ChatTranscript chat={chat} />
-      </article>
+    <AppShell active="brainwave">
+      <div className="content-grid with-tips">
+        <aside className="sidebar article-nav" aria-label="Article navigation">
+          <div className="sidebar-label">Brainwave</div>
+          <nav className="sidebar-nav">
+            <Link prefetch={false} href="/brainwave">栏目首页</Link>
+            <Link prefetch={false} href={`/topics/${slugify(chat.meta.topic)}`}>话题</Link>
+            <Link prefetch={false} href="/tags">标签</Link>
+          </nav>
+        </aside>
+
+        <article className="article-body">
+          <div className="article-meta">
+            首页 / 脑电波 / {chat.meta.topic} · {chat.meta.created ?? "未标注日期"} ·{" "}
+            {chat.meta.source ?? "Obsidian"}
+          </div>
+          <h1 className="article-title">{chat.meta.title}</h1>
+          <div className="article-lead">
+            <MetaPills chat={chat} />
+          </div>
+          <ChatTranscript chat={chat} />
+        </article>
+
+        <aside className="tips-panel" aria-label="Article tips">
+          <h2 className="tips-title">关联 Tips</h2>
+          <button className="tip-button" type="button" aria-expanded="true">
+            价值提炼
+          </button>
+          <InsightsPanel insights={chat.meta.insights} />
+        </aside>
+      </div>
     </AppShell>
   );
 }

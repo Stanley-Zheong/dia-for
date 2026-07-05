@@ -7,24 +7,28 @@ export default async function TopicsPage() {
   const topics = await getTopics();
 
   return (
-    <AppShell>
-      <section className="rounded-[2rem] border border-slate-200 bg-white/75 p-6 shadow-sm">
-        <h1 className="mb-6 text-4xl font-bold tracking-tight text-slate-950">话题</h1>
-        <div className="grid gap-4 md:grid-cols-2">
+    <AppShell active="topics">
+      <div className="topic-layout">
+        <section>
+          <p className="eyebrow">Topics</p>
+          <h1 className="page-title">话题</h1>
+          <div className="topic-cloud">
           {topics.map((topic) => (
-            <Link
+            <Link prefetch={false}
               key={topic.slug}
               href={`/topics/${topic.slug}`}
-              className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md"
+              className="topic-pill"
             >
-              <div className="text-lg font-semibold text-slate-950">{topic.name}</div>
-              <p className="mt-2 text-sm text-slate-500">
-                {topic.chats.length} 篇记录 · {topic.models.join("、")}
-              </p>
+              {topic.name} · {topic.chats.length}
             </Link>
           ))}
-        </div>
-      </section>
+          </div>
+        </section>
+        <aside className="panel">
+          <h2>话题索引</h2>
+          <p>话题页用于把多篇脑电波对话串联起来，适合比较模型观点和回看判断路径。</p>
+        </aside>
+      </div>
     </AppShell>
   );
 }

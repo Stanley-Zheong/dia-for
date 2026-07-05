@@ -6,6 +6,8 @@ import matter from "gray-matter";
 
 const repoRoot = process.cwd();
 const contentDir = path.resolve(repoRoot, process.env.OBSIDIAN_CONTENT_DIR ?? "content/chats");
+const yuanShanDir = path.resolve(repoRoot, process.env.YUAN_SHAN_CONTENT_DIR ?? "content/yuan-shan");
+const productsDir = path.resolve(repoRoot, process.env.PRODUCTS_CONTENT_DIR ?? "content/products");
 const outputPath = path.join(repoRoot, "src", "generated", "content-manifest.json");
 const nonWordPattern = /[^\p{L}\p{N}]+/gu;
 const nonAsciiPattern = /[^a-z0-9]+/g;
@@ -105,14 +107,31 @@ function normalizeArray(value) {
 }
 
 function normalizeMeta(data) {
+  const section = typeof data.section === "string" ? data.section : "brainwave";
+  const defaultTopic = section === "brainwave" ? "General" : section;
+
   return {
     title: typeof data.title === "string" && data.title.length > 0 ? data.title : "Untitled chat",
-    topic: typeof data.topic === "string" && data.topic.length > 0 ? data.topic : "General",
+    section,
+    category: typeof data.category === "string" && data.category.length > 0 ? data.category : section,
+    topic: typeof data.topic === "string" && data.topic.length > 0 ? data.topic : defaultTopic,
     models: normalizeArray(data.models),
     source: typeof data.source === "string" ? data.source : undefined,
+    source_name: typeof data.source_name === "string" ? data.source_name : undefined,
+    source_url: typeof data.source_url === "string" ? data.source_url : undefined,
+    canonical_url: typeof data.canonical_url === "string" ? data.canonical_url : undefined,
+    summary: typeof data.summary === "string" ? data.summary : undefined,
     published: data.published === true,
     created: data.created ? String(data.created) : undefined,
     tags: normalizeArray(data.tags),
+    rss_source: typeof data.rss_source === "string" ? data.rss_source : undefined,
+    score: typeof data.score === "number" ? data.score : undefined,
+    impact_score: typeof data.impact_score === "number" ? data.impact_score : undefined,
+    urgency_score: typeof data.urgency_score === "number" ? data.urgency_score : undefined,
+    confidence_score: typeof data.confidence_score === "number" ? data.confidence_score : undefined,
+    repo_path: typeof data.repo_path === "string" ? data.repo_path : undefined,
+    stack: normalizeArray(data.stack),
+    status: typeof data.status === "string" ? data.status : undefined,
   };
 }
 
@@ -172,10 +191,10 @@ function parseMessages(markdown) {
   };
 }
 
-async function loadRecord(filePath, existingSlugs) {
+async function loadRecord(filePath, existingSlugs, section) {
   const file = await fs.readFile(filePath, "utf8");
   const parsed = matter(file);
-  const meta = normalizeMeta(parsed.data);
+  const meta = normalizeMeta({ section, ...parsed.data });
 
   if (!meta.published) {
     return null;
@@ -204,15 +223,27 @@ async function loadRecord(filePath, existingSlugs) {
   };
 }
 
-const files = await discoverMarkdownFiles(contentDir);
+const contentSources = [
+  { dir: contentDir, section: "brainwave" },
+  { dir: yuanShanDir, section: "yuan-shan" },
+  { dir: productsDir, section: "xiao-ju-deng" },
+];
 const existingSlugs = new Set();
-const records = (
-  await Promise.all(files.map((filePath) => loadRecord(filePath, existingSlugs)))
-)
-  .filter(Boolean)
-  .sort((a, b) => (b.meta.created ?? "").localeCompare(a.meta.created ?? ""));
+const records = [];
+
+for (const source of contentSources) {
+  const files = await discoverMarkdownFiles(source.dir);
+  for (const filePath of files) {
+    const record = await loadRecord(filePath, existingSlugs, source.section);
+    if (record) {
+      records.push(record);
+    }
+  }
+}
+
+records.sort((a, b) => (b.meta.created ?? "").localeCompare(a.meta.created ?? ""));
 
 await fs.mkdir(path.dirname(outputPath), { recursive: true });
 await fs.writeFile(outputPath, `${JSON.stringify(records, null, 2)}\n`, "utf8");
 
-console.log(`Generated content manifest with ${records.length} published chats.`);
+console.log(`Generated content manifest with ${records.length} published articles.`);

@@ -1,23 +1,12 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
+  "main": "src/worker.ts",
   "name": "dia-for",
+  "account_id": "f52e095f302aec8c38fc5e86cc046e01",
   "compatibility_date": "2026-04-25",
-  "compatibility_flags": [
-    "nodejs_compat"
-  ],
   "assets": {
-    "directory": ".open-next/assets",
+    "directory": "out",
     "binding": "ASSETS"
-  },
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      "service": "dia-for"
-    }
-  ],
-  "images": {
-    "binding": "IMAGES"
   },
   "observability": {
     "enabled": true

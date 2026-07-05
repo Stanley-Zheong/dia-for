@@ -9,6 +9,8 @@
     "parseStatus": "complete",
     "meta": {
       "title": "harness 自动化开发思考",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "多模型观点对比",
       "models": [
         "perplexity"
@@ -27,7 +29,8 @@
         "Skill",
         "vibe-coding",
         "CLADA"
-      ]
+      ],
+      "stack": []
     },
     "messages": [
       {
@@ -300,6 +303,8 @@
     "parseStatus": "complete",
     "meta": {
       "title": "Agent 训练与对抗平台",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "General",
       "models": [],
       "source": "https://chatgpt.com/c/69f93fd1-50ac-83ea-8ea1-b1d2772fba05",
@@ -313,7 +318,8 @@
         "agent策略",
         "agent评估",
         "LLM"
-      ]
+      ],
+      "stack": []
     },
     "messages": [
       {
@@ -400,6 +406,8 @@
     "parseStatus": "partial",
     "meta": {
       "title": "两小时工作效率分析与改进建议",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "General",
       "models": [],
       "source": "https://claude.ai/chat/25345618-96ed-4e70-a8b5-22fa8ce454ce",
@@ -407,7 +415,8 @@
       "created": "Tue Apr 28 2026 08:00:00 GMT+0800 (China Standard Time)",
       "tags": [
         "clippings"
-      ]
+      ],
+      "stack": []
     },
     "messages": [
       {
@@ -433,6 +442,8 @@
     "parseStatus": "complete",
     "meta": {
       "title": "AI 编程工具选型：Claude 视角",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "AI 编程工具选型",
       "models": [
         "Claude"
@@ -443,7 +454,8 @@
       "tags": [
         "ai-tools",
         "coding"
-      ]
+      ],
+      "stack": []
     },
     "messages": [
       {
@@ -482,6 +494,8 @@
     "parseStatus": "complete",
     "meta": {
       "title": "AI系统开发思维",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "General",
       "models": [],
       "source": "https://claude.ai/chat/9bce9961-8df3-47fa-84c1-37744fef542f",
@@ -495,7 +509,8 @@
         "hermes",
         "ai-memory",
         "ai-评估体系"
-      ]
+      ],
+      "stack": []
     },
     "messages": [
       {
@@ -549,6 +564,34 @@
     ]
   },
   {
+    "slug": "dia-for",
+    "aliases": [],
+    "rawMarkdown": "dia-for 是统一信息站的前端与发布底座，用于承载脑电波、远山和小桔灯三个栏目。\n\n它负责把 Markdown 内容构建成可浏览、可搜索、可互链的公开站点，并通过 Cloudflare Workers 服务三he水。",
+    "parseStatus": "partial",
+    "meta": {
+      "title": "dia-for",
+      "section": "xiao-ju-deng",
+      "category": "product",
+      "topic": "xiao-ju-deng",
+      "models": [],
+      "summary": "公开 AI 对话和行业情报的统一信息站底座。",
+      "published": true,
+      "created": "Sun Jul 05 2026 08:00:00 GMT+0800 (China Standard Time)",
+      "tags": [
+        "信息站",
+        "内容发布"
+      ],
+      "repo_path": "/Users/laosanzheong/Documents/codebases/chatweb",
+      "stack": [
+        "Next.js",
+        "Cloudflare Workers",
+        "Markdown"
+      ],
+      "status": "active"
+    },
+    "messages": []
+  },
+  {
     "slug": "openclaw",
     "aliases": [
       "科学实用openclaw数字员工",
@@ -558,6 +601,8 @@
     "parseStatus": "complete",
     "meta": {
       "title": "科学实用openclaw数字员工",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "General",
       "models": [],
       "source": "https://chatgpt.com/",
@@ -570,7 +615,8 @@
         "Skill",
         "Multi-Agent",
         "digit-emplyee"
-      ]
+      ],
+      "stack": []
     },
     "messages": [
       {
@@ -756,6 +802,38 @@
     ]
   },
   {
+    "slug": "2026-07-03-token-factory",
+    "aliases": [
+      "异构token工厂不再踩坑-多机构联合发布工业级设计实践-拆解跨硬件推理服务的核心边界"
+    ],
+    "rawMarkdown": "多机构联合发布了工业级异构Token工厂的设计实践，详细拆解了跨硬件推理服务的核心边界问题。\n\n## 影响谁\n\n从事AI推理服务、异构计算、硬件加速的企业和开发者。\n\n## 为什么重要\n\n可能降低异构推理服务的开发成本和部署风险，提升跨硬件兼容性，加速AI应用落地。\n\n## 建议动作\n\n关注该设计实践，评估是否适用于自身业务，考虑引入或参考其架构。",
+    "parseStatus": "partial",
+    "meta": {
+      "title": "异构Token工厂不再踩坑！多机构联合发布工业级设计实践，拆解跨硬件推理服务的核心边界",
+      "section": "yuan-shan",
+      "category": "AI",
+      "topic": "yuan-shan",
+      "models": [],
+      "source_name": "公众号",
+      "source_url": "https://mp.weixin.qq.com/s/iQH9kjMZkGr6Y5xmw1Wbtg",
+      "canonical_url": "https://mp.weixin.qq.com/s/iQH9kjMZkGr6Y5xmw1Wbtg",
+      "summary": "多机构联合发布工业级异构Token工厂设计实践，拆解跨硬件推理服务的核心边界。",
+      "published": true,
+      "created": "Fri Jul 03 2026 08:00:00 GMT+0800 (China Standard Time)",
+      "tags": [
+        "AI",
+        "推理服务"
+      ],
+      "rss_source": "公众号",
+      "score": 52,
+      "impact_score": 0,
+      "urgency_score": 0,
+      "confidence_score": 0,
+      "stack": []
+    },
+    "messages": []
+  },
+  {
     "slug": "chat-61442e58",
     "aliases": [
       "智能时代的商业逻辑"
@@ -764,6 +842,8 @@
     "parseStatus": "partial",
     "meta": {
       "title": "智能时代的商业逻辑",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "General",
       "models": [],
       "published": true,
@@ -773,7 +853,8 @@
         "business-mode",
         "AGI",
         "Agent"
-      ]
+      ],
+      "stack": []
     },
     "messages": []
   },
@@ -787,6 +868,8 @@
     "parseStatus": "complete",
     "meta": {
       "title": "自动化开发对话",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "General",
       "models": [],
       "source": "https://www.perplexity.ai/search/xian-zai-you-hen-duo-gong-si-d-BBchstnDSLSuB1212EpjCA",
@@ -797,7 +880,8 @@
         "vibe-coding",
         "SDD",
         "Test-drive-specfic"
-      ]
+      ],
+      "stack": []
     },
     "messages": [
       {
@@ -919,6 +1003,8 @@
     "parseStatus": "complete",
     "meta": {
       "title": "AI产品研发思路",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "General",
       "models": [],
       "published": true,
@@ -928,7 +1014,8 @@
         "ai产品经理",
         "ai开发路径",
         "ai技能"
-      ]
+      ],
+      "stack": []
     },
     "messages": [
       {
@@ -1039,6 +1126,8 @@
     "parseStatus": "partial",
     "meta": {
       "title": "几种harness对比",
+      "section": "brainwave",
+      "category": "brainwave",
       "topic": "General",
       "models": [],
       "published": true,
@@ -1049,7 +1138,8 @@
         "DIG",
         "vibe-coding",
         "harness"
-      ]
+      ],
+      "stack": []
     },
     "messages": []
   }

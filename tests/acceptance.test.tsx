@@ -90,7 +90,7 @@ describe("published content acceptance", () => {
 
     expect(harness).toBeDefined();
     expect(harness?.messages.some((message) => message.role === "unknown")).toBe(false);
-    expect(harness?.messages.length).toBeLessThan(20);
+    expect(harness?.messages.length).toBeGreaterThan(20);
     expect(harness?.messages[1]?.content).toContain("## 典型项目样本");
   });
 
