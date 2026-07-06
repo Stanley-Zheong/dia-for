@@ -7,7 +7,7 @@
     "content:manifest": "node scripts/generate-content-manifest.mjs",
     "products:candidates": "node scripts/generate-product-candidates.mjs",
     "content:sync": "bash scripts/sync-from-obsidian.sh",
-    "build": "node scripts/clean-static-output.mjs && npm run content:manifest && next build --webpack && node scripts/encode-static-paths.mjs",
+    "build": "node scripts/clean-static-output.mjs && npm run content:manifest && next build --webpack && node scripts/encode-static-paths.mjs && node scripts/write-locale-redirects.mjs",
     "build:cloudflare": "npm run build",
     "dev": "next dev",
     "start": "next start",
