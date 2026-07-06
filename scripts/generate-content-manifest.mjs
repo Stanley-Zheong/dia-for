@@ -112,6 +112,7 @@ function normalizeMeta(data) {
 
   return {
     title: typeof data.title === "string" && data.title.length > 0 ? data.title : "Untitled chat",
+    title_en: typeof data.title_en === "string" && data.title_en.length > 0 ? data.title_en : undefined,
     section,
     category: typeof data.category === "string" && data.category.length > 0 ? data.category : section,
     topic: typeof data.topic === "string" && data.topic.length > 0 ? data.topic : defaultTopic,
@@ -121,9 +122,13 @@ function normalizeMeta(data) {
     source_url: typeof data.source_url === "string" ? data.source_url : undefined,
     canonical_url: typeof data.canonical_url === "string" ? data.canonical_url : undefined,
     summary: typeof data.summary === "string" ? data.summary : undefined,
+    summary_en: typeof data.summary_en === "string" ? data.summary_en : undefined,
     published: data.published === true,
     created: data.created ? String(data.created) : undefined,
     tags: normalizeArray(data.tags),
+    tags_zh: normalizeArray(data.tags_zh),
+    tags_en: normalizeArray(data.tags_en),
+    language: typeof data.language === "string" ? data.language : undefined,
     rss_source: typeof data.rss_source === "string" ? data.rss_source : undefined,
     score: typeof data.score === "number" ? data.score : undefined,
     impact_score: typeof data.impact_score === "number" ? data.impact_score : undefined,

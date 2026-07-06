@@ -30,6 +30,8 @@
         "vibe-coding",
         "CLADA"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": [
@@ -319,6 +321,8 @@
         "agent评估",
         "LLM"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": [
@@ -416,6 +420,8 @@
       "tags": [
         "clippings"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": [
@@ -455,6 +461,8 @@
         "ai-tools",
         "coding"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": [
@@ -510,6 +518,8 @@
         "ai-memory",
         "ai-评估体系"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": [
@@ -581,6 +591,8 @@
         "信息站",
         "内容发布"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "repo_path": "/Users/laosanzheong/Documents/codebases/chatweb",
       "stack": [
         "Next.js",
@@ -616,6 +628,8 @@
         "Multi-Agent",
         "digit-emplyee"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": [
@@ -824,6 +838,8 @@
         "AI",
         "推理服务"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "rss_source": "公众号",
       "score": 52,
       "impact_score": 0,
@@ -854,6 +870,8 @@
         "AGI",
         "Agent"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": []
@@ -881,6 +899,8 @@
         "SDD",
         "Test-drive-specfic"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": [
@@ -1015,6 +1035,8 @@
         "ai开发路径",
         "ai技能"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": [
@@ -1139,6 +1161,8 @@
         "vibe-coding",
         "harness"
       ],
+      "tags_zh": [],
+      "tags_en": [],
       "stack": []
     },
     "messages": []

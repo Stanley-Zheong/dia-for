@@ -160,16 +160,26 @@ Cloudflare Workers Assets 上的公开站点（脑电波 / 远山 / 小桔灯 / 
 公开站不依赖运行时 API；搜索使用本地 manifest，insight 在构建期无 key 时走本地降级
 ```
 
-RSS 情报进入远山的累计式链路：
+RSS 情报进入远山的累计式双语链路：
 
 ```
 Miniflux / RSSHub / industry-crawler
+    ↓
+NetNewsWire / Miniflux star
+    ↓
+ai-intel-daily/scripts/sync_miniflux.py
+    ↓
+status = starred_pending_ai
+    ↓
+ai-intel-daily/scripts/ai_enrich.py
+    ↓
+status = publish_ready（中英双语正文、tags、评分）
     ↓
 ai-intel-daily/scripts/publish_to_chatweb.py
     ↓
 ai-intel-daily/generator/export_yuan_shan_markdown.py
     ↓
-content/yuan-shan/*.md
+content/yuan-shan/*.md + obsidian/raw/rss/**/*.md
     ↓
 npm run content:manifest
     ↓
@@ -177,7 +187,9 @@ npm run build:cloudflare
 ```
 
 `publish_to_chatweb.py` 会校验每条可发布 DB 行都已经进入远山 Markdown 和
-`src/generated/content-manifest.json`，否则非零退出，避免 RSS 管道静默只发布一篇。
+`src/generated/content-manifest.json`，否则非零退出，避免 RSS 管道静默只发布一篇或跳过历史文章。
+
+公开站支持 `/zh/...` 与 `/en/...` 双语静态 URL。没有语言前缀的旧 URL 会由 Cloudflare Worker 按浏览器语言或 `locale` cookie 跳转。
 
 详见 `docs/unified-info-site.md`。
 

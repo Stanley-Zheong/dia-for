@@ -16,6 +16,7 @@ import type {
 
 const frontmatterSchema = z.object({
   title: z.string().min(1).default("Untitled chat"),
+  title_en: z.string().optional(),
   section: z
     .enum(["brainwave", "yuan-shan", "xiao-ju-deng"])
     .default("brainwave"),
@@ -30,12 +31,22 @@ const frontmatterSchema = z.object({
   source_url: z.string().optional(),
   canonical_url: z.string().optional(),
   summary: z.string().optional(),
+  summary_en: z.string().optional(),
   published: z.boolean().default(false),
   created: z.coerce.string().optional(),
   tags: z
     .union([z.array(z.string()), z.string()])
     .transform((value) => (Array.isArray(value) ? value : [value]))
     .default([]),
+  tags_zh: z
+    .union([z.array(z.string()), z.string()])
+    .transform((value) => (Array.isArray(value) ? value : [value]))
+    .optional(),
+  tags_en: z
+    .union([z.array(z.string()), z.string()])
+    .transform((value) => (Array.isArray(value) ? value : [value]))
+    .optional(),
+  language: z.enum(["zh", "en", "bilingual"]).optional(),
   insights: z.string().optional(),
   rss_source: z.string().optional(),
   score: z.coerce.number().optional(),
@@ -74,6 +85,8 @@ function normalizeMeta(data: unknown): ChatRecordMeta {
     topic: parsed.topic === "General" ? defaultTopicForSection(parsed.section) : parsed.topic,
     models: parsed.models.filter(Boolean),
     tags: parsed.tags.filter(Boolean),
+    tags_zh: parsed.tags_zh?.filter(Boolean),
+    tags_en: parsed.tags_en?.filter(Boolean),
     stack: parsed.stack?.filter(Boolean),
   };
 }

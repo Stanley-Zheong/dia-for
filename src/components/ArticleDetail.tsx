@@ -3,29 +3,34 @@ import Link from "next/link";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { articleHref, sectionHref, sectionName } from "@/lib/routes";
 import type { ArticleRecord } from "@/lib/types";
+import type { Locale } from "@/lib/i18n";
+import { defaultLocale, localizeArticle, t, withLocale } from "@/lib/i18n";
 
 type ArticleDetailProps = {
   article: ArticleRecord;
   related?: ArticleRecord[];
+  locale?: Locale;
 };
 
-export function ArticleDetail({ article, related = [] }: ArticleDetailProps) {
-  const sourceUrl = article.meta.canonical_url ?? article.meta.source_url ?? article.meta.source;
+export function ArticleDetail({ article, related = [], locale = defaultLocale }: ArticleDetailProps) {
+  const display = localizeArticle(article, locale);
+  const localizedRelated = related.map((item) => localizeArticle(item, locale));
+  const sourceUrl = display.meta.canonical_url ?? display.meta.source_url ?? display.meta.source;
 
   return (
     <div className="content-grid with-tips">
       <aside className="sidebar article-nav" aria-label="Article navigation">
-        <div className="sidebar-label">{sectionName(article.meta.section)}</div>
+        <div className="sidebar-label">{sectionName(display.meta.section, locale)}</div>
         <nav className="sidebar-nav">
-          <Link prefetch={false} href={sectionHref(article.meta.section)}>栏目首页</Link>
-          <Link prefetch={false} href="/topics">话题</Link>
-          <Link prefetch={false} href="/tags">标签</Link>
+          <Link prefetch={false} href={sectionHref(display.meta.section, locale)}>{t(locale, "栏目首页", "Section home")}</Link>
+          <Link prefetch={false} href={withLocale("/topics", locale)}>{t(locale, "话题", "Topics")}</Link>
+          <Link prefetch={false} href={withLocale("/tags", locale)}>{t(locale, "标签", "Tags")}</Link>
         </nav>
-        {related.length > 0 ? (
+        {localizedRelated.length > 0 ? (
           <div className="quick-posts">
-            <p className="caption">同栏阅读</p>
-            {related.slice(0, 4).map((item) => (
-              <Link prefetch={false} key={`${item.meta.section}-${item.slug}`} href={articleHref(item)}>
+            <p className="caption">{t(locale, "同栏阅读", "Related")}</p>
+            {localizedRelated.slice(0, 4).map((item) => (
+              <Link prefetch={false} key={`${item.meta.section}-${item.slug}`} href={articleHref(item, locale)}>
                 {item.meta.title}
               </Link>
             ))}
@@ -35,20 +40,20 @@ export function ArticleDetail({ article, related = [] }: ArticleDetailProps) {
 
       <article className="article-body">
         <div className="article-meta">
-          首页 / {sectionName(article.meta.section)} / {article.meta.category} ·{" "}
-          {article.meta.created ?? "未标注日期"} ·{" "}
-          {article.meta.source_name ?? article.meta.source ?? "站内文章"}
+          {t(locale, "首页", "Home")} / {sectionName(display.meta.section, locale)} / {display.meta.category} ·{" "}
+          {display.meta.created ?? t(locale, "未标注日期", "Undated")} ·{" "}
+          {display.meta.source_name ?? display.meta.source ?? t(locale, "站内文章", "Site article")}
         </div>
-        <h1 className="article-title">{article.meta.title}</h1>
-        {article.meta.summary ? <p className="article-lead">{article.meta.summary}</p> : null}
-        <MarkdownContent content={article.rawMarkdown} />
+        <h1 className="article-title">{display.meta.title}</h1>
+        {display.meta.summary ? <p className="article-lead">{display.meta.summary}</p> : null}
+        <MarkdownContent content={display.rawMarkdown} />
         <div className="source-note">
-          来源：{article.meta.source_name ?? article.meta.source ?? "站内文章"}
+          {t(locale, "来源", "Source")}：{display.meta.source_name ?? display.meta.source ?? t(locale, "站内文章", "Site article")}
           {sourceUrl ? (
             <>
               {" · "}
               <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
-                查看原始来源
+                {t(locale, "查看原始来源", "View original source")}
               </a>
             </>
           ) : null}
@@ -56,44 +61,44 @@ export function ArticleDetail({ article, related = [] }: ArticleDetailProps) {
       </article>
 
       <aside className="tips-panel" aria-label="Article tips">
-        <h2 className="tips-title">关联 Tips</h2>
+        <h2 className="tips-title">{t(locale, "关联 Tips", "Related Tips")}</h2>
         <button className="tip-button" type="button" aria-expanded="true">
-          这篇文章属于 {sectionName(article.meta.section)}
+          {t(locale, "这篇文章属于", "This article belongs to")} {sectionName(display.meta.section, locale)}
         </button>
         <div className="tip-related open">
-          <Link prefetch={false} className="related-card" href={sectionHref(article.meta.section)}>
-            <strong>{sectionName(article.meta.section)}栏目</strong>
-            {article.meta.category} · {article.meta.tags.join(" / ") || "未标注标签"}
-            <span>{article.meta.created ?? "未标注日期"}</span>
+          <Link prefetch={false} className="related-card" href={sectionHref(display.meta.section, locale)}>
+            <strong>{sectionName(display.meta.section, locale)}</strong>
+            {display.meta.category} · {display.meta.tags.join(" / ") || t(locale, "未标注标签", "No tags")}
+            <span>{display.meta.created ?? t(locale, "未标注日期", "Undated")}</span>
           </Link>
         </div>
-        {related.length > 0 ? (
+        {localizedRelated.length > 0 ? (
           <>
             <button className="tip-button" type="button" aria-expanded="true">
-              同栏相关文章
+              {t(locale, "同栏相关文章", "Related Articles")}
             </button>
             <div className="tip-related open">
-              {related.slice(0, 3).map((item) => (
+              {localizedRelated.slice(0, 3).map((item) => (
                 <Link
                   prefetch={false}
                   key={`${item.meta.section}-${item.slug}`}
                   className="related-card"
-                  href={articleHref(item)}
+                  href={articleHref(item, locale)}
                 >
                   <strong>{item.meta.title}</strong>
                   {item.meta.summary ?? item.rawMarkdown.replace(/\s+/g, " ").slice(0, 90)}
-                  <span>{item.meta.created ?? "未标注日期"}</span>
+                  <span>{item.meta.created ?? t(locale, "未标注日期", "Undated")}</span>
                 </Link>
               ))}
             </div>
           </>
         ) : null}
-        {article.meta.score !== undefined ? (
+        {display.meta.score !== undefined ? (
           <div className="panel compact-panel">
-            <h3>评分</h3>
+            <h3>{t(locale, "评分", "Scores")}</h3>
             <div className="stat-list">
-              <div className="stat"><strong>{article.meta.score}</strong><span className="caption">综合分</span></div>
-              <div className="stat"><strong>{article.meta.confidence_score ?? "-"}</strong><span className="caption">置信度</span></div>
+              <div className="stat"><strong>{display.meta.score}</strong><span className="caption">{t(locale, "综合分", "Overall")}</span></div>
+              <div className="stat"><strong>{display.meta.confidence_score ?? "-"}</strong><span className="caption">{t(locale, "置信度", "Confidence")}</span></div>
             </div>
           </div>
         ) : null}

@@ -2,27 +2,31 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { siteConfig } from "@/lib/config";
+import type { Locale } from "@/lib/i18n";
+import { defaultLocale, t, withLocale } from "@/lib/i18n";
 
 type AppShellProps = {
   children: ReactNode;
   active?: "home" | "brainwave" | "yuan-shan" | "xiao-ju-deng" | "topics" | "tags" | "search";
+  locale?: Locale;
 };
 
-const navItems = [
-  { key: "home", href: "/", label: "首页" },
-  { key: "brainwave", href: "/brainwave", label: "脑电波" },
-  { key: "yuan-shan", href: "/yuan-shan", label: "远山" },
-  { key: "xiao-ju-deng", href: "/xiao-ju-deng", label: "小桔灯" },
-  { key: "topics", href: "/topics", label: "话题" },
-  { key: "tags", href: "/tags", label: "标签" },
-] as const;
+export function AppShell({ children, active = "home", locale = defaultLocale }: AppShellProps) {
+  const navItems = [
+    { key: "home", href: withLocale("/", locale), label: t(locale, "首页", "Home") },
+    { key: "brainwave", href: withLocale("/brainwave", locale), label: t(locale, "脑电波", "Brainwave") },
+    { key: "yuan-shan", href: withLocale("/yuan-shan", locale), label: t(locale, "远山", "Distant Hills") },
+    { key: "xiao-ju-deng", href: withLocale("/xiao-ju-deng", locale), label: t(locale, "小桔灯", "Little Lantern") },
+    { key: "topics", href: withLocale("/topics", locale), label: t(locale, "话题", "Topics") },
+    { key: "tags", href: withLocale("/tags", locale), label: t(locale, "标签", "Tags") },
+  ] as const;
+  const otherLocale = locale === "en" ? "zh" : "en";
 
-export function AppShell({ children, active = "home" }: AppShellProps) {
   return (
     <>
       <header className="site-header">
         <div className="header-inner">
-          <Link prefetch={false} className="brand" href="/">
+          <Link prefetch={false} className="brand" href={withLocale("/", locale)}>
             三he水
           </Link>
           <nav className="site-nav" aria-label="Main navigation">
@@ -40,12 +44,15 @@ export function AppShell({ children, active = "home" }: AppShellProps) {
           <div className="header-tools">
             <form className="search-box" action="/search">
               <label className="sr-only" htmlFor="global-search">
-                搜索标题、标签和内容
+                {t(locale, "搜索标题、标签和内容", "Search titles, tags, and content")}
               </label>
-              <input id="global-search" name="q" type="search" placeholder="搜索双链 / 标签" />
+              <input id="global-search" name="q" type="search" placeholder={t(locale, "搜索双链 / 标签", "Search notes / tags")} />
             </form>
-            <Link prefetch={false} className="theme-toggle" aria-label="打开搜索" href="/search">
+            <Link prefetch={false} className="theme-toggle" aria-label={t(locale, "打开搜索", "Open search")} href={withLocale("/search", locale)}>
               ⌕
+            </Link>
+            <Link prefetch={false} className="theme-toggle" href={withLocale("/", otherLocale)} hrefLang={otherLocale}>
+              {otherLocale.toUpperCase()}
             </Link>
           </div>
         </div>
@@ -56,10 +63,10 @@ export function AppShell({ children, active = "home" }: AppShellProps) {
       <footer className="site-footer rich-footer">
         <section className="subscribe-block">
           <p className="eyebrow">Subscribe</p>
-          <h2>订阅 RSS-Daily 与站点更新</h2>
+          <h2>{t(locale, "订阅 RSS-Daily 与站点更新", "Subscribe to RSS-Daily and site updates")}</h2>
           <form className="subscribe-form">
             <input type="email" placeholder="you@example.com" />
-            <button type="button">订阅</button>
+            <button type="button">{t(locale, "订阅", "Subscribe")}</button>
           </form>
           <p>{siteConfig.description}</p>
         </section>
@@ -72,8 +79,8 @@ export function AppShell({ children, active = "home" }: AppShellProps) {
         <section className="footer-meta">
           <strong>三he水</strong>
           <span>
-            <Link prefetch={false} href="/yuan-shan">RSS</Link> ·{" "}
-            <Link prefetch={false} href="/search">搜索</Link> · 归档 · © 2026
+            <Link prefetch={false} href={withLocale("/yuan-shan", locale)}>RSS</Link> ·{" "}
+            <Link prefetch={false} href={withLocale("/search", locale)}>{t(locale, "搜索", "Search")}</Link> · {t(locale, "归档", "Archive")} · © 2026
           </span>
         </section>
       </footer>

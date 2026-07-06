@@ -9,6 +9,37 @@ function canTryDirectoryIndex(url: URL) {
   return !url.pathname.endsWith("/") && !lastSegment.includes(".");
 }
 
+function isStaticAssetPath(pathname: string) {
+  const lastSegment = pathname.split("/").pop() ?? "";
+  return pathname.startsWith("/_next/") || pathname.startsWith("/assets/") || lastSegment.includes(".");
+}
+
+function hasLocalePrefix(pathname: string) {
+  return pathname === "/zh" || pathname === "/en" || pathname.startsWith("/zh/") || pathname.startsWith("/en/");
+}
+
+function preferredLocale(request: Request) {
+  const cookie = request.headers.get("cookie") ?? "";
+  const cookieMatch = cookie.match(/(?:^|;\s*)locale=(zh|en)(?:;|$)/);
+  if (cookieMatch) {
+    return cookieMatch[1];
+  }
+
+  const acceptLanguage = request.headers.get("accept-language")?.toLowerCase() ?? "";
+  return acceptLanguage.includes("en") && !acceptLanguage.includes("zh") ? "en" : "zh";
+}
+
+function localizedRedirect(request: Request) {
+  const url = new URL(request.url);
+  if (isStaticAssetPath(url.pathname) || hasLocalePrefix(url.pathname)) {
+    return null;
+  }
+
+  const locale = preferredLocale(request);
+  url.pathname = `/${locale}${url.pathname === "/" ? "" : url.pathname}`;
+  return Response.redirect(url.toString(), 302);
+}
+
 function candidateRequests(request: Request) {
   const url = new URL(request.url);
   const paths = new Set([url.pathname]);
@@ -51,6 +82,11 @@ const worker = {
   async fetch(request: Request, env: Env): Promise<Response> {
     if (request.method !== "GET") {
       return env.ASSETS.fetch(request);
+    }
+
+    const redirect = localizedRedirect(request);
+    if (redirect) {
+      return redirect;
     }
 
     let fallback: Response | null = null;

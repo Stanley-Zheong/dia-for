@@ -11,6 +11,7 @@ export type ChatMessage = {
 
 export type ChatRecordMeta = {
   title: string;
+  title_en?: string;
   section: ContentSection;
   category?: string;
   topic: string;
@@ -20,9 +21,13 @@ export type ChatRecordMeta = {
   source_url?: string;
   canonical_url?: string;
   summary?: string;
+  summary_en?: string;
   published: boolean;
   created?: string;
   tags: string[];
+  tags_zh?: string[];
+  tags_en?: string[];
+  language?: "zh" | "en" | "bilingual";
   insights?: string;
   rss_source?: string;
   score?: number;

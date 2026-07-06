@@ -23,13 +23,23 @@
 ```text
 Miniflux / RSSHub / industry-crawler
   ↓
-RSS 侧筛选、AI 摘要、评分、人工确认
+NetNewsWire / Miniflux star
+  ↓
+ai-intel-daily/scripts/sync_miniflux.py
+  ↓
+intelligence_items(status = starred_pending_ai)
+  ↓
+ai-intel-daily/scripts/ai_enrich.py
+  ↓
+AI 检索原文、RSS 元数据和历史库，生成中英双语情报
+  ↓
+intelligence_items(status = publish_ready)
   ↓
 ai-intel-daily/scripts/publish_to_chatweb.py
   ↓
 ai-intel-daily/generator/export_yuan_shan_markdown.py
   ↓
-chatweb/content/yuan-shan/*.md
+chatweb/content/yuan-shan/*.md + obsidian/raw/rss/**/*.md
   ↓
 npm run content:manifest
   ↓
@@ -44,9 +54,11 @@ Cloudflare Workers Assets / info.19999991.xyz
 - RSS 是 `industry-crawler` 的信源增强方式之一；`industry-crawler` 可以反向输出关键词、主题、指定 RSS 源或采集需求。
 - 正式公开页面只由 `chatweb` 生成；RSS 旧仓库的 `docs/index.html` 仅作历史兼容。
 - 所有文章必须累计存储为 Markdown 文件，不能用一个 HTML 页面覆盖式发布。
-- RSS 进入 `chatweb` 必须经过 `publish_to_chatweb.py` 的 manifest 校验：每条可发布 DB 行都要出现在远山 Markdown 和 `content-manifest.json` 中。
+- RSS 进入 `chatweb` 必须先经过 AI enrichment；不得把 RSS 原文或简单摘要直接作为公开文章发布。
+- `publish_to_chatweb.py` 必须做 manifest 校验：每条可发布 DB 行都要出现在远山 Markdown 和 `content-manifest.json` 中。
 - 公开站不使用 OpenNext SSR；所有公开页面必须在构建期生成为静态 HTML，避免 Cloudflare Worker 资源上限导致 1102。
 - topic/tag URL 使用 ASCII slug，页面显示仍保留中文名称，避免中文路径在 Cloudflare Assets 上出现 percent-encoding 兼容问题。
+- 双语 URL 使用 `/zh/...` 和 `/en/...`；无语言前缀的旧 URL 由 Cloudflare Worker 按 cookie 或浏览器 `Accept-Language` 跳转。
 
 ## Frontmatter Contract
 
@@ -55,6 +67,7 @@ Cloudflare Workers Assets / info.19999991.xyz
 ```yaml
 ---
 title: "文章标题"
+title_en: "Article title"
 section: "brainwave | yuan-shan | xiao-ju-deng"
 category: "AI"
 topic: "远山"
@@ -62,10 +75,16 @@ published: true
 created: "2026-07-05"
 tags:
   - 远山
+tags_zh:
+  - 远山
+tags_en:
+  - Distant Hills
 source_name: "来源名称"
 source_url: "https://example.com/source"
 canonical_url: "https://example.com/source"
 summary: "一句话摘要"
+summary_en: "One-line summary"
+language: "bilingual"
 ---
 ```
 
@@ -96,6 +115,7 @@ status: "active"
 - `/yuan-shan` 展示远山文章和五个固定子栏目。
 - `/yuan-shan/[slug]` 同时支持分类页和文章详情页。
 - `/xiao-ju-deng` 展示产品矩阵，产品详情有稳定 URL。
+- `/zh/...` 和 `/en/...` 生成同一批文章的双语静态页面。
 - `npm run content:manifest` 能把三个内容目录都写入 `src/generated/content-manifest.json`。
 - `npm run test`、`npm run typecheck`、`npm run lint`、`npm run build:cloudflare` 必须通过。
 - `npm run qa:live` 必须通过：Chromium/WebKit 打开线上站，所有内部链接可打开，12 篇发布文章页数量与 manifest 对齐，无 1102/503/Next error/乱码/空页面。

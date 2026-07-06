@@ -7,9 +7,9 @@ const manifest = JSON.parse(
 );
 
 function sectionHref(section) {
-  if (section === "brainwave") return "/brainwave";
-  if (section === "yuan-shan") return "/yuan-shan";
-  return "/xiao-ju-deng";
+  if (section === "brainwave") return "/zh/brainwave";
+  if (section === "yuan-shan") return "/zh/yuan-shan";
+  return "/zh/xiao-ju-deng";
 }
 
 function canonical(rawUrl) {
@@ -84,10 +84,11 @@ async function runBrowser(browserType, name) {
 
   const seen = new Set();
   const queue = [
-    canonical(`${base}/`),
-    canonical(`${base}/brainwave`),
-    canonical(`${base}/yuan-shan`),
-    canonical(`${base}/xiao-ju-deng`),
+    canonical(`${base}/zh`),
+    canonical(`${base}/en`),
+    canonical(`${base}/zh/brainwave`),
+    canonical(`${base}/zh/yuan-shan`),
+    canonical(`${base}/zh/xiao-ju-deng`),
     ...articleUrls,
   ];
   const results = [];
@@ -108,14 +109,14 @@ async function runBrowser(browserType, name) {
     }
   }
 
-  await page.goto(`${base}/`, { waitUntil: "domcontentloaded", timeout: 30000 });
-  await page.locator('a[href="/yuan-shan"]').first().click();
+  await page.goto(`${base}/zh`, { waitUntil: "domcontentloaded", timeout: 30000 });
+  await page.locator('a[href="/zh/yuan-shan"]').first().click();
   await page.waitForLoadState("domcontentloaded", { timeout: 30000 });
   const afterYuanShan = page.url();
-  const expectedArticleUrl = canonical(`${base}/yuan-shan/2026-07-03-token-factory`);
+  const expectedArticleUrl = canonical(`${base}/zh/yuan-shan/2026-07-03-token-factory`);
   const articleClickTarget = page
     .locator(
-      'a[href="/yuan-shan/2026-07-03-token-factory"], a[href="/yuan-shan/2026-07-03-token-factory/"]',
+      'a[href="/zh/yuan-shan/2026-07-03-token-factory"], a[href="/zh/yuan-shan/2026-07-03-token-factory/"]',
     )
     .first();
   const articleClickTargetCount = await articleClickTarget.count();
