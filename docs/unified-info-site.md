@@ -2,6 +2,10 @@
 
 `dia-for/chatweb` 是 `info.19999991.xyz` 的统一发布端。它不再只是聊天记录站，而是一个累计式信息站：所有公开内容先落成 Markdown，再由 Next.js 静态导出为可穿透链接的网站，并由 Cloudflare Workers Assets 服务。
 
+三路内容来源（chat / RSS / crawler）进入同一站点后的统一页面、引用、双语、
+配图和发布门禁结构，见
+[Unified Content Publishing Structure](system/CONTENT_PUBLISHING_STRUCTURE.md)。
+
 ## 栏目
 
 | 栏目 | 路由 | 内容来源 | 内容目录 |
