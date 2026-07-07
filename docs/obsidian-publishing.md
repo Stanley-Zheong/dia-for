@@ -2,6 +2,38 @@
 
 The public site reads Markdown notes from `OBSIDIAN_CONTENT_DIR`. Obsidian remains the source of truth; the site only imports, renders, indexes, and derives AI artifacts from published notes.
 
+## Direct Publish
+
+Obsidian notes no longer need to be moved into `content/chats/` by hand. Keep
+the notes in the vault, set `published: true`, then run one of these commands
+from the `chatweb` repo:
+
+```bash
+# Sync Markdown from Obsidian into content/chats and regenerate the manifest.
+npm run content:sync
+
+# Sync, regenerate the manifest, commit, push, and deploy to Cloudflare.
+npm run content:publish
+```
+
+The default source directory is:
+
+```text
+/Users/laosanzheong/Documents/obsdata/knowledge-center/raw/01-articles
+```
+
+Override it with `OBSIDIAN_SOURCE_DIR` when publishing from another machine or
+vault path:
+
+```bash
+OBSIDIAN_SOURCE_DIR="/path/to/vault/dia-for" npm run content:publish
+```
+
+By default the sync copies only Markdown notes whose frontmatter has
+`published: true`. Drafts and notes without frontmatter are not copied into the
+public repository. The generated `content/chats/` directory is still committed
+because Cloudflare cannot read a local Obsidian vault during production builds.
+
 ## Frontmatter
 
 Only notes with `published: true` are public.

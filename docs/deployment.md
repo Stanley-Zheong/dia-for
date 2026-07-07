@@ -6,6 +6,7 @@ Create a `.env` file locally or configure these variables in production:
 
 ```bash
 OBSIDIAN_CONTENT_DIR=content/chats
+OBSIDIAN_SOURCE_DIR="/Users/laosanzheong/Documents/obsdata/knowledge-center/raw/01-articles"
 NEXT_PUBLIC_SITE_NAME=ChatWeb
 NEXT_PUBLIC_SITE_DESCRIPTION="Public AI chat archive powered by Obsidian and Gemini."
 GEMINI_API_KEY=
@@ -15,6 +16,7 @@ GEMINI_MODEL=gemini-2.5-flash
 ## Notes
 
 - `OBSIDIAN_CONTENT_DIR` points to the Markdown directory exported or synced from Obsidian.
+- `OBSIDIAN_SOURCE_DIR` points to the local Obsidian folder used by `npm run content:sync` and `npm run content:publish`.
 - `GEMINI_API_KEY` is server-only and must not be exposed to the browser.
 - If `GEMINI_API_KEY` is missing, insight generation and search fall back to local non-AI responses so the site can still build.
 - During `next build`, generated insight pages use local fallback content; runtime requests can still use Gemini when the API key is configured.
@@ -28,4 +30,6 @@ npm run lint
 npm run typecheck
 npm run test
 npm run build
+npm run content:sync
+npm run content:publish
 ```

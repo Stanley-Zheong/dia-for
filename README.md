@@ -149,9 +149,9 @@ Obsidian Web Clipping 保存为 Markdown
     ↓
 在 Obsidian 中整理 frontmatter 和正文，设置 published: true
     ↓
-scripts/sync-from-obsidian.sh  →  同步到 content/chats/*.md
+npm run content:sync  →  同步到 content/chats/*.md 并生成 manifest
     ↓
-npm run content:manifest  →  生成 src/generated/content-manifest.json（published 过滤）
+npm run content:publish  →  commit / push / deploy（可选直接发布）
     ↓
 next build 静态导出
     ↓
@@ -194,6 +194,21 @@ npm run build:cloudflare
 详见 `docs/unified-info-site.md`。
 
 构建依赖顺序（已内置到脚本）：`content:manifest` 必须在 `build` 和 `test` 之前执行。
+
+Obsidian 对话不需要再手工搬到 `content/chats/`。默认源目录是
+`/Users/laosanzheong/Documents/obsdata/knowledge-center/raw/01-articles`，
+也可以通过 `OBSIDIAN_SOURCE_DIR` 覆盖。
+
+```bash
+# 只同步本地内容并重建 manifest，不提交
+npm run content:sync
+
+# 从 Obsidian 直接发布：同步、manifest、commit、push、Cloudflare deploy
+npm run content:publish
+```
+
+公开门禁不变：同步脚本默认只复制 frontmatter 中 `published: true` 的笔记，
+manifest 也只读取 `published: true` 的记录。
 
 示例 frontmatter：
 
