@@ -89,9 +89,24 @@ textarea {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   font-size: clamp(1.6rem, 2.2vw, 2rem);
   line-height: 1;
   color: #4b1767;
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.brand-name {
+  min-width: 0;
 }
 
 .site-nav {
@@ -1061,6 +1076,11 @@ textarea {
     align-items: flex-start;
     justify-content: center;
     padding: 14px 0;
+  }
+
+  .brand-logo {
+    width: 36px;
+    height: 36px;
   }
 
   .site-nav {

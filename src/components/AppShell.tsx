@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
@@ -27,7 +28,8 @@ export function AppShell({ children, active = "home", locale = defaultLocale }: 
       <header className="site-header">
         <div className="header-inner">
           <Link prefetch={false} className="brand" href={withLocale("/", locale)}>
-            三he水
+            <Image className="brand-logo" src="/assets/erDDshui_logo.png" alt="" width={40} height={40} priority />
+            <span className="brand-name">三he水</span>
           </Link>
           <nav className="site-nav" aria-label="Main navigation">
             {navItems.map((item) => (
