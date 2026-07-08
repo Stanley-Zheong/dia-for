@@ -12,7 +12,8 @@ export function HomeHeroIdentity({ copy = homeHeroCopy }: HomeHeroIdentityProps)
     <div className="hero-identity">
       <p className="eyebrow">二DD水</p>
       <h1 className="hero-title site-hero-title hero-tagline-gradient">
-        聚数成海，滴水成智
+        <span>聚数成海，</span>
+        <span>滴水成智</span>
       </h1>
       <p className="hero-copy">{copy}</p>
     </div>

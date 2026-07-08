@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { AppShell } from "@/components/AppShell";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleDetail } from "@/components/ArticleDetail";
+import { ArticleIllustration } from "@/components/ArticleIllustration";
 import { ChatCard } from "@/components/ChatCard";
 import { ChatTranscript } from "@/components/ChatTranscript";
 import { HomeHeroIdentity, homeHeroCopy } from "@/components/HomeHeroIdentity";
@@ -72,8 +73,7 @@ export async function generateStaticParams() {
 }
 
 async function Home({ locale }: { locale: Locale }) {
-  const [articles, brainwaves, yuanShan, products, topics, tags] = await Promise.all([
-    getAllArticles(),
+  const [brainwaves, yuanShan, products, topics, tags] = await Promise.all([
     getArticlesBySection("brainwave"),
     getArticlesBySection("yuan-shan"),
     getArticlesBySection("xiao-ju-deng"),
@@ -135,17 +135,6 @@ async function Home({ locale }: { locale: Locale }) {
       </section>
 
       <div className="home-sections">
-        <section className="section-block">
-          <div className="section-head">
-            <p className="eyebrow">Latest</p>
-            <h2 className="block-title">{t(locale, "最新种子", "Latest Seeds")}</h2>
-          </div>
-          <div className="stream" aria-label="Latest posts">
-            {articles.map((article) => (
-              <ArticleCard key={`${article.meta.section}-${article.slug}`} article={article} locale={locale} />
-            ))}
-          </div>
-        </section>
         <aside className="panel trends-panel">
           <p className="eyebrow">Trends</p>
           <h2>{t(locale, "最近话题", "Recent Topics")}</h2>
@@ -210,6 +199,7 @@ async function BrainwaveDetail({ locale, slug }: { locale: Locale; slug: string 
           <div className="article-meta">{t(locale, "首页", "Home")} / {sectionName("brainwave", locale)} / {display.meta.topic} · {display.meta.created ?? t(locale, "未标注日期", "Undated")}</div>
           <h1 className="article-title">{display.meta.title}</h1>
           <div className="article-lead"><MetaPills chat={display} locale={locale} /></div>
+          <ArticleIllustration article={display} />
           <ChatTranscript chat={display} locale={locale} />
         </article>
         <aside className="tips-panel" aria-label="Article tips">

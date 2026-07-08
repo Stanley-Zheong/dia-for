@@ -5,6 +5,7 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { AppShell } from "@/components/AppShell";
 import { ChatCard } from "@/components/ChatCard";
 import { HomeHeroIdentity } from "@/components/HomeHeroIdentity";
+import HomePage from "@/app/page";
 import type { ArticleRecord, ChatRecord } from "@/lib/types";
 
 const chat: ChatRecord = {
@@ -53,11 +54,13 @@ describe("public card presentation", () => {
     const shellMarkup = renderToStaticMarkup(<AppShell><main /></AppShell>);
     const heroMarkup = renderToStaticMarkup(<HomeHeroIdentity />);
 
-    expect(shellMarkup).toContain('width="46"');
-    expect(shellMarkup).toContain('height="46"');
+    expect(shellMarkup).toContain('width="69"');
+    expect(shellMarkup).toContain('height="69"');
     expect(shellMarkup).toContain("二DD水");
     expect(shellMarkup).not.toContain("三he水");
-    expect(heroMarkup).toContain("聚数成海，滴水成智");
+    expect(heroMarkup).toContain("聚数成海，");
+    expect(heroMarkup).toContain("滴水成智");
+    expect(heroMarkup).toContain("<span>聚数成海，</span><span>滴水成智</span>");
     expect(heroMarkup).toContain("hero-tagline-gradient");
     expect(heroMarkup).toContain("专注大模型时代数据汇集与认知归档的个人实验室");
     expect(heroMarkup).toContain("“二DD水”");
@@ -65,6 +68,14 @@ describe("public card presentation", () => {
     expect(heroMarkup).not.toContain("DAL");
     expect(heroMarkup).not.toContain("DIL");
     expect(heroMarkup).not.toContain("LINKED NOTES");
+  });
+
+  it("does not render the latest seeds block on the home page", async () => {
+    const markup = renderToStaticMarkup(await HomePage());
+
+    expect(markup).not.toContain("最新种子");
+    expect(markup).not.toContain("Latest Seeds");
+    expect(markup).not.toContain("Latest posts");
   });
 
   it("uses topic, model names, and YYYY-MM-DD for brainwave card metadata", () => {

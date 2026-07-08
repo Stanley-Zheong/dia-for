@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
 import { AppShell } from "@/components/AppShell";
+import { ArticleIllustration } from "@/components/ArticleIllustration";
 import { ChatTranscript } from "@/components/ChatTranscript";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { MetaPills } from "@/components/MetaPills";
@@ -73,6 +74,7 @@ export default async function ChatPage({ params }: ChatPageProps) {
           <div className="article-lead">
             <MetaPills chat={chat} />
           </div>
+          <ArticleIllustration article={chat} />
           <ChatTranscript chat={chat} />
         </article>
 

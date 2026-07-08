@@ -1,11 +1,9 @@
 import { AppShell } from "@/components/AppShell";
-import { ArticleCard } from "@/components/ArticleCard";
 import { HomeHeroIdentity } from "@/components/HomeHeroIdentity";
-import { getAllArticles, getArticlesBySection, getTags, getTopics } from "@/lib/content";
+import { getArticlesBySection, getTags, getTopics } from "@/lib/content";
 
 export default async function HomePage() {
-  const [articles, brainwaves, yuanShan, products, topics, tags] = await Promise.all([
-    getAllArticles(),
+  const [brainwaves, yuanShan, products, topics, tags] = await Promise.all([
     getArticlesBySection("brainwave"),
     getArticlesBySection("yuan-shan"),
     getArticlesBySection("xiao-ju-deng"),
@@ -39,18 +37,6 @@ export default async function HomePage() {
       </section>
 
       <div className="home-sections">
-        <section className="section-block">
-          <div className="section-head">
-            <p className="eyebrow">Latest</p>
-            <h2 className="block-title">最新种子</h2>
-          </div>
-          <div className="stream" aria-label="Latest posts">
-            {articles.map((article) => (
-              <ArticleCard key={`${article.meta.section}-${article.slug}`} article={article} />
-            ))}
-          </div>
-        </section>
-
         <aside className="panel trends-panel">
           <p className="eyebrow">Trends</p>
           <h2>最近话题</h2>

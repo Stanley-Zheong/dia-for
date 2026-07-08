@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { ArticleIllustration } from "@/components/ArticleIllustration";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { articleHref, sectionHref, sectionName } from "@/lib/routes";
 import type { ArticleRecord } from "@/lib/types";
@@ -46,6 +47,7 @@ export function ArticleDetail({ article, related = [], locale = defaultLocale }:
         </div>
         <h1 className="article-title">{display.meta.title}</h1>
         {display.meta.summary ? <p className="article-lead">{display.meta.summary}</p> : null}
+        <ArticleIllustration article={display} />
         <MarkdownContent content={display.rawMarkdown} />
         <div className="source-note">
           {t(locale, "来源", "Source")}：{display.meta.source_name ?? display.meta.source ?? t(locale, "站内文章", "Site article")}

@@ -28,7 +28,7 @@ export function AppShell({ children, active = "home", locale = defaultLocale }: 
       <header className="site-header">
         <div className="header-inner">
           <Link prefetch={false} className="brand" href={withLocale("/", locale)}>
-            <Image className="brand-logo" src="/assets/erDDshui_logo.png" alt="" width={46} height={46} priority />
+            <Image className="brand-logo" src="/assets/erDDshui_logo.png" alt="" width={69} height={69} priority />
             <span className="brand-name">{siteConfig.name}</span>
           </Link>
           <nav className="site-nav" aria-label="Main navigation">

@@ -4,7 +4,7 @@
   "description": "Public AI chat archive powered by Obsidian and Gemini.",
   "private": true,
   "scripts": {
-    "content:manifest": "node scripts/generate-content-manifest.mjs",
+    "content:manifest": "node scripts/generate-content-manifest.mjs && node scripts/generate-content-illustrations.mjs",
     "products:candidates": "node scripts/generate-product-candidates.mjs",
     "content:sync": "node scripts/sync-obsidian-content.mjs",
     "content:publish": "node scripts/sync-obsidian-content.mjs --deploy",
