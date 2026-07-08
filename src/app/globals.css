@@ -529,6 +529,12 @@ textarea {
   margin: 24px 0 34px;
 }
 
+.keyword-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
 .keyword {
   display: inline-flex;
   min-height: 44px;
@@ -541,6 +547,12 @@ textarea {
   box-shadow: 0 8px 18px rgba(74, 38, 98, 0.06);
   color: var(--ink-plum);
   font-weight: 700;
+}
+
+button.keyword {
+  width: 100%;
+  cursor: pointer;
+  text-align: left;
 }
 
 .keyword span {

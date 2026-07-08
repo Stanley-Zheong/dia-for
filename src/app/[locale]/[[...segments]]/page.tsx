@@ -6,6 +6,7 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleDetail } from "@/components/ArticleDetail";
 import { ChatCard } from "@/components/ChatCard";
 import { ChatTranscript } from "@/components/ChatTranscript";
+import { KeywordFilter } from "@/components/KeywordFilter";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { MetaPills } from "@/components/MetaPills";
 import {
@@ -25,6 +26,7 @@ import {
   getYuanShanCategoryBySlug,
 } from "@/lib/content";
 import { isLocale, locales, localizeArticle, t, withLocale, type Locale } from "@/lib/i18n";
+import { keywordSummariesFor } from "@/lib/presentation";
 import { sectionHref, sectionName } from "@/lib/routes";
 import { slugify } from "@/lib/slug";
 
@@ -165,19 +167,27 @@ async function Home({ locale }: { locale: Locale }) {
 }
 
 async function BrainwaveList({ locale }: { locale: Locale }) {
-  const [chats, topics] = await Promise.all([getAllChats(), getTopics()]);
+  const chats = await getAllChats();
+  const keywords = keywordSummariesFor(chats);
   return (
     <AppShell active="brainwave" locale={locale}>
-      <div className="category-layout">
+      <div className="category-layout" data-filter-scope="brainwave">
         <section>
           <p className="eyebrow">Brainwave</p>
           <h1 className="page-title">{t(locale, "脑电波", "Brainwave")}</h1>
-          <p className="page-intro">{t(locale, "来源于我和大模型的公开对话，保留原始上下文，并按话题、模型和标签穿透访问。", "Public conversations with large models, preserved with context and navigable by topic, model, and tag.")}</p>
+          <p className="page-intro">{t(locale, "与大模型的极限对垒，捕捉人机思辨的火花。", "Extreme sparring with large models, capturing the sparks of human-machine reasoning.")}</p>
           <div className="stream">{chats.map((chat) => <ChatCard key={chat.slug} chat={chat} locale={locale} />)}</div>
         </section>
         <aside className="panel">
           <h2>{t(locale, "栏目结构", "Structure")}</h2>
-          <p>{topics.length} {t(locale, "个话题", "topics")}</p>
+          <p>
+            {t(
+              locale,
+              "拒绝灌水与公式化问答。这里完整复盘、记录并蒸馏高价值的 AI 对话全过程。通过拆解高阶 Prompt 架构与逻辑反向测试，探索 AI 的能力边界，把调教过程沉淀为可复用的启智方法论。",
+              "No filler, no formulaic Q&A. This section records, reviews, and distills high-value AI conversations end to end, using advanced prompt architecture and reverse logic tests to probe model boundaries and turn tuning into reusable thinking methods.",
+            )}
+          </p>
+          <KeywordFilter scope="brainwave" keywords={keywords} label={t(locale, "关键字：", "Keywords:")} />
         </aside>
       </div>
     </AppShell>
@@ -222,15 +232,16 @@ async function BrainwaveDetail({ locale, slug }: { locale: Locale; slug: string 
 async function SectionList({ locale, section }: { locale: Locale; section: "yuan-shan" | "xiao-ju-deng" }) {
   const articles = section === "yuan-shan" ? await getArticlesBySection("yuan-shan") : await getProducts();
   const categories = section === "yuan-shan" ? await getYuanShanCategories() : [];
+  const keywords = section === "yuan-shan" ? keywordSummariesFor(articles) : [];
   return (
     <AppShell active={section} locale={locale}>
-      <div className="category-layout">
+      <div className="category-layout" data-filter-scope={section}>
         <section>
           <p className="eyebrow">{sectionName(section, locale)}</p>
           <h1 className="page-title">{sectionName(section, locale)}</h1>
           <p className="page-intro">
             {section === "yuan-shan"
-              ? t(locale, "来自 RSS、公众号、Miniflux 和 AI 评分管道的行业资讯，按固定子栏目累计归档。", "Industry intelligence from RSS, public-account feeds, Miniflux, and the AI scoring pipeline, archived by category.")
+              ? t(locale, "全网数据自动化采集矩阵，构筑行业认知基座。", "An automated web-wide data collection matrix that builds the industry's cognitive base.")
               : t(locale, "产品矩阵介绍。第一版从本机 codebases 扫描候选项目，确认公开后进入这里。", "Product matrix pages for public projects and tools.")}
           </p>
           {categories.length > 0 ? (
@@ -247,7 +258,20 @@ async function SectionList({ locale, section }: { locale: Locale; section: "yuan
         </section>
         <aside className="panel">
           <h2>{t(locale, "栏目结构", "Structure")}</h2>
-          <p>{articles.length} {t(locale, "篇累计文章", "published articles")}</p>
+          {section === "yuan-shan" ? (
+            <>
+              <p>
+                {t(
+                  locale,
+                  "多种方式数据聚合引擎，随时获取全球动态。在这里，杂乱的生数据被清洗为结构化的行业数据矩阵，成为对抗信息噪声的防线与坚固的数据基座。",
+                  "A multi-method data aggregation engine for global updates. Here, raw noisy data is cleaned into a structured industry data matrix: a defense against information noise and a durable data base.",
+                )}
+              </p>
+              <KeywordFilter scope="yuan-shan" keywords={keywords} label={t(locale, "关键字：", "Keywords:")} />
+            </>
+          ) : (
+            <p>{articles.length} {t(locale, "篇累计文章", "published articles")}</p>
+          )}
         </aside>
       </div>
     </AppShell>

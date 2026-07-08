@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 import { articleHref, sectionHref, sectionName } from "@/lib/routes";
+import { cardKeywordsFor, formatPublicDate, sourceLabelFor } from "@/lib/presentation";
 import { slugify } from "@/lib/slug";
 import type { ArticleRecord } from "@/lib/types";
 import type { Locale } from "@/lib/i18n";
@@ -21,14 +22,24 @@ function excerptFor(article: ArticleRecord) {
 
 export function ArticleCard({ article, locale = defaultLocale }: ArticleCardProps) {
   const display = localizeArticle(article, locale);
+  const date = formatPublicDate(display.meta.created, t(locale, "未标注日期", "Undated"));
+  const sourceLabel = sourceLabelFor(display, t(locale, "站内文章", "Site article"));
+  const meta =
+    display.meta.section === "yuan-shan"
+      ? `${sourceLabel}，${date}`
+      : `${sectionName(display.meta.section, locale)} · ${display.meta.category} · ${date} · ${sourceLabel}`;
+
   return (
-    <article className="post-card article-row">
+    <article className="post-card article-row" data-filter-item="true" data-filter-keywords={cardKeywordsFor(display).join("|")}>
       <div className="post-meta">
-        <Link prefetch={false} href={sectionHref(display.meta.section, locale)}>
-          {sectionName(display.meta.section, locale)}
-        </Link>{" "}
-        · {display.meta.category} · {display.meta.created ?? t(locale, "未标注日期", "Undated")} ·{" "}
-        {display.meta.source_name ?? display.meta.source ?? t(locale, "站内文章", "Site article")}
+        {display.meta.section === "yuan-shan" ? meta : (
+          <>
+            <Link prefetch={false} href={sectionHref(display.meta.section, locale)}>
+              {sectionName(display.meta.section, locale)}
+            </Link>{" "}
+            · {display.meta.category} · {date} · {sourceLabel}
+          </>
+        )}
       </div>
       <Link prefetch={false} href={articleHref(display, locale)}>
         <h2 className="post-title">{display.meta.title}</h2>

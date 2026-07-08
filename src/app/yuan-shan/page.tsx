@@ -2,13 +2,16 @@ import Link from "next/link";
 
 import { AppShell } from "@/components/AppShell";
 import { ArticleCard } from "@/components/ArticleCard";
+import { KeywordFilter } from "@/components/KeywordFilter";
 import { getArticlesBySection, getYuanShanCategories } from "@/lib/content";
+import { keywordSummariesFor } from "@/lib/presentation";
 
 export default async function YuanShanPage() {
   const [articles, categories] = await Promise.all([
     getArticlesBySection("yuan-shan"),
     getYuanShanCategories(),
   ]);
+  const keywords = keywordSummariesFor(articles);
 
   return (
     <AppShell active="yuan-shan">
@@ -25,13 +28,13 @@ export default async function YuanShanPage() {
           </nav>
         </aside>
 
-        <div className="category-layout">
+        <div className="category-layout" data-filter-scope="yuan-shan">
           <div>
             <section className="page-head" id="all">
               <p className="eyebrow">Distant Hills · RSS / Miniflux / industry intelligence</p>
               <h1 className="page-title">远山</h1>
               <p className="page-intro">
-                来自 RSS、公众号、Miniflux 和 AI 评分管道的行业资讯，按 AI、数据、新能源、传统AI+、教育AI+ 累计归档。
+                全网数据自动化采集矩阵，构筑行业认知基座。
               </p>
             </section>
             <div className="filter-bar" aria-label="Subcategory filters">
@@ -50,12 +53,8 @@ export default async function YuanShanPage() {
           </div>
           <aside className="panel">
             <h2>栏目结构</h2>
-            <p>远山只承接经过筛选、摘要和人工确认的情报 Markdown；RSS 是信源增强方式，不直接变成站点内容。</p>
-            <div className="taxonomy-grid">
-              {categories.map((category) => (
-                <span key={category.slug}>{category.name} · {category.articles.length}</span>
-              ))}
-            </div>
+            <p>多种方式数据聚合引擎，随时获取全球动态。在这里，杂乱的生数据被清洗为结构化的行业数据矩阵，成为对抗信息噪声的防线与坚固的数据基座。</p>
+            <KeywordFilter scope="yuan-shan" keywords={keywords} label="关键字：" />
           </aside>
         </div>
       </div>

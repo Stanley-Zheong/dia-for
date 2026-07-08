@@ -2,10 +2,13 @@ import Link from "next/link";
 
 import { AppShell } from "@/components/AppShell";
 import { ChatCard } from "@/components/ChatCard";
-import { getAllChats, getTopics } from "@/lib/content";
+import { KeywordFilter } from "@/components/KeywordFilter";
+import { getAllChats } from "@/lib/content";
+import { keywordSummariesFor } from "@/lib/presentation";
 
 export default async function BrainwavePage() {
-  const [chats, topics] = await Promise.all([getAllChats(), getTopics()]);
+  const chats = await getAllChats();
+  const keywords = keywordSummariesFor(chats);
 
   return (
     <AppShell active="brainwave">
@@ -20,13 +23,13 @@ export default async function BrainwavePage() {
           </nav>
         </aside>
 
-        <div className="category-layout">
+        <div className="category-layout" data-filter-scope="brainwave">
           <div>
             <section className="page-head" id="brainwave">
               <p className="eyebrow">Brainwave · 按话题 / 模型整理</p>
               <h1 className="page-title">脑电波</h1>
               <p className="page-intro">
-                来源于我和大模型的公开对话，保留原始上下文，并按话题、模型和标签穿透访问。
+                与大模型的极限对垒，捕捉人机思辨的火花。
               </p>
             </section>
             <div className="filter-bar" aria-label="Subcategory filters">
@@ -43,11 +46,8 @@ export default async function BrainwavePage() {
           </div>
           <aside className="panel">
             <h2>栏目结构</h2>
-            <p>脑电波按对话主题组织，适合回看一段判断如何形成，也适合从话题页横向比较多个模型的观点。</p>
-            <div className="stat-list">
-              <div className="stat"><strong>{chats.length}</strong><span className="caption">Published posts</span></div>
-              <div className="stat"><strong>{topics.length}</strong><span className="caption">Topics</span></div>
-            </div>
+            <p>拒绝灌水与公式化问答。这里完整复盘、记录并蒸馏高价值的 AI 对话全过程。通过拆解高阶 Prompt 架构与逻辑反向测试，探索 AI 的能力边界，把调教过程沉淀为可复用的启智方法论。</p>
+            <KeywordFilter scope="brainwave" keywords={keywords} label="关键字：" />
           </aside>
         </div>
       </div>
