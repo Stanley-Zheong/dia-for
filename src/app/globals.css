@@ -195,8 +195,9 @@ textarea {
 }
 
 .content-grid.with-tips {
-  grid-template-columns: 142px minmax(0, 1fr) 250px;
-  gap: clamp(22px, 3vw, 42px);
+  grid-template-columns: minmax(104px, 132px) minmax(0, 760px) minmax(180px, 220px);
+  justify-content: center;
+  gap: 24px;
 }
 
 .sidebar {
@@ -281,16 +282,12 @@ textarea {
 }
 
 .hero-tagline-gradient {
-  display: inline-block;
+  display: block;
   max-width: 100%;
-  margin: 0 0 18px;
   background: linear-gradient(90deg, #4b1767 0%, #7c3aed 45%, #0f766e 100%);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
-  font-size: clamp(1.15rem, 2.1vw, 1.6rem);
-  font-weight: 800;
-  line-height: 1.35;
 }
 
 .page-title {
@@ -669,7 +666,15 @@ button.keyword {
 }
 
 .article-body {
+  min-width: 0;
   max-width: 760px;
+}
+
+.markdown-body {
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .article-meta {
@@ -742,6 +747,7 @@ button.keyword {
 }
 
 .markdown-body pre {
+  max-width: 100%;
   overflow-x: auto;
   border: 1px solid var(--lilac-line);
   border-radius: var(--radius);
@@ -762,7 +768,10 @@ button.keyword {
 }
 
 .markdown-body table {
+  display: block;
   width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
   border-collapse: collapse;
   margin: 1.25rem 0;
   font-size: 0.9rem;
@@ -883,12 +892,16 @@ button.keyword {
 
 .chat-transcript {
   display: grid;
-  gap: 18px;
+  width: 100%;
+  max-width: 760px;
+  gap: 22px;
+  margin: 0 auto;
 }
 
 .chat-turn {
   display: flex;
   width: 100%;
+  min-width: 0;
 }
 
 .chat-turn-user {
@@ -900,6 +913,7 @@ button.keyword {
 }
 
 .chat-bubble {
+  min-width: 0;
   max-width: 86%;
   border: 1px solid var(--lilac-line);
   border-radius: var(--radius-lg);
@@ -909,7 +923,15 @@ button.keyword {
 }
 
 .chat-bubble-user {
+  max-width: min(82%, 620px);
   background: rgba(240, 222, 249, 0.8);
+}
+
+.chat-bubble-assistant {
+  max-width: 100%;
+  border-color: transparent;
+  background: transparent;
+  box-shadow: none;
 }
 
 .chat-speaker {

@@ -2,7 +2,13 @@ import { describe, expect, it, vi } from "vitest";
 
 async function loadSeo(env: Record<string, string | undefined> = {}) {
   vi.resetModules();
-  for (const key of ["SITE_PROFILE", "NEXT_PUBLIC_SITE_URL", "NEXT_PUBLIC_ANALYTICS_ENDPOINT"]) {
+  for (const key of [
+    "SITE_PROFILE",
+    "NEXT_PUBLIC_SITE_URL",
+    "NEXT_PUBLIC_ANALYTICS_ENDPOINT",
+    "NEXT_PUBLIC_SITE_NAME",
+    "NEXT_PUBLIC_SITE_DESCRIPTION",
+  ]) {
     if (env[key] === undefined) {
       delete process.env[key];
     } else {
@@ -29,7 +35,7 @@ describe("SEO and GEO helpers", () => {
     const { llmsText } = await loadSeo({ SITE_PROFILE: "domestic" });
     const text = llmsText();
 
-    expect(text).toContain("# 三he水");
+    expect(text).toContain("# 二DD水");
     expect(text).toContain("https://dachanghao.com/zh/brainwave");
     expect(text).toContain("GEO");
   });

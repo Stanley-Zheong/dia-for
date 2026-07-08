@@ -25,7 +25,7 @@ const activeProfile = profileDefaults[siteProfile];
 
 export const siteConfig = {
   profile: siteProfile,
-  name: process.env.NEXT_PUBLIC_SITE_NAME ?? "三he水",
+  name: process.env.NEXT_PUBLIC_SITE_NAME ?? "二DD水",
   description:
     process.env.NEXT_PUBLIC_SITE_DESCRIPTION ??
     "脑电波、远山、小桔灯：对话、资讯和产品矩阵的公开信息站。",

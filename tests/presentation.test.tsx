@@ -51,13 +51,16 @@ const yuanShan: ArticleRecord = {
 describe("public card presentation", () => {
   it("renders the enlarged logo and home identity block", () => {
     const shellMarkup = renderToStaticMarkup(<AppShell><main /></AppShell>);
-    const heroMarkup = renderToStaticMarkup(<HomeHeroIdentity copy="Sample copy" />);
+    const heroMarkup = renderToStaticMarkup(<HomeHeroIdentity />);
 
     expect(shellMarkup).toContain('width="46"');
     expect(shellMarkup).toContain('height="46"');
-    expect(heroMarkup).toContain("二dd水 (DAL · DIL)");
+    expect(shellMarkup).toContain("二DD水");
+    expect(shellMarkup).not.toContain("三he水");
     expect(heroMarkup).toContain("聚数成海，滴水成智");
     expect(heroMarkup).toContain("hero-tagline-gradient");
+    expect(heroMarkup).toContain("专注大模型时代数据汇集与认知归档的个人实验室");
+    expect(heroMarkup).not.toContain("LINKED NOTES");
   });
 
   it("uses topic, model names, and YYYY-MM-DD for brainwave card metadata", () => {

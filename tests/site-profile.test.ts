@@ -2,7 +2,13 @@ import { describe, expect, it, vi } from "vitest";
 
 async function loadConfig(env: Record<string, string | undefined>) {
   vi.resetModules();
-  for (const key of ["SITE_PROFILE", "NEXT_PUBLIC_SITE_URL", "NEXT_PUBLIC_ANALYTICS_ENDPOINT"]) {
+  for (const key of [
+    "SITE_PROFILE",
+    "NEXT_PUBLIC_SITE_URL",
+    "NEXT_PUBLIC_ANALYTICS_ENDPOINT",
+    "NEXT_PUBLIC_SITE_NAME",
+    "NEXT_PUBLIC_SITE_DESCRIPTION",
+  ]) {
     if (env[key] === undefined) {
       delete process.env[key];
     } else {
@@ -20,6 +26,7 @@ describe("site profiles", () => {
       NEXT_PUBLIC_ANALYTICS_ENDPOINT: "https://collector.example/events",
     });
 
+    expect(siteConfig.name).toBe("二DD水");
     expect(siteConfig.primaryUrl).toBe("https://info.19999991.xyz");
     expect(siteConfig.locales).toEqual(["zh", "en", "ja", "ko"]);
     expect(siteConfig.contacts.map((contact) => contact.label)).toEqual(["X", "GitHub"]);

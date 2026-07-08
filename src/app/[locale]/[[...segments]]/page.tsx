@@ -6,7 +6,7 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleDetail } from "@/components/ArticleDetail";
 import { ChatCard } from "@/components/ChatCard";
 import { ChatTranscript } from "@/components/ChatTranscript";
-import { HomeHeroIdentity } from "@/components/HomeHeroIdentity";
+import { HomeHeroIdentity, homeHeroCopy } from "@/components/HomeHeroIdentity";
 import { KeywordFilter } from "@/components/KeywordFilter";
 import { MarkdownContent } from "@/components/MarkdownContent";
 import { MetaPills } from "@/components/MetaPills";
@@ -118,8 +118,8 @@ async function Home({ locale }: { locale: Locale }) {
         <HomeHeroIdentity
           copy={t(
             locale,
-            "脑电波记录你和大模型的对话，远山沉淀 RSS 行业资讯，小桔灯整理产品矩阵。所有文章累计保存，并可通过栏目、标签和详情页穿透访问。",
-            "Brainwave records conversations with AI models, Distant Hills curates RSS intelligence, and Little Lantern organizes the product matrix. Every article is stored cumulatively and remains reachable through sections, tags, and detail links.",
+            homeHeroCopy,
+            "ErDDshui is a personal laboratory for data aggregation and cognitive archiving in the large-model era. It gathers, cleans, and produces multidimensional web data to resist everyday information noise. Instead of chasing fragmented trends, it distills highly generative dry knowledge and uses data-to-wisdom refinement to build a hard cognitive foundation for AI capability evolution and technical iteration.",
           )}
         />
         <div className="hub-cards" aria-label="Column shortcuts">

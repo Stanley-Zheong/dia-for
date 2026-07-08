@@ -29,7 +29,7 @@ export function AppShell({ children, active = "home", locale = defaultLocale }: 
         <div className="header-inner">
           <Link prefetch={false} className="brand" href={withLocale("/", locale)}>
             <Image className="brand-logo" src="/assets/erDDshui_logo.png" alt="" width={46} height={46} priority />
-            <span className="brand-name">三he水</span>
+            <span className="brand-name">{siteConfig.name}</span>
           </Link>
           <nav className="site-nav" aria-label="Main navigation">
             {navItems.map((item) => (
@@ -83,7 +83,7 @@ export function AppShell({ children, active = "home", locale = defaultLocale }: 
           ))}
         </section>
         <section className="footer-meta">
-          <strong>三he水</strong>
+          <strong>{siteConfig.name}</strong>
           <span>
             <Link prefetch={false} href={withLocale("/yuan-shan", locale)}>RSS</Link> ·{" "}
             <Link prefetch={false} href={withLocale("/search", locale)}>{t(locale, "搜索", "Search")}</Link> · {t(locale, "归档", "Archive")} · © 2026
