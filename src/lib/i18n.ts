@@ -1,13 +1,15 @@
 import { parseMessages } from "@/lib/content";
 import type { ArticleRecord, ChatRecordMeta } from "@/lib/types";
 
-export type Locale = "zh" | "en";
+export type Locale = "zh" | "en" | "ja" | "ko";
 
-export const locales: Locale[] = ["zh", "en"];
+import { siteConfig } from "@/lib/config";
+
+export const locales: Locale[] = siteConfig.locales;
 export const defaultLocale: Locale = "zh";
 
 export function isLocale(value: string | undefined): value is Locale {
-  return value === "zh" || value === "en";
+  return value === "zh" || value === "en" || value === "ja" || value === "ko";
 }
 
 export function localePrefix(locale: Locale = defaultLocale) {
@@ -60,4 +62,3 @@ export function localizeArticle<T extends ArticleRecord>(article: T, locale: Loc
     },
   };
 }
-

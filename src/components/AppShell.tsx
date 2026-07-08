@@ -21,7 +21,7 @@ export function AppShell({ children, active = "home", locale = defaultLocale }: 
     { key: "topics", href: withLocale("/topics", locale), label: t(locale, "话题", "Topics") },
     { key: "tags", href: withLocale("/tags", locale), label: t(locale, "标签", "Tags") },
   ] as const;
-  const otherLocale = locale === "en" ? "zh" : "en";
+  const languageTargets = siteConfig.locales.filter((item) => item !== locale);
 
   return (
     <>
@@ -53,9 +53,11 @@ export function AppShell({ children, active = "home", locale = defaultLocale }: 
             <Link prefetch={false} className="theme-toggle" aria-label={t(locale, "打开搜索", "Open search")} href={withLocale("/search", locale)}>
               ⌕
             </Link>
-            <Link prefetch={false} className="theme-toggle" href={withLocale("/", otherLocale)} hrefLang={otherLocale}>
-              {otherLocale.toUpperCase()}
-            </Link>
+            {languageTargets.map((targetLocale) => (
+              <Link prefetch={false} className="theme-toggle" href={withLocale("/", targetLocale)} hrefLang={targetLocale} key={targetLocale}>
+                {targetLocale.toUpperCase()}
+              </Link>
+            ))}
           </div>
         </div>
       </header>
@@ -73,10 +75,12 @@ export function AppShell({ children, active = "home", locale = defaultLocale }: 
           <p>{siteConfig.description}</p>
         </section>
         <section className="qr-grid" aria-label="Social QR links">
-          <div className="qr-card"><span className="qr-mark" /><strong>X</strong></div>
-          <div className="qr-card"><span className="qr-mark" /><strong>公众号</strong></div>
-          <div className="qr-card"><span className="qr-mark" /><strong>小红书</strong></div>
-          <div className="qr-card"><span className="qr-mark" /><strong>知乎</strong></div>
+          {siteConfig.contacts.map((contact) => (
+            <a className="qr-card" href={contact.href} key={contact.label}>
+              <span className="qr-mark" />
+              <strong>{contact.label}</strong>
+            </a>
+          ))}
         </section>
         <section className="footer-meta">
           <strong>三he水</strong>
