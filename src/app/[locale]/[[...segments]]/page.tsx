@@ -119,7 +119,7 @@ async function Home({ locale }: { locale: Locale }) {
           copy={t(
             locale,
             homeHeroCopy,
-            "ErDDshui is a personal laboratory for data aggregation and cognitive archiving in the large-model era. It gathers, cleans, and produces multidimensional web data to resist everyday information noise. Instead of chasing fragmented trends, it distills highly generative dry knowledge and uses data-to-wisdom refinement to build a hard cognitive foundation for AI capability evolution and technical iteration.",
+            "ErDDShui is a personal laboratory for data aggregation and cognitive archiving in the large-model era. It gathers, cleans, and produces multidimensional web data to resist everyday information noise. Instead of chasing fragmented trends, it distills highly generative dry knowledge and uses data-to-wisdom refinement to build a hard cognitive foundation for AI capability evolution and technical iteration.",
           )}
         />
         <div className="hub-cards" aria-label="Column shortcuts">

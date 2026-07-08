@@ -576,7 +576,7 @@
   {
     "slug": "dia-for",
     "aliases": [],
-    "rawMarkdown": "dia-for 是统一信息站的前端与发布底座，用于承载脑电波、远山和小桔灯三个栏目。\n\n它负责把 Markdown 内容构建成可浏览、可搜索、可互链的公开站点，并通过 Cloudflare Workers 服务三he水。",
+    "rawMarkdown": "dia-for 是统一信息站的前端与发布底座，用于承载脑电波、远山和小桔灯三个栏目。\n\n它负责把 Markdown 内容构建成可浏览、可搜索、可互链的公开站点，并通过 Cloudflare Workers 服务二DD水。",
     "parseStatus": "partial",
     "meta": {
       "title": "dia-for",

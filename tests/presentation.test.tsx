@@ -60,6 +60,10 @@ describe("public card presentation", () => {
     expect(heroMarkup).toContain("聚数成海，滴水成智");
     expect(heroMarkup).toContain("hero-tagline-gradient");
     expect(heroMarkup).toContain("专注大模型时代数据汇集与认知归档的个人实验室");
+    expect(heroMarkup).toContain("“二DD水”");
+    expect(heroMarkup).not.toContain("二dd水");
+    expect(heroMarkup).not.toContain("DAL");
+    expect(heroMarkup).not.toContain("DIL");
     expect(heroMarkup).not.toContain("LINKED NOTES");
   });
 

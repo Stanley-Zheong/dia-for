@@ -22,7 +22,7 @@ function redirectHtml(targetPath) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="refresh" content="0; url=${zhPath}">
-  <title>三he水</title>
+  <title>二DD水</title>
   <script>
     (function () {
       var path = ${safePath};
