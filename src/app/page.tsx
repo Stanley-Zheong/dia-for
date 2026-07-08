@@ -1,5 +1,6 @@
 import { AppShell } from "@/components/AppShell";
 import { ArticleCard } from "@/components/ArticleCard";
+import { HomeHeroIdentity } from "@/components/HomeHeroIdentity";
 import { getAllArticles, getArticlesBySection, getTags, getTopics } from "@/lib/content";
 
 export default async function HomePage() {
@@ -15,13 +16,7 @@ export default async function HomePage() {
   return (
     <AppShell active="home">
       <section className="hero hub-hero">
-        <div>
-          <p className="eyebrow">Personal content hub</p>
-          <h1 className="hero-title">LINKED NOTES<br />PUBLIC INDEX</h1>
-          <p className="hero-copy">
-            脑电波记录你和大模型的对话，远山沉淀 RSS 行业资讯，小桔灯整理产品矩阵。所有文章累计保存，并可通过栏目、标签和详情页穿透访问。
-          </p>
-        </div>
+        <HomeHeroIdentity copy="脑电波记录你和大模型的对话，远山沉淀 RSS 行业资讯，小桔灯整理产品矩阵。所有文章累计保存，并可通过栏目、标签和详情页穿透访问。" />
         <div className="hub-cards" aria-label="Column shortcuts">
           {[
             { href: "/brainwave", kicker: "Brainwave", name: "脑电波", count: brainwaves.length, desc: "我和大模型的对话、判断与技术/商业复盘。" },

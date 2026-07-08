@@ -98,8 +98,8 @@ textarea {
 }
 
 .brand-logo {
-  width: 40px;
-  height: 40px;
+  width: 46px;
+  height: 46px;
   flex: 0 0 auto;
   border-radius: 8px;
   object-fit: cover;
@@ -258,6 +258,39 @@ textarea {
   margin: 0 0 18px;
   font-size: clamp(4rem, 8vw, 7.2rem);
   line-height: 0.92;
+}
+
+.hero-identity {
+  min-width: 0;
+}
+
+.site-hero-title {
+  margin-bottom: 10px;
+  font-size: clamp(3.6rem, 7vw, 6.6rem);
+  line-height: 0.95;
+  word-break: keep-all;
+}
+
+.site-hero-title > span {
+  display: block;
+}
+
+.hero-title-sub {
+  font-size: 0.54em;
+  line-height: 1.05;
+}
+
+.hero-tagline-gradient {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0 0 18px;
+  background: linear-gradient(90deg, #4b1767 0%, #7c3aed 45%, #0f766e 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  font-size: clamp(1.15rem, 2.1vw, 1.6rem);
+  font-weight: 800;
+  line-height: 1.35;
 }
 
 .page-title {
@@ -1091,8 +1124,8 @@ button.keyword {
   }
 
   .brand-logo {
-    width: 36px;
-    height: 36px;
+    width: 41px;
+    height: 41px;
   }
 
   .site-nav {
@@ -1164,6 +1197,14 @@ button.keyword {
   .page-title,
   .article-title {
     font-size: clamp(3rem, 17vw, 4.5rem);
+  }
+
+  .site-hero-title {
+    font-size: clamp(3rem, 14vw, 4rem);
+  }
+
+  .hero-tagline-gradient {
+    font-size: clamp(1.05rem, 5.6vw, 1.35rem);
   }
 
   .sidebar-nav {

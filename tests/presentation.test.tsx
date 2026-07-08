@@ -2,7 +2,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 
 import { ArticleCard } from "@/components/ArticleCard";
+import { AppShell } from "@/components/AppShell";
 import { ChatCard } from "@/components/ChatCard";
+import { HomeHeroIdentity } from "@/components/HomeHeroIdentity";
 import type { ArticleRecord, ChatRecord } from "@/lib/types";
 
 const chat: ChatRecord = {
@@ -47,6 +49,17 @@ const yuanShan: ArticleRecord = {
 };
 
 describe("public card presentation", () => {
+  it("renders the enlarged logo and home identity block", () => {
+    const shellMarkup = renderToStaticMarkup(<AppShell><main /></AppShell>);
+    const heroMarkup = renderToStaticMarkup(<HomeHeroIdentity copy="Sample copy" />);
+
+    expect(shellMarkup).toContain('width="46"');
+    expect(shellMarkup).toContain('height="46"');
+    expect(heroMarkup).toContain("二dd水 (DAL · DIL)");
+    expect(heroMarkup).toContain("聚数成海，滴水成智");
+    expect(heroMarkup).toContain("hero-tagline-gradient");
+  });
+
   it("uses topic, model names, and YYYY-MM-DD for brainwave card metadata", () => {
     const markup = renderToStaticMarkup(<ChatCard chat={chat} />);
 
